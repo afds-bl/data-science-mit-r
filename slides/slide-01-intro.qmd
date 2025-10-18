@@ -1,0 +1,1210 @@
+---
+title: "Data Science Lifecycle und Visualisierung"
+subtitle: "Unit 1"
+date: ""
+format:
+  revealjs
+params:
+  unit: 1
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+# Willkommen! :wave: {background-color="#e6f2f2"}
+
+# Themen
+
+-   *Data Science Lifecycle*
+-   Daten visualisieren
+-   *Tidy data*, Daten aufräumen und umwandeln
+-   mit Quarto kommunizieren
+
+## Kennenlernen
+
+-   Dienststelle / Aufgabe
+-   was willst du lernen?
+-   was machst du gerne ausserhalb der Arbeit?
+
+<!-- `r countdown(minutes = 10, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em")` -->
+
+# Ziele für heute
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+# *Data Science Lifecycle* {background-color="#e6f2f2"}
+
+## Reproduzierbare Datenanalyse
+
+:question:
+
+::: fragment
+-   Tabellen und Grafiken aus Daten und Code reproduzieren?
+-   Code in anderen Skripten verwenden?
+-   Stimmt meine Umgebung mit der meiner Kollegen/innen überein?
+:::
+
+::: notes
+Was macht eine Datenanalyse reproduzierbar?
+
+-   Können Tabellen und Grafiken aus den Daten und dem Code reproduziert werden?
+-   Kann Code in anderen Skripten verwendet werden?
+-   Stimmt meine Umgebung mit der meiner Kollegen/innen überein?
+:::
+
+##  {background-image="img/dslc/data-science-cycle.001.png"}
+
+::: notes
+Hier ist ein Diagramm aus dem Buch R for Data Science, das wir für den Kurs verwenden werden.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.002.png"}
+
+::: notes
+1.  Zuerst müsst ihr eure Daten in R importieren. Dies bedeutet normalerweise, dass ihr gespeicherte Daten übernimmt:
+
+-   in einer Datei
+-   in einer Datenbank,
+-   oder Webanwendung, und ihr sie in R lädt.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.003.png"}
+
+::: notes
+2.  Sobald ihr eure Daten importiert habt, solltest ihr sie aufräumen. Das heisst, sie in eine Struktur zu bringen, die es euch ermöglicht, euch auf die Fragen zu euren Daten zu konzentrieren und nicht auf das Format, in dem sie vorliegen müssen.
+
+Dies ist der Schritt, auf den wir bei weitem die meiste Zeit verwenden. Man schätzt, dass wir etwa 80 % unserer Zeit mit dem Bereinigen und Aufräumen von Daten verbringen, damit wir sie für unsere Analysen verwenden können.
+
+3.  Sobald eure Daten aufgeräumt sind, besteht ein erster gemeinsamer Schritt darin, sie zu transformieren. Dies beinhaltet:
+
+-   Eingrenzung auf das, was euch interessiert (z. B. alle Menschen ohne Toilette in einem Bezirk oder alle Daten des letzten Jahres)
+-   Erstellung neuer Variablen aus vorhandenen Variablen (wie z. B. die Toilettenverteilung, d. h. die Anzahl der Personen pro Toilette)
+-   Berechnung zusammenfassender Statistiken (z. B. Zählungen oder der Mittelwert).
+
+Die Kombination aus Aufräumen und Transformieren wird auch als "Wrangling" bezeichnet, da es sich oft wie ein **Kampf** anfühlt, die Daten in eine Form zu bringen, mit der man gut arbeiten kann.
+
+Sobald ihr aufgeräumte Daten mit den benötigten Variablen habt, gibt es zwei Hauptmotoren der Wissensgenerierung: - Visualisierung - und Modellierung. Beide haben komplementäre Stärken und Schwächen, so dass bei einer echten Analyse immer wieder zwischen ihnen gewechselt wird.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.004.png"}
+
+::: notes
+4.  Visualisierung ist eine grundlegend menschliche Tätigkeit. Eine gute Visualisierung wird euch Dinge zeigen, die ihr nicht erwartet habt, oder neue Fragen zu den Daten aufwerfen.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.005.png"}
+
+::: notes
+5.  Modelle sind ergänzende Instrumente zur Visualisierung. Wenn ihr eure Fragen hinreichend präzise formuliert habt, könntet ihr ein Modell verwenden, um sie zu beantworten.
+
+In diesem Kurs spielen sie eine sehr kleine Rolle. Ich bin aber überzeugt, dass ihr eure Kenntnisse über die Modellierung erweitern könntet, sobald ihr die Grundprinzipien der Sprache R verstanden habt.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.006.png"}
+
+##  {background-image="img/dslc/data-science-cycle.007.png"}
+
+::: notes
+6.  Der letzte Schritt von Data Science ist die Kommunikation, ein absolut kritischer Teil eines jeden Datenanalyseprojekts. Es spielt keine Rolle, wie gut eure Modelle und Visualisierungen zum Verständnis der Daten geführt habt, wenn ihr eure Ergebnisse nicht auch anderen vermitteln könnt. Und das ist ein Teil, in dem R wirklich stark geworden ist.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.008.png"}
+
+::: notes
+Dies ist eine etwas irreführende Darstellung. Kommunikation ist ein fester Bestandteil des datenwissenschaftlichen Prozesses. Man analysiert nicht und kommuniziert dann am Ende. Vielmehr dokumentiert und kommuniziert man während des Prozesses.
+:::
+
+##  {background-image="img/dslc/data-science-cycle.009.png"}
+
+::: notes
+1.  Zuerst müsst ihr eure Daten in R importieren. Dies bedeutet normalerweise, dass ihr gespeicherte Daten übernimmt:
+
+-   in einer Datei
+-   in einer Datenbank,
+-   oder Webanwendung, und ihr sie in R lädt.
+
+2.  Sobald ihr eure Daten importiert habt, solltest ihr sie aufräumen. Das heisst, sie in eine Struktur zu bringen, die es euch ermöglicht, euch auf die Fragen zu euren Daten zu konzentrieren und nicht auf das Format, in dem sie vorliegen müssen.
+
+Dies ist der Schritt, auf den wir bei weitem die meiste Zeit verwenden. Man schätzt, dass wir etwa 80 % unserer Zeit mit dem Bereinigen und Aufräumen von Daten verbringen, damit wir sie für unsere Analysen verwenden können.
+
+3.  Sobald eure Daten aufgeräumt sind, besteht ein erster gemeinsamer Schritt darin, sie zu transformieren. Dies beinhaltet:
+
+-   Eingrenzung auf das, was euch interessiert (z. B. alle Menschen ohne Toilette in einem Bezirk oder alle Daten des letzten Jahres)
+-   Erstellung neuer Variablen aus vorhandenen Variablen (wie z. B. die Toilettenverteilung, d. h. die Anzahl der Personen pro Toilette)
+-   Berechnung zusammenfassender Statistiken (z. B. Zählungen oder der Mittelwert).
+
+Die Kombination aus Aufräumen und Transformieren wird auch als "Wrangling" bezeichnet, da es sich oft wie ein **Kampf** anfühlt, die Daten in eine Form zu bringen, mit der man gut arbeiten kann.
+
+Sobald ihr aufgeräumte Daten mit den benötigten Variablen habt, gibt es zwei Hauptmotoren der Wissensgenerierung: - Visualisierung - und Modellierung. Beide haben komplementäre Stärken und Schwächen, so dass bei einer echten Analyse immer wieder zwischen ihnen gewechselt wird.
+
+4.  Visualisierung ist eine grundlegend menschliche Tätigkeit. Eine gute Visualisierung wird euch Dinge zeigen, die ihr nicht erwartet habt, oder neue Fragen zu den Daten aufwerfen.
+
+5.  Modelle sind ergänzende Instrumente zur Visualisierung. Wenn ihr eure Fragen hinreichend präzise formuliert habt, könntet ihr ein Modell verwenden, um sie zu beantworten.
+
+In diesem Kurs spielen sie eine sehr kleine Rolle. Ich bin aber überzeugt, dass ihr eure Kenntnisse über die Modellierung erweitern könntet, sobald ihr die Grundprinzipien der Sprache R verstanden habt.
+
+6.  Der letzte Schritt von Data Science ist die Kommunikation, ein absolut kritischer Teil eines jeden Datenanalyseprojekts. Es spielt keine Rolle, wie gut eure Modelle und Visualisierungen zum Verständnis der Daten geführt habt, wenn ihr eure Ergebnisse nicht auch anderen vermitteln könnt. Und das ist ein Teil, in dem R wirklich stark geworden ist.
+:::
+
+## Kurs-Werkzeuge
+
+:::::: columns
+::: {.column width="47%"}
+Programmierung:
+
+-   [R](https://r4ds.hadley.nz/)
+
+-   [RStudio](https://www.dataquest.io/blog/rstudio-tips-tricks-shortcuts/)
+
+-   [tidyverse](https://www.tidyverse.org/)
+
+-   [Quarto](https://images.datacamp.com/image/upload/v1676540721/Marketing/Blog/Quarto_Cheat_Sheet.pdf "Quarto") 
+:::
+
+:::: {.column width="53%"}
+::: fragment
+Versionskontrolle & Kollaboration:
+
+-   [{{< iconify logos git >}}](https://education.github.com/git-cheat-sheet-education.pdf)
+
+-   [{{< iconify mdi github >}}](https://github.com)
+
+-   [{{< iconify devicon gitlab >}}](https://gitlab.com)
+:::
+::::
+::::::
+
+:::: fragment
+::: {style="font-size: 1.5em; color: red; text-align: center;"}
+Reproduzierbare Datenanalyse
+:::
+::::
+
+::: notes
+$\rightarrow$ Gewinne Erkenntnisse aus Daten, reproduzierbar (mit kompetenter Programmierung und Versionskontrolle) und gemeinsam unter Verwendung moderner Programmierwerkzeuge und -techniken
+
+([R Markdown](https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown-2.0.pdf))
+:::
+
+## Hallo R! :wave:
+
+<br>
+
+::::::: columns
+:::: {.column width="50%"}
+::: fragment
+Du brauchst die [Sprache](https://cloud.r-project.org/)
+
+![](img/r-logo.png)
+:::
+::::
+
+:::: {.column width="50%"}
+::: fragment
+und das [IDE](https://www.rstudio.com/products/rstudio/download/#download)
+
+![](img/rstudio-logo.png)
+:::
+::::
+:::::::
+
+::: notes
+-   R ist eine Open-Source-Programmiersprache für Statistik
+
+-   R ist auch eine Umgebung für statistische Berechnungen und Grafiken
+
+-   Es ist leicht mit Packages erweiterbar
+
+RStudio ist eine grafische Benutzeroberfläche, IDE = Integrated Development Environment. Du könntest R-code in einer anderen Umgebung, aber RStudio wird sehr häufig von R-Programmierern und Data Scientists verwendet.
+
+Wenn R der Motor ist, dann ist RStudio das Dashboard.
+:::
+
+## R-Packages
+
+<br> Du benutzt R durch *packages*
+
+```{r}
+#| eval: false
+
+install.packages("package")
+library(package)
+```
+
+::: fragment
+<br/> ...die *functions* enthalten
+:::
+
+::: fragment
+<br> ...die häufig nur Befehle sind
+
+```{r}
+#| eval: false
+
+do_this(to_this)
+do_that(to_this, to_that, with_those)
+```
+:::
+
+::: fragment
+[Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/)
+:::
+
+::: notes
+-   **Packages** sind die grundlegenden Einheiten von reproduzierbarem R-Code
+-   Packages enthalten:
+    -   wiederverwendbare R Funktionen,
+    -   die Dokumentation welche beschreibt wie sie verwendet werden,
+    -   und Beispieldaten
+-   October 2023 \> 20,000 R-Packages auf **CRAN** (Comprehensive R Archive Network)
+-   Wir werden mit einem kleinen (aber wichtigen) Teil arbeiten!
+:::
+
+## ![](img/kgwr/kgwr-excel.png)
+
+## ![](img/kgwr/kgwr-rstudio.png)
+
+::: notes
+Dies ist die Umgebung, in der wir unsere Programmierung durchführen werden. Eine Seite ist für Menschen lesbar, die andere enthält eine Mischung aus Code, Text und Symbolen, die wir vielleicht nicht wirklich verstehen. Mein Ziel heute ist, dass ihr den Code und den seltsamen Text auf der einen Seite versteht und mit dem menschenlesbaren Teil auf der rechten Seite verknüpfen könntet.
+:::
+
+## RStudio {visibility="uncounted" auto-animate="true"}
+
+![](img/coderbar/rstudio2.png)
+
+## RStudio {visibility="uncounted" auto-animate="true"}
+
+![](img/coderbar/rstudio3.png)
+
+## RStudio {visibility="uncounted" auto-animate="true"}
+
+![](img/coderbar/rstudio4.png)
+
+## RStudio {visibility="uncounted" auto-animate="true"}
+
+![](img/coderbar/rstudio5.png)
+
+## RStudio {visibility="uncounted" auto-animate="true"}
+
+![](img/coderbar/rstudio6.png)
+
+## RStudio und R-wesentliches
+
+![](img/RStudio.png)
+
+::: notes
+Show R shortcuts:
+
+-   Pane layout: `Tools > Global Options > Pane Layout`
+-   Assignment operator: `Alt + -`
+-   Zoom in panes:
+    -   All panes: `Ctrl + Shift + 0`
+    -   Code Viewer: `Ctrl + Shift + 1`
+    -   Viewer: `Ctrl + Shift + 9`
+
+The `$` operator.
+:::
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+## Tidyverse
+
+![](img/tidyverse-packages-with-lubridate.png)
+
+::: notes
+Tidyverse ist ine Metalibrary mit 9 Packages = Ein logisch zusammenhängendes System von R Packages zur - Daten Aufbereitung - Daten Exploration - Daten Visualisierung - Daten Modellierung - Eine Designphilosophie, Grammatik und Daten Struktur - Entwickelt um Produktivität zu unterstützen.
+:::
+
+## Data Science Lifecycle
+
+![](img/data-science-life-cycle-packages.png)
+
+#  {background-image="img/quarto.jpg"}
+
+::: notes
+Quarto® ist ein wissenschaftliches und technisches Open-Source-Publikationssystem, das auf [Pandoc](https://pandoc.org/) basiert. Du kannst Text und Code miteinander verweben, um elegant formatierte Dokumente, Webseiten, Blogbeiträge, Bücher und mehr zu erstellen. Dieser Kurs (Slides und Website) wurde mit Quarto geschrieben.
+:::
+
+## ![](img/unvotes/unvotes-04.png){width="100%"} {background-image="img/quarto.jpg" background-opacity="0.2"}
+
+::: notes
+Text wird als reiner Text interpretiert (Markdown). Code muss sich in einem **code chunk** befinden oder auch inline.
+:::
+
+## ![](img/unvotes/unvotes-05.png){width="100%"} {background-image="img/quarto.jpg" background-opacity="0.2"}
+
+## ![](img/unvotes/unvotes-06.png) {background-image="img/quarto.jpg" background-opacity="0.2"}
+
+## ![](img/unvotes/unvotes-07.png) {background-image="img/quarto.jpg" background-opacity="0.2"}
+
+##  {background-image="img/quarto-pandoc.png" background-size="contain" visibility="hidden"}
+
+::: aside
+Artwork from "Hello, Quarto" keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst.
+:::
+
+##  {background-image="img/quarto.jpg" background-opacity="0.2"}
+
+-   Text → **Markdown**
+
+::: fragment
+-   Code → **code chunk**
+
+```{r}
+#| echo: fenced
+
+sqrt(1/5)
+```
+:::
+
+::: fragment
+-   Code und Text → ***inline code***
+
+    \`​r sqrt(1/5)\` → `r sqrt(1/5)`
+:::
+
+# Lasst uns eintauchen! {background-color="#e6f2f2"}
+
+##  {background-image="img/unvotes/unvotes-01.jpeg"}
+
+::: notes
+Last uns beginnen mit einem Beispiel für eine Datenanalyse aus der Generalversammlung der Vereinten Nationen (United Nations General Assembly).
+
+Wir werden uns ansehen, wie die Länder über bestimmte Themen abgestimmt haben.
+:::
+
+## 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(scales)
+library(gt)
+library(unvotes)
+
+un_votes |>
+  inner_join(un_roll_calls, by = "rcid") |>
+  inner_join(un_roll_call_issues, by = "rcid") |>
+  filter(country %in% c("Algeria", "Switzerland", "United Kingdom")) |>
+  mutate(
+    year = year(date),
+    issue = fct_relevel(issue, "Arms control and disarmament"),
+    issue = fct_relevel(issue, "Palestinian conflict", after = Inf)
+  ) |>
+  group_by(country, year, issue) |>
+  summarise(percent_yes = mean(vote == "yes")) |>
+  ggplot(mapping = aes(x = year, y = percent_yes, colour = country)) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~issue) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = paste(un_roll_calls |> summarise(min(year(date))) |> pull(), "to", un_roll_calls |> summarise(max(year(date))) |> pull()),
+    colour = "Country",
+    x = "Year",
+    y = "% Yes"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8)
+  )
+```
+
+## 
+
+![](img/unvotes/unvotes-03.jpeg)
+
+## 
+
+::: panel-tabset
+### Code
+
+```{r}
+#| echo: fenced
+#| code-line-numbers: "|5-7|8|16|22"
+#| eval: false
+
+un_votes |>
+  inner_join(un_roll_calls, by = "rcid") |>
+  inner_join(un_roll_call_issues, by = "rcid") |>
+  filter(country %in% c("Algeria", "Switzerland", "United Kingdom")) |>
+  mutate(
+    year = year(date),
+    issue = fct_relevel(issue, "Arms control and disarmament"),
+    issue = fct_relevel(issue, "Palestinian conflict", after = Inf)
+  ) |>
+  group_by(country, year, issue) |>
+  summarise(percent_yes = mean(vote == "yes")) |>
+  ggplot(mapping = aes(x = year, y = percent_yes, colour = country)) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~issue) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = paste(un_roll_calls |> summarise(min(year(date))) |> pull(), "to", un_roll_calls |> summarise(max(year(date))) |> pull()),
+    colour = "Country",
+    x = "Year",
+    y = "% Yes"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8)
+  )
+```
+
+### Plot
+
+```{r}
+#| warning: false
+#| echo: false
+
+un_votes |>
+  inner_join(un_roll_calls, by = "rcid") |>
+  inner_join(un_roll_call_issues, by = "rcid") |>
+  filter(country %in% c("Algeria", "Switzerland", "United Kingdom")) |>
+  mutate(
+    year = year(date),
+    issue = fct_relevel(issue, "Arms control and disarmament"),
+    issue = fct_relevel(issue, "Palestinian conflict", after = Inf)
+  ) |>
+  group_by(country, year, issue) |>
+  summarise(percent_yes = mean(vote == "yes")) |>
+  ggplot(mapping = aes(x = year, y = percent_yes, colour = country)) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~issue) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = paste(un_roll_calls |> summarise(min(year(date))) |> pull(), "to", un_roll_calls |> summarise(max(year(date))) |> pull()),
+    colour = "Country",
+    x = "Year",
+    y = "% Yes"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8)
+  )
+```
+:::
+
+## Praktikum 01a: UN Votes
+
+[`prak-01a-unvotes.qmd`](../exercises/unit01/prak-01a-unvotes.qmd)
+
+-   `Render` oder `Ctrl + Shift + K`,
+-   andere Länder auswählen.
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+::: notes
+:eyes: `setwd()`: **More** > **Set as Working Directory**
+:::
+
+## Praktikum 01b: Quarto – Bechdel Test
+
+[`prak-01b-bechdel.qmd`](../exercises/unit01/prak-01b-bechdel.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Visualisierung {background-color="#e6f2f2"}
+
+## R Package `ggplot2`
+
+::::::::: columns
+::::: {.column width="40%"}
+![](img/ggplot2-part-of-tidyverse.png)
+
+:::: fragment
+::: {.absolute bottom="5%" left="0%"}
+[Grammar of Graphics]{style="color: #cc0000"}
+:::
+::::
+:::::
+
+::::: {.column width="60%"}
+::: fragment
+Streudiagramm (*Scatterplot*)
+
+Verteilungen visualisieren
+
+Beziehungen visualisieren <br><br>
+:::
+
+::: fragment
+```{r}
+#| eval: false
+#| code-line-numbers: "1-3|4|5"
+
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+:::
+:::::
+:::::::::
+
+::: notes
+-   **ggplot2** is tidyverse's data visualization package
+-   `gg` in `ggplot2` stands for Grammar of Graphics
+-   Inspired by the book **Grammar of Graphics** by Leland Wilkinson
+-   **Documentation:** https://ggplot2.tidyverse.org/
+-   **Book**: https://ggplot2-book.org
+:::
+
+## R Package `ggplot2`
+
+::::::: columns
+:::: {.column width="40%"}
+![](img/ggplot2-part-of-tidyverse.png)
+
+::: {.absolute bottom="5%" left="0%"}
+[Grammar of Graphics]{style="color: #cc0000"}
+:::
+::::
+
+:::: {.column width="60%"}
+Streudiagramm (*Scatterplot*)
+
+::: {.fragment .semi-fade-out}
+Verteilungen visualisieren
+
+Beziehungen visualisieren <br><br>
+:::
+
+```{r}
+#| eval: false
+
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+::::
+:::::::
+
+
+# Erste Schritte: Streudiagramm {background-color="#e6f2f2" visibility="uncounted"}
+
+::: notes
+Wir beginnen mit der Erstellung eines einfachen Scatterplots und nutzen diesen, um ästhetische Mappings und geometrische Objekte einzuführen - die grundlegenden Bausteine von ggplot2. Anschließend werden wir euch durch die Visualisierung von Verteilungen einzelner Variablen sowie durch die Visualisierung von Beziehungen zwischen zwei oder mehr Variablen führen. Zum Schluss werden wir eure Diagramme speichern.
+:::
+
+## Voraussetzung
+
+::: fragment
+```{r}
+#| echo: fenced
+
+# install.packages("tidyverse")
+library(tidyverse)
+```
+:::
+
+::: fragment
+<br>
+
+```{r}
+#| echo: fenced
+
+library(palmerpenguins) # data
+library(ggthemes) # colourblind safe colour palette
+```
+:::
+
+##  {background-image="img/penguins/penguins.png"}
+
+##  {background-image="img/penguins.png" background-opacity="0.1"}
+
+```{r}
+#| echo: fenced
+
+glimpse(penguins)
+```
+
+::: fragment
+![](img/penguins/penguins_bill.png){fig-align="center" width="50%"}
+:::
+
+::: notes
+From now on, not using `echo: fenced` but implicitly all *code chunks* are enclosed in ```` ```{r}``` ````
+:::
+
+## Unser Ziel
+
+::: panel-tabset
+### Plot
+
+```{r}
+#| echo: false
+p <- ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length(mm)",
+    y = "Body mass (g)",
+    colour = "Species",
+    shape = "Species"
+  ) +
+  scale_colour_colorblind()
+p
+```
+
+### Code
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|1-7|8-9|10-18"
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length(mm)",
+    y = "Body mass (g)",
+    colour = "Species",
+    shape = "Species"
+  ) +
+  scale_colour_colorblind()
+```
+:::
+
+::: notes
+By differentiating species, we can see that there is a pretty consistent relationship between bill length and depth across species (similar slopes), but that the ranges of these variables is different (the groupings are clearly shown by the colours). Adelie penguins tend to have smaller bill length but fairly large bill depth, while the inverse is true for Gentoo penguins.
+:::
+
+## Plot Erstellen {auto-animate="true"}
+
+```{r}
+ggplot(
+  data = penguins
+)
+```
+
+## Plot Erstellen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm)
+)
+```
+
+## Plot Erstellen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+)
+```
+
+## Plot Erstellen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "5"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point()
+```
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3"
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, colour = species)
+) +
+  geom_point()
+```
+
+::: notes
+When a kategorische variable is mapped to an aesthetic, ggplot2 will automatically assign a unique value of the aesthetic (here a unique colour) to each unique level of the variable (each of the three species), a process known as scaling. ggplot2 will also add a legend that explains which values correspond to which levels.
+:::
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "6"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, colour = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+::: notes
+Now let's add one more layer: a smooth curve displaying the relationship between body mass and flipper length. Before you proceed, refer back to the code above, and think about how we can add this to our existing plot.
+
+Since this is a new geometric object representing our data, we will add a new geom as a layer on top of our point geom: geom_smooth(). And we will specify that we want to draw the line of best fit based on a linear model with method = "lm".
+
+We have successfully added lines, but this plot doesn't look like the plot we want to achive, which only has one line for the entire dataset as opposed to separate lines for each of the penguin species.
+:::
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3|5"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm")
+```
+
+::: notes
+When aesthetic mappings are defined in ggplot(), at the global level, they're passed down to each of the subsequent geom layers of the plot. However, each geom function in ggplot2 can also take a mapping argument, which allows for aesthetic mappings at the local level that are added to those inherited from the global level. Since we want points to be colored based on species but don't want the lines to be separated out for them, we should specify color = species for geom_point() only.
+:::
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "5"
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(mapping = aes(colour = species, shape = species)) +
+  geom_smooth(method = "lm")
+```
+
+::: notes
+Note that the legend is automatically updated to reflect the different shapes of the points as well.
+:::
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "7-15|8|9|10|11|12|13|15"
+#| eval: false
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(aes(colour = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", 
+    y = "Body mass (g)",
+    color = "Species", 
+    shape = "Species"
+  ) +
+  scale_colour_colorblind()
+```
+
+## Aesthetics und Schichten {auto-animate="true"}
+
+```{r}
+#| code-fold: true
+#| code-summary: "Code"
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(aes(colour = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", 
+    y = "Body mass (g)",
+    color = "Species", 
+    shape = "Species"
+  ) +
+  scale_colour_colorblind()
+```
+
+## Praktikum 01c
+
+[`prak-01c-ggplot-scatter.qmd`](../exercises/unit01/prak-01c-ggplot-scatter.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+## Aesthetics-Optionen
+
+-   colour ✅
+-   shape ✅
+-   size
+-   alpha (transparency)
+
+::: notes
+Häufig verwendete Merkmale, die einer bestimmten Variablen in den Daten zugeordnet werden können.
+:::
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: column
+#| code-line-numbers: "6-7"
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species,
+    shape = species
+  )
+) +
+  geom_point() +
+  scale_colour_colorblind()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: column
+#| code-line-numbers: "6-7"
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species,
+    shape = island
+  )
+) +
+  geom_point() +
+  scale_colour_colorblind()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: column
+#| code-line-numbers: "6-8"
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species,
+    shape = island,
+    size = bill_length_mm
+  )
+) +
+  geom_point() +
+  scale_colour_colorblind()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: column
+#| code-line-numbers: "6-9"
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species,
+    shape = island,
+    size = bill_length_mm,
+    alpha = bill_depth_mm
+  )
+) +
+  geom_point() +
+  scale_colour_colorblind()
+```
+
+## Faceting {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "10"
+#| output-location: column
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species
+  )
+) +
+  geom_point() +
+  facet_wrap(~island) +
+  scale_colour_colorblind()
+```
+
+::: notes
+Kleinere Diagramme, die verschiedene Teilmengen der Daten anzeigen. Nützlich für die Untersuchung von bedingten Beziehungen und grossen Daten.
+:::
+
+## Faceting {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "10"
+#| output-location: column
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    colour = species
+  )
+) +
+  geom_point() +
+  facet_grid(island ~ sex) +
+  scale_colour_colorblind()
+```
+
+## Mapping vs. Setting :question: {auto-animate="true"}
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+#| eval: false
+
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g,
+    size = bill_depth_mm,
+    alpha = bill_length_mm
+  )
+) +
+  geom_point()
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| eval: false
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(size = 4, alpha = 0.2)
+```
+:::
+:::::
+
+## Mapping vs. Setting {auto-animate="true"}
+
+::::::::: columns
+::::: {.column width="50%"}
+```{r}
+#| code-line-numbers: "3,6-7"
+
+ggplot(
+  penguins,
+  aes(
+    x = bill_depth_mm,
+    y = bill_length_mm,
+    size = body_mass_g,
+    alpha = flipper_length_mm
+  )
+) +
+  geom_point()
+```
+
+:::: {.fragment fragment-index="1"}
+::: {.absolute top="10%" left="25%"}
+[Mapping]{style="color: #cc0000"}
+:::
+::::
+:::::
+
+::::: {.column width="50%"}
+```{r}
+#| code-line-numbers: "8"
+
+ggplot(
+  penguins,
+  aes(
+    x = bill_depth_mm,
+    y = bill_length_mm
+  )
+) +
+  geom_point(size = 4, alpha = 0.2)
+```
+
+:::: {.fragment fragment-index="1"}
+::: {.absolute top="10%" right="15%"}
+[Setting]{style="color: #cc0000"}
+:::
+::::
+:::::
+:::::::::
+
+::: notes
+-   **Mapping**: Bestimme `size`, `alpha`, `shape`, `colour` von Punkten basierend auf den Werten einer Variablen in den Daten
+    -   geht in `aes()`
+-   **Setting**: Bestimme `size`, `alpha`, `shape`, `colour` von Punkten, die **nicht** auf den Werten einer Variablen in den Daten basieren
+    -   geht in`geom_*()` (wir werden bald etwas über andere *Geoms* erfahren!)
+:::
+
+[`prak-01c-ggplot-scatter.qmd`](../exercises/unit01/prak-01c-ggplot-scatter.qmd)
+
+# Workflow: Rechtschreibung {background-color="#e6f2f2"}
+
+## Namen
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|1-2"
+
+# Good
+i_use_snake_case
+
+# acceptable
+otherPeopleUseCamelCase
+some.people.use.periods
+
+# Bad
+And_aFew.People_Are.FREEspirits
+```
+
+## 
+
+![](img/r-case-snake1.png)
+
+::: aside
+[Artwork by \@allison_horst](https://twitter.com/allison_horst)
+:::
+
+## 
+
+![](img/r-case-snake2.png)
+
+::: aside
+[Artwork by \@allison_horst](https://twitter.com/allison_horst)
+:::
+
+## 
+
+:warning: Case matters...<br>
+
+```{r}
+welcome_to_r <- "Welcome to R"
+```
+
+::: fragment
+```{r}
+#| eval: false
+
+welcome_to_R
+#> Error: object 'welcome_to_R' not found
+```
+:::
+
+::: fragment
+... and so does punctuation!
+:::
+
+::: notes
+Gross- und Kleinschreibung ist wichtig, ebenso wie die Zeichensetzung.
+:::
+
+## Hausaufgabe 
+
+[`prak-01d-style.qmd`](../exercises/unit01/prak-01d-style.qmd)
+
+## Praktikum 01d {visibility="hidden"}
+
+[`prak-01d-style.qmd`](../exercises/unit01/prak-01d-style.qmd)
+
+`r countdown(minutes = 15, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+## R for Data Science
+
+::::: columns
+::: {.column width="50%"}
+-   Das Buch für den Kurs
+-   Kostenfrei [Online](https://r4ds.hadley.nz/)
+-   Tiydverse-Philosophie
+:::
+
+::: {.column width="50%"}
+[![](img/r4ds.jpg){.absolute top="70" left="530" fig-alt="R for Data Science" height="574"}](https://r4ds.hadley.nz/)
+:::
+:::::
+
+::: notes
+Dementsprechend orientiert sich der Kurs auch an dem von ihm geschriebenen Buch "R for Data Science" von Hadley Wickam. Das Buch ist online kostenfrei verfügbar. Während des Kurses wird es uns als Textbuch zur Seite stehen.
+
+The kākāpō, which appears on the cover, is a critically endangered parrot native to New Zealand; there are only 248 left.
+:::
+
+# Danke! :new_moon: {background-color="#e6f2f2"}
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide_02_visualisation.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).

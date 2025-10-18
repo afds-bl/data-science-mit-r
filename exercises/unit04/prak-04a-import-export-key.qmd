@@ -1,0 +1,113 @@
+---
+title: "Praktikum 4a: Daten importieren und exportieren"
+execute: 
+  error: true
+---
+
+# Tastaturkürzel
+
+|  |  |
+|-------------------------------------------------|-----------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Aufgaben
+
+## Packages laden
+
+1.  Ladet die Packages `tidyverse`, `writexl` und `janitor`
+
+```{r}
+library(janitor)
+library(writexl)
+library(tidyverse)
+```
+
+## Daten importieren
+
+2.  Importiert die "data/ogd_12030_wetter.csv"-Datei mit `read_csv2()`
+
+```{r}
+wetter <- read_csv2("data/ogd_12030_wetter.csv")
+
+glimpse(wetter)
+```
+
+3.  Bereinigt die Namen mit der `janitor::clean_names()`-Funktion
+
+```{r}
+wetter <- wetter |>
+  clean_names()
+
+glimpse(wetter)
+```
+
+4.  Verwendet `group_by()` und `summarise()` um die durschnittliche maximale Tagestemperatur (`tagesmaximum_lufttemperatur`) pro Jahr zu rechnen:
+
+```{r}
+wetter |>
+  group_by(jahr) |>
+  summarise(temp_max = mean(tagesmaximum_lufttemperatur, na.rm = TRUE))
+```
+
+5.  Lest die Warnung/Fehlermeldung. Wie könntet ihr das Problem beheben?
+    
+```{r}
+#  Option 1: `readr::parse_number()`
+wetter |>
+  mutate(tagesmaximum_lufttemperatur = parse_number(tagesmaximum_lufttemperatur)) |>
+  summarise(
+    temp_max = mean(tagesmaximum_lufttemperatur, na.rm = TRUE), .by = jahr
+  )
+```
+    
+```{r}
+# Option 2: `read_delim()`
+wetter <- read_delim("data/ogd_12030_wetter.csv", delim = ";")
+glimpse(wetter)
+
+# Namen saubermachen
+wetter <- wetter |>
+  clean_names()
+
+wetter_summary <- wetter |>
+  summarise(
+    temp_max = mean(tagesmaximum_lufttemperatur, na.rm = TRUE), .by = jahr
+  )
+```
+
+## Daten exportieren
+
+6.  Speichert das Ergebnis in einer csv-Datei und einer xlsx-Datei.
+
+```{r}
+write_csv(x = wetter_summary, "data/wetter_summary.csv")
+write_xlsx(x = wetter_summary, "data/wetter_summary.xlsx")
+```
+
+## Datenkodierung
+
+7.  Ladet "data/urbanisierung-grad_1521.csv" mit `read_delim`
+
+```{r}
+urb_grad <- read_delim("data/urbanisierung-grad_1521.csv", delim = ";")
+glimpse(urb_grad)
+```
+
+8.  Etwas stimmt mit den Characters nicht, warum? Benutzt die `readr::guess_encoding()`-Funktion
+
+```{r}
+guess_encoding("data/urbanisierung-grad_1521.csv")
+```
+
+
+9.  Wie könntet ihr das Problem beheben? Hint: `?readr::locale`.
+
+```{r}
+urb_grad <- read_delim("data/urbanisierung-grad_1521.csv", delim = ";", locale = locale(encoding = "ISO-8859-1"))
+glimpse(urb_grad)
+```

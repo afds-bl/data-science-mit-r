@@ -1,0 +1,58 @@
+---
+title: "Unit 2: Mapping vs Setting in `{ggplot2}`"
+execute: 
+  warning: false
+---
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Mapping vs. Setting in {`ggplot2`}: Der Unterschied
+
+In `{ggplot2}` gibt es zwei Möglichkeiten, ästhetische Eigenschaften festzulegen:
+
+- Mapping (Zuordnung): Eine ästhetische Eigenschaft wird mit einer Variablen aus den Daten verknüpft.
+- Setting (Festlegen): Eine ästhetische Eigenschaft erhält einen festen Wert.
+    
+## Mapping - Zuordnung (Innerhalb von `aes()`)
+
+```{r}
+ggplot(penguins, aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point(aes(colour = species)) +
+  geom_smooth(method = "lm", colour = "black") +
+  scale_colour_manual(values = c("Adelie" = "purple", "Gentoo" = "cyan", "Chinstrap" = "green"))
+```
+
+- Die Farbe der Punkte hängt von der Pinguinart (`species`) ab, da `colour = species` innerhalb von `aes()` steht.
+- Eine Legende wird automatisch erstellt, weil die Farben an eine Variable gebunden sind.
+
+## Setting - Festlegung (Ausserhalb von `aes()`)
+
+```{r}
+ggplot(penguins, aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point(colour = "purple")
+```
+
+- Alle Punkte sind lila, weil `colour = "purple"` ausserhalb von `aes()` gesetzt wurde.
+- Es gibt keine Legende, weil die Farbe nicht von einer Variable abhängt.`
+
+## Vergleichstabelle
+
+| Eigenschaft                | Mapping (`aes()`)      | Setting (ausserhalb `aes()`) |
+|----------------------------|------------------------|-----------------------------|
+| Abhängig von den Daten?    | ✅ Ja                  | ❌ Nein                      |
+| Erstellt eine Legende?     | ✅ Ja                  | ❌ Nein                      |
+| Ändert sich pro Beobachtung? | ✅ Ja               | ❌ Nein                      |
+| Beispiel                   | `aes(colour = species)` | `colour = "red"`             |
+
+
+## Mapping und Setting kombinieren
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(size = 3, shape = 10) +
+  geom_smooth(method = "lm", color = "black")
+```
+

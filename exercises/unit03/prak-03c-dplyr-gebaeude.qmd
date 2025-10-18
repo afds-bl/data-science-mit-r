@@ -1,0 +1,148 @@
+---
+title: "Prak03c: Gebäude und Energie Kanton BL "
+---
+
+Das kantonale Gebäude- und Wohnungsregister (kGWR) veröffentlicht monatlich im [OGD-Portal](https://data.bl.ch/pages/welcome/) sämtliche Gebäude im Kanton Basel-Landschaft (BL), die unter anderem die Wärmequelle für die Heizung sowie weitere Merkmale enthaltet.
+
+Der vorliegende, vorbereitete Datensatz basiert auf [dieser kGWR-Tabelle](https://data.bl.ch/explore/dataset/12160/table) und umfasst die Energiequelle der Heizung von bestehenden Gebäuden mit ausschliesslicher Wohnnutzung. Ziel dieses Praktikums ist es, Trends bei den Energiequellen für die Heizung im Verlauf der Jahre zu ermitteln.
+
+Das Ziel des Praktikums ist diese Darstellung zu reproduzieren:
+
+![](img/gebaeude.png)
+
+## Packages Laden
+
+1.  Lade die `scales` und `tidyverse` Packages.
+
+## Daten Laden
+
+2.  Lade die vorbereiteten Daten:
+
+```{r}
+# gebaeude <- read_rds("data/ogd_gebaeude12160_clean.rds")
+```
+
+## Daten erkunden
+
+3.  Erkunde die Daten: Anzahl Zeilen und Spalten, Variable-Namen und -Typen (`glimpse()`).
+
+4.  Wie viele verschiedene Gemeinden sind es (`distinct` oder `count()`)?
+
+```{r}
+# gebaeude |> ___(___)
+# gebaeude |> ___(___)
+```
+
+5.  Wie viele Energiequellen der Heizung (`energie_waermequelle_heizung_primaer_bezeichnung` und `energie_waermequelle_heizung_primaer_bezeichnung_gruppiert`) sind es?
+
+```{r}
+# gebaeude |> count(
+#   ___,
+#   ___,
+#   sort = TRUE)
+```
+
+# Daten transformieren
+
+6.  Verwende das pipe und `dplyr`-Befehle um die folgenden Schritte einzusetzten:
+
+    -   `select()` - behalte nur folgende Spalten: baujahr_des_gebaeudes, gemeindename, gebaeudeflaeche, anzahl_geschosse, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert
+    -   `arrange`- ordne die Daten nach Baujahr und Gemeinde
+    -   `rename()`- benenne energie_waermequelle_heizung_primaer_bezeichnung_gruppiert als "energie_quelle" und baujahr_des_gebaeudes als baujahr um
+    -   `filter()` - behalte nur Gebäude mit Baujahr ab 1960
+    -   `mutate()` - berechne die Gesamtfläche des Gebäudes (Fläche mal Anzahl der Stockwerke)
+    -   `group_by()` und `summarise()` - berechne die gesamte beheizte Fläche in BL-Gebäuden pro Jahr und Heizmethode
+
+```{r}
+# gebaeude_transformiert <- gebaeude |>
+#   # Spalten von Interesse behalten
+#   select(___) |>
+#
+#   # Nach Baujahr und Gemeinde ordnen
+#   arrange(___) |>
+#
+#   # Spalten umbenennen
+#   rename(
+#     baujahr = ___,
+#     energie_quelle = ___) |>
+#
+#   # Gebäude mit Baujahr ab 1960
+#   filter(baujahr > ___) |>
+#
+#   # Gesamtfläche des Gebäudes
+#   mutate(flaeche = ___ * ___, .before = energie_quelle) |>
+#
+#   # Gesamte beheizte Fläche in BL-Gebäuden pro Jahr und Heizmethode
+#   group_by(baujahr, energie_quelle) |>
+#   summarise(total_flaeche = sum(___)) |>
+#   mutate(anteil_flaeche = total_flaeche / sum(total_flaeche)) |>
+#   ungroup()
+```
+
+    oder `.by()` statt `group_by()` für den `summarise()` verwenden:
+
+```{r}
+# gebaeude_transformiert <- gebaeude |>
+#   # Spalten von Interesse behalten
+#   select(___) |>
+#
+#   # Nach Baujahr und Gemeinde ordnen
+#   arrange(___) |>
+#
+#   # Spalten umbenennen
+#   rename(
+#     baujahr = ___,
+#     energie_quelle = ___) |>
+#
+#   # Gebäude mit Baujahr ab 1960
+#   filter(baujahr > ___) |>
+#
+#   # Gesamtfläche des Gebäudes
+#   mutate(flaeche = ___ * ___, .before = energie_quelle) |>
+#
+#   # Gesamte beheizte Fläche in BL-Gebäuden pro Jahr und Heizmethode
+#   summarise(total_flaeche = sum(___), .by = c(baujahr, energie_quelle)) |>
+#   mutate(anteil_flaeche = total_flaeche / sum(total_flaeche), .by = baujahr)
+```
+
+## Daten visualisieren
+
+7.  Erstelle ein Liniendiagramm (`geom_line()`), das die gesamte Gebäudefläche (total_flaeche) nach Energiequelle und Baujahr zeigt:
+
+```{r}
+# gebaeude_transformiert |>
+#   ggplot(aes(x = ___, y = ___, colour = ___)) +
+#   ___(alpha = 0.4) +
+#   geom_point(alpha = 0.4) +
+#   geom_smooth(se = FALSE) +
+#   labs(
+#     title = "Totale Gebäudefläche pro Energiequelle und Baujahr ab 1960",
+#     subtitle = "Kanton BL",
+#     caption = "Quelle: https://data.bl.ch/explore/dataset/12160/table",
+#     x = "Baujahr",
+#     y = "Fläche (m2)",
+#     colour = "Energiequelle"
+#   ) +
+#   theme_minimal()
+```
+
+8.  Erstelle ein Liniendiagramm (`geom_line()`), das den Anteil der Gebäudeflächen (anteil_flaeche) nach Energiequelle und Baujahr zeigt:
+
+```{r}
+# gebaeude_transformiert |>
+#   ggplot(aes(x = ___, y = ___, colour = ___)) +
+#   ___(alpha = 0.4) +
+#   geom_point(alpha = 0.4) +
+#   geom_smooth(se = FALSE) +
+#   labs(
+#     title = "Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960",
+#     subtitle = "Kanton BL",
+#     caption = "Quelle: https://data.bl.ch/explore/dataset/12160/table",
+#     x = "Baujahr",
+#     y = "Anteil der gesamten Fläche"
+#   ) +
+#   theme_minimal() +
+#   guides(colour = "none") +
+#   scale_y_continuous(labels = scales::label_percent()) +
+#   facet_wrap(~ energie_quelle)
+```

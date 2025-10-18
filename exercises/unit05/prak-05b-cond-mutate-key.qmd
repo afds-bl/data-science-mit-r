@@ -1,0 +1,119 @@
+---
+title: "Praktium 05b: Bedingt `mutate()`"
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages laden
+
+- Lädt das `tidyverse`-Package.
+
+```{r}
+library(tidyverse)
+```
+
+# `if_else()`
+
+- Lädt die Daten "data/ogd_abstimmungsarchiv_11990.csv".
+- Erkundet die Daten: `glimpse()`, `summary()`, `View()`
+
+```{r}
+abstimmung <- read_delim("data/ogd_abstimmungsarchiv_11990.csv", delim = ";")
+# glimpse(abstimmung)
+```
+
+- Was ist die durschnittliche Wahlbeteiligung?
+
+```{r}
+(avg_turnout <- abstimmung |> 
+  summarise(avg_turnout = mean(percent_turnout)) |> 
+  pull(avg_turnout))
+```
+
+-  Erstellt eine neue kategorielle Variable `turnout_cat` die zwei Niveaux hat:
+    - unterdurschnittlich
+    - überdurschnittlich
+- Erstellt ein Balkendiagramm (`geom_bar()` und `facet_wrap()`) pro Bezirk mit:
+    - `x` = domain
+    - `fill` = turnout_cat
+
+```{r}
+abstimmung |> 
+  mutate(turnout_cat = if_else(percent_turnout < avg_turnout, "unterdurschnittlich", "überdurschnittlich")) |> 
+  ggplot(aes(x = domain, fill = turnout_cat)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~district) +
+  labs(
+    x = "",
+    y = "Anteil Abstimmungen",
+    fill = "",
+    title = "Anteil Abstimmungen pro Domain und Bezirk"
+  ) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  ggthemes::scale_fill_colorblind() +
+  theme_minimal()
+```
+
+- Was ist die die durschnittliche Wahlbeteiligung pro `domain`?
+```{r}
+abstimmung |> 
+  summarise(mean(percent_turnout), .by = domain)
+```
+
+# `case_when()`
+
+- Lädt die Daten "data/ogd_gebaeude12160.csv"
+- Erkundet die Daten: `glimpse()`, `summary()`, `View()`
+
+```{r}
+gebauede <- read_delim("data/ogd_gebaeude12160.csv", delim = ";")
+# glimpse(gebauede)
+```
+
+- Behaltet nur die folgenden Spalten:
+    - "gemeindenummer_bfs"                              
+    - "gemeindename"                                    
+    - "baujahr_des_gebaeudes"                           
+    - "energie_waermequelle_heizung_primaer_code"       
+    - "energie_waermequelle_heizung_primaer_bezeichnung"
+    - "gebaeudeflaeche"                                 
+    - "anzahl_geschosse"
+    
+```{r}
+gebauede_small <- gebauede |> 
+  select(starts_with("gemeinde"), baujahr_des_gebaeudes, starts_with("energie_waermequelle_heizung_primaer"), gebaeudeflaeche, anzahl_geschosse)
+```
+
+- Wie viele verschiedene Primäre Wärmequellen gibt es?
+
+```{r}
+gebauede_small |> count(energie_waermequelle_heizung_primaer_bezeichnung, sort = TRUE)
+```
+
+- Verwendet `case_when()` und die Variable `energie_waermequelle_heizung_primaer_bezeichnung` um eine neue Variable der Wärmequelle zu erstellen, die vier Kategorien hat:
+    - Gas, Heizöl → Fossil
+    - Keine → Keine
+    - Unbestimmt → Unbestimmt
+    - alle andere Quellen → Erneuerbare
+
+```{r}
+gebauede_small |> 
+   mutate(
+    energie_waermequelle_heizung_primaer_bezeichnung_gruppiert = case_when(
+      energie_waermequelle_heizung_primaer_bezeichnung %in% c("Gas", "Heizöl") ~ "Fossil",
+      energie_waermequelle_heizung_primaer_bezeichnung %in% c("Keine", "Unbestimmt") ~ energie_waermequelle_heizung_primaer_bezeichnung,
+      .default = "Erneuerbare"
+      )
+  ) |> 
+  count(energie_waermequelle_heizung_primaer_bezeichnung_gruppiert)
+```
+

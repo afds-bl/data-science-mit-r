@@ -1,0 +1,45 @@
+---
+title: "Unit 6"
+subtitle: "SQL-Datenbanken abfragen und Versionierung mit `git`"
+params:
+  unit: 6
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+## {{< fa bullseye >}} Ziele
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+Am Ende dieser Woche kannst du:
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+<!-- `r paste0("- ", lobj, "\n")` -->
+
+<!-- `r  purrr::map(lobj, \(x) paste0("- ", x, "\n"))` -->
+
+## {{< fa display >}} Folien
+
+[Folien im Vollbild anzeigen](../slides/slide-06-sql-git.qmd) \| [Folien als PDF herunterladen](../slides/slide-06-sql-git.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-06-sql-git.html title="Unit 6 - sql and git" style="border: 1px solid #123233;"></iframe>
+```
+
+## {{< fa code >}} Praktika
+
+- [CO2-Emissionen](../exercises/unit06/prak_06a-quarto-projekt.qmd)
+
+## {{< fa book >}} Lektüre
+
+-   [Datenbanken in *R for Data Science*](https://r4ds.hadley.nz/databases.html)
+-   [`{config}-Package`](https://github.com/rstudio/config)
+-   [Postgres und R](https://solutions.posit.co/connections/db/databases/postgresql/)

@@ -1,0 +1,260 @@
+country,country_name,type,2016,2017,2018
+BE,Belgium,Conventional thermal,30728,31316,30092.635
+BE,Belgium,Nuclear,41430,40128.5,26995.628
+BE,Belgium,Hydro,1476,1360.9,1239.248
+BE,Belgium,Wind,5340,6387.9000000000005,7177.346000000001
+BE,Belgium,Solar,3070,3264.2999999999997,3488.9790000000003
+BE,Belgium,Geothermal,0,0,0
+BE,Belgium,Other,476,490.9,218.509
+BG,Bulgaria,Conventional thermal,18909,20234.209,19334
+BG,Bulgaria,Nuclear,14932,14718.368,15290
+BG,Bulgaria,Hydro,4535,3458.015,4690
+BG,Bulgaria,Wind,1425,1504.063,1326
+BG,Bulgaria,Solar,1386,1402.766,1043
+BG,Bulgaria,Geothermal,0,0,0
+BG,Bulgaria,Other,34,33.882,22
+CZ,Czechia,Conventional thermal,47817,47246.628,48042.91499999999
+CZ,Czechia,Nuclear,22727,26785.6,28255.421
+CZ,Czechia,Hydro,3169,3007.403,2650.153
+CZ,Czechia,Wind,488,581.917,600.67
+CZ,Czechia,Solar,2110,2168.74,2317.645
+CZ,Czechia,Geothermal,0,0,0
+CZ,Czechia,Other,87,95.478,100.826
+DK,Denmark,Conventional thermal,15533.149,14104.326,14072.337
+DK,Denmark,Nuclear,0,0,0
+DK,Denmark,Hydro,19.272,17.871,14.928999999999998
+DK,Denmark,Wind,12781.731,14780,13898.806
+DK,Denmark,Solar,743.78,751.485,952.9729999999998
+DK,Denmark,Geothermal,0,0,0
+DK,Denmark,Other,0,0,0.044
+DE,Germany,Conventional thermal,390141,376128,320437.701
+DE,Germany,Nuclear,80038,72155,72274.13299999999
+DE,Germany,Hydro,25690,25888,20041.878
+DE,Germany,Wind,78218,103707,112174
+DE,Germany,Solar,38098,39401,46184
+DE,Germany,Geothermal,165,157,165.25
+DE,Germany,Other,1805,1623,522.751
+EE,Estonia,Conventional thermal,9795,10485,10170.042999999998
+EE,Estonia,Nuclear,0,0,0
+EE,Estonia,Hydro,35,26,18.2
+EE,Estonia,Wind,594,723,645.9
+EE,Estonia,Solar,0,0,0
+EE,Estonia,Geothermal,0,0,0
+EE,Estonia,Other,0,0,0
+IE,Ireland,Conventional thermal,22571.711,21745.666,19963.734
+IE,Ireland,Nuclear,0,0,0
+IE,Ireland,Hydro,962.861,885.765,921.979
+IE,Ireland,Wind,6148.508,7444.742,8349.172
+IE,Ireland,Solar,6.16,10.801,0
+IE,Ireland,Geothermal,0,0,0
+IE,Ireland,Other,0,0,0
+EL,Greece,Conventional thermal,35586,37021.751,34803.244
+EL,Greece,Nuclear,0,0,0
+EL,Greece,Hydro,5565,4039,5802.4169999999995
+EL,Greece,Wind,5146,5536.987,6300.26
+EL,Greece,Solar,3930,3991.477,3792.038
+EL,Greece,Geothermal,0,0,0
+EL,Greece,Other,0,0,10.99
+ES,Spain,Conventional thermal,108210,126885,110084.238
+ES,Spain,Nuclear,56100,55540,53270.8
+ES,Spain,Hydro,39180,20708,36083.636
+ES,Spain,Wind,47712,47929,49495.207
+ES,Spain,Solar,13051,13778,12137.315
+ES,Spain,Geothermal,0,0,0
+ES,Spain,Other,91,78,0
+FR,France,Conventional thermal,60607.854,68922.949,53956.439999999995
+FR,France,Nuclear,384008.125,379093.955,393153.254
+FR,France,Hydro,64879.956,54432.863999999994,68706.552
+FR,France,Wind,21472.915999999997,24710.749,26134.019999999997
+FR,France,Solar,8657.27,9572.843,9651.478
+FR,France,Geothermal,87.93299999999999,119.937,84.084
+FR,France,Other,559.515,673.71,0
+HR,Croatia,Conventional thermal,4241,4808,4155.654
+HR,Croatia,Nuclear,0,0,0
+HR,Croatia,Hydro,6967,5437.8,7681.336999999999
+HR,Croatia,Wind,1010,1198.4,1350.356
+HR,Croatia,Solar,66,78.7,69.193
+HR,Croatia,Geothermal,0,0,0
+HR,Croatia,Other,0,0,0
+IT,Italy,Conventional thermal,190121,199722.444,185046
+IT,Italy,Nuclear,0,0,0
+IT,Italy,Hydro,43784.622,37556.721000000005,49275
+IT,Italy,Wind,17523,17565.332,17318
+IT,Italy,Solar,21757,24016.821,22887
+IT,Italy,Geothermal,5867,5821.46,5708
+IT,Italy,Other,650,582.871,0
+CY,Cyprus,Conventional thermal,4295,4394.819,4380.142999999999
+CY,Cyprus,Nuclear,0,0,0
+CY,Cyprus,Hydro,0,0,0
+CY,Cyprus,Wind,226.701,211.448,220.613
+CY,Cyprus,Solar,145.937,172.013,190.329
+CY,Cyprus,Geothermal,0,0,0
+CY,Cyprus,Other,0,0,0
+LV,Latvia,Conventional thermal,3277,2520.3830000000003,3962
+LV,Latvia,Nuclear,0,0,0
+LV,Latvia,Hydro,2523,4355.513,2418
+LV,Latvia,Wind,127,148.523,120
+LV,Latvia,Solar,0,0.44,0
+LV,Latvia,Geothermal,0,0,0
+LV,Latvia,Other,0,0,0
+LT,Lithuania,Conventional thermal,1566,1165.3000000000002,802.83500000000015
+LT,Lithuania,Nuclear,0,0,0
+LT,Lithuania,Hydro,1027,1164.6,940.677
+LT,Lithuania,Wind,1130,1356.2,1136.357
+LT,Lithuania,Solar,66,67,80.01400000000001
+LT,Lithuania,Geothermal,0,0,0
+LT,Lithuania,Other,262,243,223.212
+LU,Luxembourg,Conventional thermal,449.564,450.167,463.132
+LU,Luxembourg,Nuclear,0,0,0
+LU,Luxembourg,Hydro,1516.352,1411.286,1326.3289999999995
+LU,Luxembourg,Wind,101.486,234.823,263.70799999999997
+LU,Luxembourg,Solar,100.288,108.462,111.693
+LU,Luxembourg,Geothermal,0,0,0
+LU,Luxembourg,Other,0,0,0
+HU,Hungary,Conventional thermal,13156,14096,13489.644
+HU,Hungary,Nuclear,15162,15206,14854.662
+HU,Hungary,Hydro,253,214,215.862
+HU,Hungary,Wind,665,737,589.406
+HU,Hungary,Solar,241,346,594.258
+HU,Hungary,Geothermal,0,1,6.047
+HU,Hungary,Other,71,76,0
+MT,Malta,Conventional thermal,680,1439.156,1716.4900000000002
+MT,Malta,Nuclear,0,0,0
+MT,Malta,Hydro,0,0,0
+MT,Malta,Wind,0,0.058,0
+MT,Malta,Solar,127.16,155.245,0
+MT,Malta,Geothermal,0,0,0
+MT,Malta,Other,0,0,0
+NL,Netherlands,Conventional thermal,97271.8,97231.607,94450
+NL,Netherlands,Nuclear,3750,3277.664,3313.371
+NL,Netherlands,Hydro,100.079,60.757,86
+NL,Netherlands,Wind,8170.462,10568.797,12279
+NL,Netherlands,Solar,1601.811,2204.344,2423
+NL,Netherlands,Geothermal,0,0,0
+NL,Netherlands,Other,138.101,121.865,0
+AT,Austria,Conventional thermal,18065.01,20135.846,16350.754
+AT,Austria,Nuclear,0,0,0
+AT,Austria,Hydro,40772.188,40098.554,37217.295000000006
+AT,Austria,Wind,4968.262,6239.497,5857.059
+AT,Austria,Solar,1040.698,1204.311,0
+AT,Austria,Geothermal,0.02,0.086,0
+AT,Austria,Other,14.692,11.868,6162.686
+PL,Poland,Conventional thermal,136945,137068.099,138957.387
+PL,Poland,Nuclear,0,0,0
+PL,Poland,Hydro,2591,2999.86,2353.336
+PL,Poland,Wind,12279,14574.192,12487.345
+PL,Poland,Solar,124,165.463,298.43199999999996
+PL,Poland,Geothermal,0,0,0
+PL,Poland,Other,64,61.73,0
+PT,Portugal,Conventional thermal,28702,36882.017,30887
+PT,Portugal,Nuclear,0,0,0
+PT,Portugal,Hydro,16794.113,7489.938,13489
+PT,Portugal,Wind,12343.336,12112.464,12530
+PT,Portugal,Solar,870.6030000000001,991.546,974
+PT,Portugal,Geothermal,152,193.007,205
+PT,Portugal,Other,0,0,0
+RO,Romania,Conventional thermal,23304,24923.065,22611
+RO,Romania,Nuclear,10366,10557.906,10443
+RO,Romania,Hydro,18239,14687.531,17653
+RO,Romania,Wind,6527,7331.254,6261
+RO,Romania,Solar,1820,1855.674,1754
+RO,Romania,Geothermal,0,0,0
+RO,Romania,Other,0,0,0
+SI,Slovenia,Conventional thermal,5121,5054.639999999999,4703.068
+SI,Slovenia,Nuclear,5431,5967.827,5489.905999999999
+SI,Slovenia,Hydro,4721,4085.015,4831.147
+SI,Slovenia,Wind,6,5.716,6.02
+SI,Slovenia,Solar,267,283.678,254.113
+SI,Slovenia,Geothermal,0,0,0
+SI,Slovenia,Other,0,0,0
+SK,Slovakia,Conventional thermal,6065,6417,5426
+SK,Slovakia,Nuclear,13732,14016,13807
+SK,Slovakia,Hydro,4549,4620,3838
+SK,Slovakia,Wind,6,6,5
+SK,Slovakia,Solar,533,506,586
+SK,Slovakia,Geothermal,0,0,0
+SK,Slovakia,Other,112,127,55
+FI,Finland,Conventional thermal,24950,23681,26425
+FI,Finland,Nuclear,22280,21574,21890
+FI,Finland,Hydro,15634,14610,13158.674
+FI,Finland,Wind,3068,4795,5861
+FI,Finland,Solar,19,43,89
+FI,Finland,Geothermal,0,0,0
+FI,Finland,Other,249,335,0
+SE,Sweden,Conventional thermal,14621,15003,14869.986
+SE,Sweden,Nuclear,60524,63008,65801.155
+SE,Sweden,Hydro,61764,64676,60977.60199999999
+SE,Sweden,Wind,15479,17609,16638.345
+SE,Sweden,Solar,143,230,0
+SE,Sweden,Geothermal,0,0,0
+SE,Sweden,Other,0,0,0
+UK,NA,Conventional thermal,203165.188,189296.528,180837.905
+UK,NA,Nuclear,65149.08,63886.86,59097.753
+UK,NA,Hydro,8286.51,8723.43,7678.659000000001
+UK,NA,Wind,37262.699,50003.654,56903.96100000001
+UK,NA,Solar,10410.948,11524.87,12857.348999999998
+UK,NA,Geothermal,0,0,0
+UK,NA,Other,0,0,0
+NO,Norway,Conventional thermal,3212,3233,3457.28
+NO,Norway,Nuclear,0,0,0
+NO,Norway,Hydro,143442,142276,139512.026
+NO,Norway,Wind,2116,2852,3875.8809999999994
+NO,Norway,Solar,0,0,0
+NO,Norway,Geothermal,0,0,0
+NO,Norway,Other,297,281,0
+ME,Montenegro,Conventional thermal,1216,1265,1444
+ME,Montenegro,Nuclear,0,0,0
+ME,Montenegro,Hydro,1807,1003.8,2137
+ME,Montenegro,Wind,0,95,162
+ME,Montenegro,Solar,0,0,0
+ME,Montenegro,Geothermal,0,0,0
+ME,Montenegro,Other,0,0,0
+MK,North Macedonia,Conventional thermal,3281.378,4005.609,3309.1140000000005
+MK,North Macedonia,Nuclear,0,0,0
+MK,North Macedonia,Hydro,1869.694,1087.024,1774.496
+MK,North Macedonia,Wind,109.482,110.48,97.338
+MK,North Macedonia,Solar,23.699,23.752,22.787999999999993
+MK,North Macedonia,Geothermal,0,0,0
+MK,North Macedonia,Other,0,0,0
+AL,Albania,Conventional thermal,0,0,0
+AL,Albania,Nuclear,0,0,0
+AL,Albania,Hydro,7136,4496.607,8596.537
+AL,Albania,Wind,0,0,0
+AL,Albania,Solar,0,1.2,0
+AL,Albania,Geothermal,0,0,0
+AL,Albania,Other,0,0,0
+RS,Serbia,Conventional thermal,25161,24566.923000000003,23625.088999999996
+RS,Serbia,Nuclear,0,0,0
+RS,Serbia,Hydro,11429,9670.033,11453.07
+RS,Serbia,Wind,26,48.457,150.41899999999998
+RS,Serbia,Solar,12,13.139,12.608
+RS,Serbia,Geothermal,0,0,0
+RS,Serbia,Other,0,0,0
+TR,Turkey,Conventional thermal,174166,199910.043,195153.546
+TR,Turkey,Nuclear,0,0,0
+TR,Turkey,Hydro,66686,57823.851,59865.351
+TR,Turkey,Wind,15381,17793.167,19825.697000000004
+TR,Turkey,Solar,1013,2817.837,7459.485000000001
+TR,Turkey,Geothermal,4010,5101.487,6275.3730000000005
+TR,Turkey,Other,681,811.134,703.126
+BA,Bosnia & Herzegovina,Conventional thermal,10971,11250,4003.505
+BA,Bosnia & Herzegovina,Nuclear,0,0,0
+BA,Bosnia & Herzegovina,Hydro,5614,3968,3476.5539999999996
+BA,Bosnia & Herzegovina,Wind,0,0,22.368
+BA,Bosnia & Herzegovina,Solar,24,21,0
+BA,Bosnia & Herzegovina,Geothermal,0,0,0
+BA,Bosnia & Herzegovina,Other,0,0,0
+UA,Ukraine,Conventional thermal,65415,54041.9,60830.7
+UA,Ukraine,Nuclear,75931,80295.3,84397.90000000001
+UA,Ukraine,Hydro,9025,8812,11920.2
+UA,Ukraine,Wind,949,974,1185.9
+UA,Ukraine,Solar,490,737.6,737.8000000000001
+UA,Ukraine,Geothermal,0,0,0
+UA,Ukraine,Other,79,45,0
+GE,Georgia,Conventional thermal,2135,2131.3,2114.901
+GE,Georgia,Nuclear,0,0,0
+GE,Georgia,Hydro,9221,9096.8,9949.387
+GE,Georgia,Wind,9,87.7,84.22600000000001
+GE,Georgia,Solar,0,0,0
+GE,Georgia,Geothermal,0,0,0
+GE,Georgia,Other,0,0,0

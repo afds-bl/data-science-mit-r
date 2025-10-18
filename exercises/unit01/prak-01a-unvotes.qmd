@@ -1,0 +1,105 @@
+---
+title: "Praktikum 01a - UN-Abstimmungen"
+author: ""
+date: last-modified
+format: 
+  html:
+    fontsize: 16px
+editor: visual
+toc: true
+toc-location: right
+execute: 
+  warning: false
+  message: false
+nocite: |
+  @robinson2021, @mincr2023
+---
+
+## Einleitung
+
+Wie stimmen die verschiedenen Länder in der Generalversammlung der United Nations ab? Wie hat sich ihr Abstimmungsverhalten im Laufe der Zeit entwickelt? Wie unterscheidet sich ihr Abstimmungsverhalten bei bestimmten Themen?
+
+Wir werden versuchen, diese Fragen durch Visualisierung zu beantworten.
+
+Wir werden die Packages `tidyverse`, `scales` und `gt` für die Datenaufbereitung und -visualisierung und das Package `unvotes` [@voeten2013] für die Daten verwenden.
+
+```{r}
+#| label: load-packages
+
+install.packages("unvotes")
+install.packages("gt")
+
+library(gt)
+library(scales)
+library(unvotes)
+library(tidyverse)
+```
+
+## UN-Wahlverhalten
+
+Wir wollen eine Datenvisualisierung erstellen, die zeigt, wie sich das Abstimmungsverhalten von **Algerien**, der **Schweiz** und dem **Vereinigten Königreich** im Laufe der Zeit bei einer Reihe von Themen verändert hat.
+
+Wir können ganz einfach ein Diagramm für jede beliebige Länderkombination erstellen, indem wir die Ländernamen in der unten stehenden `filter()`-Anweisung ersetzen. Die genauen Namen der Länder findest du im [Anhang](#appendix).
+
+```{r}
+#| label: plot-yes-issues-year
+un_votes |>
+  inner_join(un_roll_calls, by = "rcid") |>
+  inner_join(un_roll_call_issues, by = "rcid") |>
+  filter(country %in% c("Algeria", "Switzerland", "United Kingdom")) |>
+  mutate(
+    year = year(date),
+    issue = fct_relevel(issue, "Arms control and disarmament"),
+    issue = fct_relevel(issue, "Palestinian conflict", after = Inf)
+  ) |>
+  group_by(country, year, issue) |>
+  summarise(percent_yes = mean(vote == "yes")) |>
+  ggplot(mapping = aes(x = year, y = percent_yes, colour = country)) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~issue) +
+  scale_y_continuous(labels = label_percent()) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = paste(un_roll_calls |> summarise(min(year(date))) |> pull(), "to", un_roll_calls |> summarise(max(year(date))) |> pull()),
+    colour = "Country",
+    x = "Year",
+    y = "% Yes"
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8)
+  )
+```
+
+Nützliche Fakten:
+
+-   Die United Nations wurden 1945 gegründet.
+-   Algerien wurde 1962 unabhängig.
+-   Das Vereinigte Königreich trat 1973 der EU bei.
+-   Die Schweiz trat 2002 der UNO bei.
+
+```{r}
+#| label: save-plot
+#| echo: false
+
+ggsave(file = "img/unvotes.jpg")
+```
+
+## Anhang {#appendix}
+
+```{r}
+#| label: country-list
+#| echo: false
+
+un_votes |> 
+  # distinct(country) |>
+  # mutate(country = fct(country)) |> 
+  reframe(country = fct_unique(country)) |>
+  gt() |> 
+  tab_header(title = md("**Liste der Länder mit Stimmrecht in der UN-Generalversammlung**")) |> 
+  cols_label(country = md("**Land**")) |> 
+  opt_align_table_header(align = "center") |> 
+  opt_stylize(style = 2) |> 
+  opt_interactive(use_search = TRUE)
+```

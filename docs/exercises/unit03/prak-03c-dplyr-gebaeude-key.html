@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="">
+
+<title>Prak03c: Gebäude und Energie Kanton BL – Data Science mit R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2960dceb88924dd7736a6f6127982528.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/iconify-1.0.7/iconify-icon.min.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Keine Treffer",
+    "search-matching-documents-text": "Treffer",
+    "search-copy-link-title": "Link in die Suche kopieren",
+    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
+    "search-more-match-text": "weitere Treffer in diesem Dokument",
+    "search-more-matches-text": "weitere Treffer in diesem Dokument",
+    "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Abbrechen",
+    "search-submit-button-title": "Abschicken",
+    "search-label": "Suchen"
+  }
+}</script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../../site_libs/plotly-binding-4.11.0/plotly.js"></script>
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/BL_Logo_FKD_AfDuS_A_r_rgb.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Data Science mit R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Suchen"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navigation umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://afds-bl.github.io/data-science-mit-r"> 
+<span class="menu-text"><iconify-icon inline="" icon="fa6-brands:square-github" style="font-size: 2em;"></iconify-icon></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Prak03c: Gebäude und Energie Kanton BL</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Überblick</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-01-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-02-viz-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-03-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-04-import-pivot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-05-forcats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../webpages/web-06-sql-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit 6</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Literatur</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Auf dieser Seite</h2>
+   
+  <ul>
+  <li><a href="#packages-laden" id="toc-packages-laden" class="nav-link active" data-scroll-target="#packages-laden">Packages Laden</a></li>
+  <li><a href="#daten-laden" id="toc-daten-laden" class="nav-link" data-scroll-target="#daten-laden">Daten Laden</a></li>
+  <li><a href="#daten-erkunden" id="toc-daten-erkunden" class="nav-link" data-scroll-target="#daten-erkunden">Daten erkunden</a></li>
+  <li><a href="#daten-transformieren" id="toc-daten-transformieren" class="nav-link" data-scroll-target="#daten-transformieren">Daten transformieren</a>
+  <ul class="collapse">
+  <li><a href="#daten-visualisieren" id="toc-daten-visualisieren" class="nav-link" data-scroll-target="#daten-visualisieren">Daten visualisieren</a></li>
+  </ul></li>
+  <li><a href="#interactive-plot" id="toc-interactive-plot" class="nav-link" data-scroll-target="#interactive-plot">Interactive Plot</a>
+  <ul class="collapse">
+  <li><a href="#simple" id="toc-simple" class="nav-link" data-scroll-target="#simple">Simple</a></li>
+  <li><a href="#improved" id="toc-improved" class="nav-link" data-scroll-target="#improved">Improved</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Prak03c: Gebäude und Energie Kanton BL</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Samstag, 18. Oktober 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Das kantonale Gebäude- und Wohnungsregister (kGWR) veröffentlicht monatlich im <a href="https://data.bl.ch/pages/welcome/">OGD-Portal</a> sämtliche Gebäude im Kanton Basel-Landschaft (BL), die unter anderem die Wärmequelle für die Heizung sowie weitere Merkmale enthaltet.</p>
+<p>Der vorliegende, vorbereitete Datensatz basiert auf <a href="https://data.bl.ch/explore/dataset/12160/table">dieser kGWR-Tabelle</a> und umfasst die Energiequelle der Heizung von bestehenden Gebäuden mit ausschliesslicher Wohnnutzung. Ziel dieses Praktikums ist es, Trends bei den Energiequellen für die Heizung im Verlauf der Jahre zu ermitteln.</p>
+<p>Das Ziel des Praktikums ist diese Darstellung zu reproduzieren:</p>
+<p><img src="img/gebaeude.png" class="img-fluid"></p>
+<section id="packages-laden" class="level2">
+<h2 class="anchored" data-anchor-id="packages-laden">Packages Laden</h2>
+<ol type="1">
+<li>Lade die <code>scales</code> und <code>tidyverse</code> Packages.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="daten-laden" class="level2">
+<h2 class="anchored" data-anchor-id="daten-laden">Daten Laden</h2>
+<ol start="2" type="1">
+<li>Lade die vorbereiteten Daten:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>gebaeude <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/ogd_gebaeude12160_clean.rds"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="daten-erkunden" class="level2">
+<h2 class="anchored" data-anchor-id="daten-erkunden">Daten erkunden</h2>
+<ol start="3" type="1">
+<li>Erkunde die Daten: Anzahl Zeilen und Spalten, Variable-Namen und -Typen.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gebaeude)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="hscroll"><code>Rows: 57,883
+Columns: 13
+$ egid                                                       &lt;dbl&gt; 3029846, 39…
+$ gemeindenummer_bfs                                         &lt;dbl&gt; 2770, 2763,…
+$ gemeindename                                               &lt;chr&gt; "Muttenz", …
+$ egrid                                                      &lt;chr&gt; "CH79827961…
+$ grundstücksnummer                                          &lt;chr&gt; "635", "457…
+$ baujahr_des_gebaeudes                                      &lt;dbl&gt; 1998, 1970,…
+$ bauperiode_code                                            &lt;dbl&gt; 8019, 8014,…
+$ bauperiode_bezeichnung                                     &lt;chr&gt; "Periode vo…
+$ gebaeudeflaeche                                            &lt;dbl&gt; 58, 85, 172…
+$ anzahl_geschosse                                           &lt;dbl&gt; 3, 3, 3, 2,…
+$ energie_waermequelle_heizung_primaer_code                  &lt;dbl&gt; 7520, 7530,…
+$ energie_waermequelle_heizung_primaer_bezeichnung           &lt;chr&gt; "Gas", "Hei…
+$ energie_waermequelle_heizung_primaer_bezeichnung_gruppiert &lt;fct&gt; Fossil, Fos…</code></pre>
+</div>
+</div>
+<ol start="4" type="1">
+<li>Wie viele verschiedene Gemeinden sind es (<code>distinct</code> oder <code>count()</code>)?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gebaeude <span class="sc">|&gt;</span> <span class="fu">distinct</span>(gemeindename)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="hscroll"><code># A tibble: 86 × 1
+   gemeindename
+   &lt;chr&gt;       
+ 1 Muttenz     
+ 2 Arlesheim   
+ 3 Wahlen      
+ 4 Münchenstein
+ 5 Giebenach   
+ 6 Tenniken    
+ 7 Therwil     
+ 8 Arisdorf    
+ 9 Ettingen    
+10 Diegten     
+# ℹ 76 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gebaeude <span class="sc">|&gt;</span> <span class="fu">count</span>(gemeindename)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="hscroll"><code># A tibble: 86 × 2
+   gemeindename     n
+   &lt;chr&gt;        &lt;int&gt;
+ 1 Aesch (BL)    1942
+ 2 Allschwil     3106
+ 3 Anwil          122
+ 4 Arboldswil     173
+ 5 Arisdorf       438
+ 6 Arlesheim     1710
+ 7 Augst          176
+ 8 Bennwil        146
+ 9 Biel-Benken   1022
+10 Binningen     2541
+# ℹ 76 more rows</code></pre>
+</div>
+</div>
+<ol start="5" type="1">
+<li>Wie viele Energiequellen der Heizung sind es?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>gebaeude <span class="sc">|&gt;</span> <span class="fu">count</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  energie_waermequelle_heizung_primaer_bezeichnung_gruppiert,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  energie_waermequelle_heizung_primaer_bezeichnung,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sort =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="hscroll"><code># A tibble: 18 × 3
+   energie_waermequelle_heizung_primaer_bezeichnu…¹ energie_waermequelle…²     n
+   &lt;fct&gt;                                            &lt;chr&gt;                  &lt;int&gt;
+ 1 Fossil                                           Gas                    19442
+ 2 Fossil                                           Heizöl                 17583
+ 3 Erneuerbare                                      Erdwärme (generisch)    9636
+ 4 Erneuerbare                                      Fernwärme (generisch)   4658
+ 5 Erneuerbare                                      Luft                    1585
+ 6 Erneuerbare                                      Elektrizität            1415
+ 7 Erneuerbare                                      Holz (generisch)        1387
+ 8 Erneuerbare                                      Erdwärmesonde            730
+ 9 Unbestimmt                                       Unbestimmt               571
+10 Erneuerbare                                      Holz (Pellets)           447
+11 Erneuerbare                                      Holz (Stückholz)         272
+12 Erneuerbare                                      Andere                    86
+13 Erneuerbare                                      Holz (Schnitzel)          41
+14 Keine                                            Keine                     14
+15 Erneuerbare                                      Sonne (thermisch)          9
+16 Erneuerbare                                      Erdregister                4
+17 Erneuerbare                                      Wasser (Grundwasser, …     2
+18 Erneuerbare                                      Abwärme (innerhalb de…     1
+# ℹ abbreviated names:
+#   ¹​energie_waermequelle_heizung_primaer_bezeichnung_gruppiert,
+#   ²​energie_waermequelle_heizung_primaer_bezeichnung</code></pre>
+</div>
+</div>
+</section>
+<section id="daten-transformieren" class="level1">
+<h1>Daten transformieren</h1>
+<ol start="6" type="1">
+<li>Verwende das pipe und <code>dplyr</code>-Befehle um die folgenden Schritte einzusetzten:</li>
+</ol>
+<ul>
+<li><code>select()</code> - behalte nur folgende Spalten: baujahr_des_gebaeudes, gemeindename, gebaeudeflaeche, anzahl_geschosse, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert</li>
+<li><code>arrange</code>- ordne die Daten nach Baujahr und Gemeinde</li>
+<li><code>rename()</code>- benenne energie_waermequelle_heizung_primaer_bezeichnung_gruppiert als “energie_quelle” und baujahr_des_gebaeudes als “baujahr” um</li>
+<li><code>filter()</code> - behalte nur Gebäude mit Baujahr ab 1960</li>
+<li><code>mutate()</code> - berechne die Gesamtfläche des Gebäudes (Fläche mal Anzahl der Stockwerke)</li>
+<li><code>group_by()</code> und <code>summarise()</code> - berechne die gesamte beheizte Fläche in BL-Gebäuden pro Jahr und Energiequelle</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gebaeude_transformiert <span class="ot">&lt;-</span> gebaeude <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(baujahr_des_gebaeudes, gemeindename, gebaeudeflaeche, anzahl_geschosse, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(baujahr_des_gebaeudes, gemeindename) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">baujahr =</span> baujahr_des_gebaeudes,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">energie_quelle =</span> energie_waermequelle_heizung_primaer_bezeichnung_gruppiert</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(baujahr <span class="sc">&gt;</span> <span class="dv">1959</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">flaeche =</span> gebaeudeflaeche <span class="sc">*</span> anzahl_geschosse, <span class="at">.before =</span> energie_quelle) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(baujahr, energie_quelle) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_flaeche =</span> <span class="fu">sum</span>(flaeche)) <span class="sc">|&gt;</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anteil_flaeche =</span> total_flaeche <span class="sc">/</span> <span class="fu">sum</span>(total_flaeche)) <span class="sc">|&gt;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>oder:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gebaeude_transformiert <span class="ot">&lt;-</span> gebaeude <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(baujahr_des_gebaeudes, gemeindename, gebaeudeflaeche, anzahl_geschosse, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(baujahr_des_gebaeudes, gemeindename) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">baujahr =</span> baujahr_des_gebaeudes,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">energie_quelle =</span> energie_waermequelle_heizung_primaer_bezeichnung_gruppiert</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(baujahr <span class="sc">&gt;</span> <span class="dv">1959</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">flaeche =</span> gebaeudeflaeche <span class="sc">*</span> anzahl_geschosse, <span class="at">.before =</span> energie_quelle) <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_flaeche =</span> <span class="fu">sum</span>(flaeche), <span class="at">.by =</span> <span class="fu">c</span>(baujahr, energie_quelle)) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anteil_flaeche =</span> total_flaeche <span class="sc">/</span> <span class="fu">sum</span>(total_flaeche), <span class="at">.by =</span> baujahr)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="daten-visualisieren" class="level2">
+<h2 class="anchored" data-anchor-id="daten-visualisieren">Daten visualisieren</h2>
+<ol start="7" type="1">
+<li>Erstelle ein Liniendiagramm (<code>geom_line()</code>), das die gesamte Gebäudefläche (total_flaeche) nach Energiequelle und Baujahr zeigt:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gebaeude_transformiert <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> baujahr, <span class="at">y =</span> total_flaeche, <span class="at">colour =</span> energie_quelle)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Totale Gebäudefläche pro Energiequelle und Baujahr ab 1960"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Kanton BL"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Quelle: https://data.bl.ch/explore/dataset/12160/table"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Baujahr"</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Fläche (m2)"</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Energiequelle"</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="prak-03c-dplyr-gebaeude-key_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="8" type="1">
+<li>Erstelle ein Liniendiagramm (<code>geom_line()</code>), das den Anteil der Gebäudeflächen (anteil_flaeche) nach Energiequelle und Baujahr zeigt:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> gebaeude_transformiert <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> baujahr, <span class="at">y =</span> anteil_flaeche, <span class="at">colour =</span> energie_quelle)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Kanton BL"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Quelle: https://data.bl.ch/explore/dataset/12160/table"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Baujahr"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Anteil der gesamten Fläche"</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>energie_quelle)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="prak-03c-dplyr-gebaeude-key_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"img/gebaeude.png"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="interactive-plot" class="level1">
+<h1>Interactive Plot</h1>
+<p><a href="https://plotly.com/ggplot2/">Meh Information über <code>plotly</code></a>.</p>
+<section id="simple" class="level2">
+<h2 class="anchored" data-anchor-id="simple">Simple</h2>
+<p>Das Package <code>plotly</code> installieren und laden:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plotly"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d0d4530852d8e85cb107" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d0d4530852d8e85cb107">{"x":{"data":[{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1970,1971,1973,1974,1975,1981,1990,1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.00044555518200929185,0.00021429073280404695,0.00056147018809251303,0.00044376851924614823,0.0020143917096590081,0.00010941779475273288,0.00052079482291368629,0.00028023709361548214,0.00021052884846734998,0.00013902173187712704,0.00050144221104392588,3.668789061138535e-05,2.4664359178841268e-05,0.00049851352331230507,0.0007672026937339025,0.001830640661538365,0.00013814168732396528,0.00013799670187882509,0.0039820426487093153,0.0029654414538535976,0.0016907618059048251,0.0006314501647690274,0.0040320365294573687,0.0046177288709357443,0.038940283369702185,0.06476568275135218,0.05925615523419394,0.033701437095351096,0.056859546265613049,0.0441280825303298,0.036231694414015622,0.057557904857794648,0.034110868841040552,0.042399315837086178,0.011780644401248748,0.0016721435923389152,0.0051399020370409302,0.0011606208183514632,0.0010211731334211327,0.03501329889589231,0.019391879739106561,0.018413383444278116,0.10109856527053979,0.072668683964156752,0.1467321185556989,0.040192251185828823],"text":["baujahr: 1960<br />anteil_flaeche: 4.455552e-04<br />energie_quelle: Unbestimmt","baujahr: 1961<br />anteil_flaeche: 2.142907e-04<br />energie_quelle: Unbestimmt","baujahr: 1962<br />anteil_flaeche: 5.614702e-04<br />energie_quelle: Unbestimmt","baujahr: 1963<br />anteil_flaeche: 4.437685e-04<br />energie_quelle: Unbestimmt","baujahr: 1964<br />anteil_flaeche: 2.014392e-03<br />energie_quelle: Unbestimmt","baujahr: 1965<br />anteil_flaeche: 1.094178e-04<br />energie_quelle: Unbestimmt","baujahr: 1966<br />anteil_flaeche: 5.207948e-04<br />energie_quelle: Unbestimmt","baujahr: 1967<br />anteil_flaeche: 2.802371e-04<br />energie_quelle: Unbestimmt","baujahr: 1968<br />anteil_flaeche: 2.105288e-04<br />energie_quelle: Unbestimmt","baujahr: 1970<br />anteil_flaeche: 1.390217e-04<br />energie_quelle: Unbestimmt","baujahr: 1971<br />anteil_flaeche: 5.014422e-04<br />energie_quelle: Unbestimmt","baujahr: 1973<br />anteil_flaeche: 3.668789e-05<br />energie_quelle: Unbestimmt","baujahr: 1974<br />anteil_flaeche: 2.466436e-05<br />energie_quelle: Unbestimmt","baujahr: 1975<br />anteil_flaeche: 4.985135e-04<br />energie_quelle: Unbestimmt","baujahr: 1981<br />anteil_flaeche: 7.672027e-04<br />energie_quelle: Unbestimmt","baujahr: 1990<br />anteil_flaeche: 1.830641e-03<br />energie_quelle: Unbestimmt","baujahr: 1991<br />anteil_flaeche: 1.381417e-04<br />energie_quelle: Unbestimmt","baujahr: 1992<br />anteil_flaeche: 1.379967e-04<br />energie_quelle: Unbestimmt","baujahr: 1994<br />anteil_flaeche: 3.982043e-03<br />energie_quelle: Unbestimmt","baujahr: 1995<br />anteil_flaeche: 2.965441e-03<br />energie_quelle: Unbestimmt","baujahr: 1996<br />anteil_flaeche: 1.690762e-03<br />energie_quelle: Unbestimmt","baujahr: 1997<br />anteil_flaeche: 6.314502e-04<br />energie_quelle: Unbestimmt","baujahr: 1998<br />anteil_flaeche: 4.032037e-03<br />energie_quelle: Unbestimmt","baujahr: 1999<br />anteil_flaeche: 4.617729e-03<br />energie_quelle: Unbestimmt","baujahr: 2000<br />anteil_flaeche: 3.894028e-02<br />energie_quelle: Unbestimmt","baujahr: 2001<br />anteil_flaeche: 6.476568e-02<br />energie_quelle: Unbestimmt","baujahr: 2002<br />anteil_flaeche: 5.925616e-02<br />energie_quelle: Unbestimmt","baujahr: 2003<br />anteil_flaeche: 3.370144e-02<br />energie_quelle: Unbestimmt","baujahr: 2004<br />anteil_flaeche: 5.685955e-02<br />energie_quelle: Unbestimmt","baujahr: 2005<br />anteil_flaeche: 4.412808e-02<br />energie_quelle: Unbestimmt","baujahr: 2006<br />anteil_flaeche: 3.623169e-02<br />energie_quelle: Unbestimmt","baujahr: 2007<br />anteil_flaeche: 5.755790e-02<br />energie_quelle: Unbestimmt","baujahr: 2008<br />anteil_flaeche: 3.411087e-02<br />energie_quelle: Unbestimmt","baujahr: 2009<br />anteil_flaeche: 4.239932e-02<br />energie_quelle: Unbestimmt","baujahr: 2010<br />anteil_flaeche: 1.178064e-02<br />energie_quelle: Unbestimmt","baujahr: 2011<br />anteil_flaeche: 1.672144e-03<br />energie_quelle: Unbestimmt","baujahr: 2012<br />anteil_flaeche: 5.139902e-03<br />energie_quelle: Unbestimmt","baujahr: 2016<br />anteil_flaeche: 1.160621e-03<br />energie_quelle: Unbestimmt","baujahr: 2017<br />anteil_flaeche: 1.021173e-03<br />energie_quelle: Unbestimmt","baujahr: 2018<br />anteil_flaeche: 3.501330e-02<br />energie_quelle: Unbestimmt","baujahr: 2019<br />anteil_flaeche: 1.939188e-02<br />energie_quelle: Unbestimmt","baujahr: 2020<br />anteil_flaeche: 1.841338e-02<br />energie_quelle: Unbestimmt","baujahr: 2021<br />anteil_flaeche: 1.010986e-01<br />energie_quelle: Unbestimmt","baujahr: 2022<br />anteil_flaeche: 7.266868e-02<br />energie_quelle: Unbestimmt","baujahr: 2023<br />anteil_flaeche: 1.467321e-01<br />energie_quelle: Unbestimmt","baujahr: 2024<br />anteil_flaeche: 4.019225e-02<br />energie_quelle: Unbestimmt"],"type":"scatter","mode":"lines+markers","line":{"width":1.8897637795275593,"color":"rgba(0,191,196,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,191,196,1)"}},"frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.23521668158601441,0.22056839738635564,0.23072465645942658,0.18240272917639336,0.23761988428438735,0.2564376985334596,0.25885753046810456,0.20857460335046255,0.38592043212549926,0.26176578162495207,0.24386914162421869,0.37182843448386466,0.26720113054927358,0.23332397792122744,0.28045678393199214,0.2689843013559568,0.23661705908485117,0.18926356126376595,0.2654129596746741,0.28828943218634673,0.30311305887178602,0.29651166330761786,0.28472073663081526,0.30359412753913351,0.27660103553317528,0.37836436139560969,0.32058053220275218,0.36632916707729357,0.33741245660241831,0.32476268221574345,0.34419179095588281,0.28217741997375306,0.3000807280705991,0.33105062155885656,0.34067340067340068,0.42647246961570634,0.3987415595672506,0.40620399786885569,0.42256414326091335,0.41329095490749768,0.3697226746985483,0.44680928925353691,0.43921732958189735,0.40195963885274105,0.35311751210808057,0.4608269672159227,0.5536895312797927,0.57560626057299391,0.55454483510493324,0.5594613700065747,0.6891186114547132,0.79370740564698961,0.7751319136412369,0.8218479403373542,0.82961803873841433,0.85423447228875971,0.82022211096445319,0.85984803971228851,0.75860152060687436,0.83603282940636325,0.88496512405643857,0.82091214694717884,0.91208873879898356,0.83858097241123342,0.94859484531755023],"text":["baujahr: 1960<br />anteil_flaeche: 2.352167e-01<br />energie_quelle: Erneuerbare","baujahr: 1961<br />anteil_flaeche: 2.205684e-01<br />energie_quelle: Erneuerbare","baujahr: 1962<br />anteil_flaeche: 2.307247e-01<br />energie_quelle: Erneuerbare","baujahr: 1963<br />anteil_flaeche: 1.824027e-01<br />energie_quelle: Erneuerbare","baujahr: 1964<br />anteil_flaeche: 2.376199e-01<br />energie_quelle: Erneuerbare","baujahr: 1965<br />anteil_flaeche: 2.564377e-01<br />energie_quelle: Erneuerbare","baujahr: 1966<br />anteil_flaeche: 2.588575e-01<br />energie_quelle: Erneuerbare","baujahr: 1967<br />anteil_flaeche: 2.085746e-01<br />energie_quelle: Erneuerbare","baujahr: 1968<br />anteil_flaeche: 3.859204e-01<br />energie_quelle: Erneuerbare","baujahr: 1969<br />anteil_flaeche: 2.617658e-01<br />energie_quelle: Erneuerbare","baujahr: 1970<br />anteil_flaeche: 2.438691e-01<br />energie_quelle: Erneuerbare","baujahr: 1971<br />anteil_flaeche: 3.718284e-01<br />energie_quelle: Erneuerbare","baujahr: 1972<br />anteil_flaeche: 2.672011e-01<br />energie_quelle: Erneuerbare","baujahr: 1973<br />anteil_flaeche: 2.333240e-01<br />energie_quelle: Erneuerbare","baujahr: 1974<br />anteil_flaeche: 2.804568e-01<br />energie_quelle: Erneuerbare","baujahr: 1975<br />anteil_flaeche: 2.689843e-01<br />energie_quelle: Erneuerbare","baujahr: 1976<br />anteil_flaeche: 2.366171e-01<br />energie_quelle: Erneuerbare","baujahr: 1977<br />anteil_flaeche: 1.892636e-01<br />energie_quelle: Erneuerbare","baujahr: 1978<br />anteil_flaeche: 2.654130e-01<br />energie_quelle: Erneuerbare","baujahr: 1979<br />anteil_flaeche: 2.882894e-01<br />energie_quelle: Erneuerbare","baujahr: 1980<br />anteil_flaeche: 3.031131e-01<br />energie_quelle: Erneuerbare","baujahr: 1981<br />anteil_flaeche: 2.965117e-01<br />energie_quelle: Erneuerbare","baujahr: 1982<br />anteil_flaeche: 2.847207e-01<br />energie_quelle: Erneuerbare","baujahr: 1983<br />anteil_flaeche: 3.035941e-01<br />energie_quelle: Erneuerbare","baujahr: 1984<br />anteil_flaeche: 2.766010e-01<br />energie_quelle: Erneuerbare","baujahr: 1985<br />anteil_flaeche: 3.783644e-01<br />energie_quelle: Erneuerbare","baujahr: 1986<br />anteil_flaeche: 3.205805e-01<br />energie_quelle: Erneuerbare","baujahr: 1987<br />anteil_flaeche: 3.663292e-01<br />energie_quelle: Erneuerbare","baujahr: 1988<br />anteil_flaeche: 3.374125e-01<br />energie_quelle: Erneuerbare","baujahr: 1989<br />anteil_flaeche: 3.247627e-01<br />energie_quelle: Erneuerbare","baujahr: 1990<br />anteil_flaeche: 3.441918e-01<br />energie_quelle: Erneuerbare","baujahr: 1991<br />anteil_flaeche: 2.821774e-01<br />energie_quelle: Erneuerbare","baujahr: 1992<br />anteil_flaeche: 3.000807e-01<br />energie_quelle: Erneuerbare","baujahr: 1993<br />anteil_flaeche: 3.310506e-01<br />energie_quelle: Erneuerbare","baujahr: 1994<br />anteil_flaeche: 3.406734e-01<br />energie_quelle: Erneuerbare","baujahr: 1995<br />anteil_flaeche: 4.264725e-01<br />energie_quelle: Erneuerbare","baujahr: 1996<br />anteil_flaeche: 3.987416e-01<br />energie_quelle: Erneuerbare","baujahr: 1997<br />anteil_flaeche: 4.062040e-01<br />energie_quelle: Erneuerbare","baujahr: 1998<br />anteil_flaeche: 4.225641e-01<br />energie_quelle: Erneuerbare","baujahr: 1999<br />anteil_flaeche: 4.132910e-01<br />energie_quelle: Erneuerbare","baujahr: 2000<br />anteil_flaeche: 3.697227e-01<br />energie_quelle: Erneuerbare","baujahr: 2001<br />anteil_flaeche: 4.468093e-01<br />energie_quelle: Erneuerbare","baujahr: 2002<br />anteil_flaeche: 4.392173e-01<br />energie_quelle: Erneuerbare","baujahr: 2003<br />anteil_flaeche: 4.019596e-01<br />energie_quelle: Erneuerbare","baujahr: 2004<br />anteil_flaeche: 3.531175e-01<br />energie_quelle: Erneuerbare","baujahr: 2005<br />anteil_flaeche: 4.608270e-01<br />energie_quelle: Erneuerbare","baujahr: 2006<br />anteil_flaeche: 5.536895e-01<br />energie_quelle: Erneuerbare","baujahr: 2007<br />anteil_flaeche: 5.756063e-01<br />energie_quelle: Erneuerbare","baujahr: 2008<br />anteil_flaeche: 5.545448e-01<br />energie_quelle: Erneuerbare","baujahr: 2009<br />anteil_flaeche: 5.594614e-01<br />energie_quelle: Erneuerbare","baujahr: 2010<br />anteil_flaeche: 6.891186e-01<br />energie_quelle: Erneuerbare","baujahr: 2011<br />anteil_flaeche: 7.937074e-01<br />energie_quelle: Erneuerbare","baujahr: 2012<br />anteil_flaeche: 7.751319e-01<br />energie_quelle: Erneuerbare","baujahr: 2013<br />anteil_flaeche: 8.218479e-01<br />energie_quelle: Erneuerbare","baujahr: 2014<br />anteil_flaeche: 8.296180e-01<br />energie_quelle: Erneuerbare","baujahr: 2015<br />anteil_flaeche: 8.542345e-01<br />energie_quelle: Erneuerbare","baujahr: 2016<br />anteil_flaeche: 8.202221e-01<br />energie_quelle: Erneuerbare","baujahr: 2017<br />anteil_flaeche: 8.598480e-01<br />energie_quelle: Erneuerbare","baujahr: 2018<br />anteil_flaeche: 7.586015e-01<br />energie_quelle: Erneuerbare","baujahr: 2019<br />anteil_flaeche: 8.360328e-01<br />energie_quelle: Erneuerbare","baujahr: 2020<br />anteil_flaeche: 8.849651e-01<br />energie_quelle: Erneuerbare","baujahr: 2021<br />anteil_flaeche: 8.209121e-01<br />energie_quelle: Erneuerbare","baujahr: 2022<br />anteil_flaeche: 9.120887e-01<br />energie_quelle: Erneuerbare","baujahr: 2023<br />anteil_flaeche: 8.385810e-01<br />energie_quelle: Erneuerbare","baujahr: 2024<br />anteil_flaeche: 9.485948e-01<br />energie_quelle: Erneuerbare"],"type":"scatter","mode":"lines+markers","line":{"width":1.8897637795275593,"color":"rgba(124,174,0,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(124,174,0,1)"}},"frame":null},{"x":[1964,1968,1974,1984,2004,2021],"y":[0.00018651775089435261,0.00025864972811703,0.0001512747362968931,0.001358804252258013,0.00070864134590874336,0.00015280190439426108],"text":["baujahr: 1964<br />anteil_flaeche: 1.865178e-04<br />energie_quelle: Keine","baujahr: 1968<br />anteil_flaeche: 2.586497e-04<br />energie_quelle: Keine","baujahr: 1974<br />anteil_flaeche: 1.512747e-04<br />energie_quelle: Keine","baujahr: 1984<br />anteil_flaeche: 1.358804e-03<br />energie_quelle: Keine","baujahr: 2004<br />anteil_flaeche: 7.086413e-04<br />energie_quelle: Keine","baujahr: 2021<br />anteil_flaeche: 1.528019e-04<br />energie_quelle: Keine"],"type":"scatter","mode":"lines+markers","line":{"width":1.8897637795275593,"color":"rgba(199,124,255,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(199,124,255,1)"}},"frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.76433776323197633,0.77921731188084031,0.76871387335248087,0.81715350230436046,0.7601792062550593,0.74345288367178763,0.74062167470898177,0.79114515955592202,0.61361038929791634,0.73823421837504799,0.75599183664390412,0.62767012330509142,0.73279886945072636,0.76663933418816121,0.71936727697253211,0.73051718512073094,0.7633829409151488,0.81073643873623402,0.73458704032532596,0.71171056781365327,0.69688694112821403,0.70272113399864822,0.71527926336918479,0.69640587246086649,0.72204016021456674,0.62163563860439031,0.67941946779724782,0.63367083292270643,0.66258754339758175,0.67523731778425655,0.65397756838257881,0.71768443833892293,0.69978127522752209,0.66894937844114344,0.65534455667789004,0.57056208893044003,0.59956767862684457,0.5931645519663753,0.57340382020962932,0.58209131622156651,0.59133704193174952,0.48842502799511089,0.50152651518390878,0.56433892405190789,0.58931430028039766,0.49504495025374751,0.41007877430619166,0.36683583456921143,0.41134429605402623,0.39813931415633913,0.29910074414403803,0.20462045076067145,0.21972818432172214,0.17815205966264577,0.17038196126158572,0.14576552771124024,0.1786172682171954,0.13913078715429034,0.20638518049723331,0.14457529085453014,0.096621492499283368,0.077836485877887149,0.015242577236859704,0.014686909033067637,0.011212903496620913],"text":["baujahr: 1960<br />anteil_flaeche: 7.643378e-01<br />energie_quelle: Fossil","baujahr: 1961<br />anteil_flaeche: 7.792173e-01<br />energie_quelle: Fossil","baujahr: 1962<br />anteil_flaeche: 7.687139e-01<br />energie_quelle: Fossil","baujahr: 1963<br />anteil_flaeche: 8.171535e-01<br />energie_quelle: Fossil","baujahr: 1964<br />anteil_flaeche: 7.601792e-01<br />energie_quelle: Fossil","baujahr: 1965<br />anteil_flaeche: 7.434529e-01<br />energie_quelle: Fossil","baujahr: 1966<br />anteil_flaeche: 7.406217e-01<br />energie_quelle: Fossil","baujahr: 1967<br />anteil_flaeche: 7.911452e-01<br />energie_quelle: Fossil","baujahr: 1968<br />anteil_flaeche: 6.136104e-01<br />energie_quelle: Fossil","baujahr: 1969<br />anteil_flaeche: 7.382342e-01<br />energie_quelle: Fossil","baujahr: 1970<br />anteil_flaeche: 7.559918e-01<br />energie_quelle: Fossil","baujahr: 1971<br />anteil_flaeche: 6.276701e-01<br />energie_quelle: Fossil","baujahr: 1972<br />anteil_flaeche: 7.327989e-01<br />energie_quelle: Fossil","baujahr: 1973<br />anteil_flaeche: 7.666393e-01<br />energie_quelle: Fossil","baujahr: 1974<br />anteil_flaeche: 7.193673e-01<br />energie_quelle: Fossil","baujahr: 1975<br />anteil_flaeche: 7.305172e-01<br />energie_quelle: Fossil","baujahr: 1976<br />anteil_flaeche: 7.633829e-01<br />energie_quelle: Fossil","baujahr: 1977<br />anteil_flaeche: 8.107364e-01<br />energie_quelle: Fossil","baujahr: 1978<br />anteil_flaeche: 7.345870e-01<br />energie_quelle: Fossil","baujahr: 1979<br />anteil_flaeche: 7.117106e-01<br />energie_quelle: Fossil","baujahr: 1980<br />anteil_flaeche: 6.968869e-01<br />energie_quelle: Fossil","baujahr: 1981<br />anteil_flaeche: 7.027211e-01<br />energie_quelle: Fossil","baujahr: 1982<br />anteil_flaeche: 7.152793e-01<br />energie_quelle: Fossil","baujahr: 1983<br />anteil_flaeche: 6.964059e-01<br />energie_quelle: Fossil","baujahr: 1984<br />anteil_flaeche: 7.220402e-01<br />energie_quelle: Fossil","baujahr: 1985<br />anteil_flaeche: 6.216356e-01<br />energie_quelle: Fossil","baujahr: 1986<br />anteil_flaeche: 6.794195e-01<br />energie_quelle: Fossil","baujahr: 1987<br />anteil_flaeche: 6.336708e-01<br />energie_quelle: Fossil","baujahr: 1988<br />anteil_flaeche: 6.625875e-01<br />energie_quelle: Fossil","baujahr: 1989<br />anteil_flaeche: 6.752373e-01<br />energie_quelle: Fossil","baujahr: 1990<br />anteil_flaeche: 6.539776e-01<br />energie_quelle: Fossil","baujahr: 1991<br />anteil_flaeche: 7.176844e-01<br />energie_quelle: Fossil","baujahr: 1992<br />anteil_flaeche: 6.997813e-01<br />energie_quelle: Fossil","baujahr: 1993<br />anteil_flaeche: 6.689494e-01<br />energie_quelle: Fossil","baujahr: 1994<br />anteil_flaeche: 6.553446e-01<br />energie_quelle: Fossil","baujahr: 1995<br />anteil_flaeche: 5.705621e-01<br />energie_quelle: Fossil","baujahr: 1996<br />anteil_flaeche: 5.995677e-01<br />energie_quelle: Fossil","baujahr: 1997<br />anteil_flaeche: 5.931646e-01<br />energie_quelle: Fossil","baujahr: 1998<br />anteil_flaeche: 5.734038e-01<br />energie_quelle: Fossil","baujahr: 1999<br />anteil_flaeche: 5.820913e-01<br />energie_quelle: Fossil","baujahr: 2000<br />anteil_flaeche: 5.913370e-01<br />energie_quelle: Fossil","baujahr: 2001<br />anteil_flaeche: 4.884250e-01<br />energie_quelle: Fossil","baujahr: 2002<br />anteil_flaeche: 5.015265e-01<br />energie_quelle: Fossil","baujahr: 2003<br />anteil_flaeche: 5.643389e-01<br />energie_quelle: Fossil","baujahr: 2004<br />anteil_flaeche: 5.893143e-01<br />energie_quelle: Fossil","baujahr: 2005<br />anteil_flaeche: 4.950450e-01<br />energie_quelle: Fossil","baujahr: 2006<br />anteil_flaeche: 4.100788e-01<br />energie_quelle: Fossil","baujahr: 2007<br />anteil_flaeche: 3.668358e-01<br />energie_quelle: Fossil","baujahr: 2008<br />anteil_flaeche: 4.113443e-01<br />energie_quelle: Fossil","baujahr: 2009<br />anteil_flaeche: 3.981393e-01<br />energie_quelle: Fossil","baujahr: 2010<br />anteil_flaeche: 2.991007e-01<br />energie_quelle: Fossil","baujahr: 2011<br />anteil_flaeche: 2.046205e-01<br />energie_quelle: Fossil","baujahr: 2012<br />anteil_flaeche: 2.197282e-01<br />energie_quelle: Fossil","baujahr: 2013<br />anteil_flaeche: 1.781521e-01<br />energie_quelle: Fossil","baujahr: 2014<br />anteil_flaeche: 1.703820e-01<br />energie_quelle: Fossil","baujahr: 2015<br />anteil_flaeche: 1.457655e-01<br />energie_quelle: Fossil","baujahr: 2016<br />anteil_flaeche: 1.786173e-01<br />energie_quelle: Fossil","baujahr: 2017<br />anteil_flaeche: 1.391308e-01<br />energie_quelle: Fossil","baujahr: 2018<br />anteil_flaeche: 2.063852e-01<br />energie_quelle: Fossil","baujahr: 2019<br />anteil_flaeche: 1.445753e-01<br />energie_quelle: Fossil","baujahr: 2020<br />anteil_flaeche: 9.662149e-02<br />energie_quelle: Fossil","baujahr: 2021<br />anteil_flaeche: 7.783649e-02<br />energie_quelle: Fossil","baujahr: 2022<br />anteil_flaeche: 1.524258e-02<br />energie_quelle: Fossil","baujahr: 2023<br />anteil_flaeche: 1.468691e-02<br />energie_quelle: Fossil","baujahr: 2024<br />anteil_flaeche: 1.121290e-02<br />energie_quelle: Fossil"],"type":"scatter","mode":"lines+markers","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.0028691392756977937,0.002378501558648155,0.0019263958952524722,0.0015043589947229831,0.001103927566271431,0.00071663831911002401,0.00033402796245052578,-5.1046346287860595e-05,-0.00043604061520096624,-0.00081411598843113752,-0.0011784150580204191,-0.0015220804160104417,-0.0018382546544432313,-0.0021200803653604458,-0.0023607001408040753,-0.0025532565728158207,-0.0026908922534376219,-0.0027858743578546494,-0.0028567054347944042,-0.0029003901246548473,-0.0029138882090123967,-0.0028941594694434384,-0.0028381636875243559,-0.0027428606448315724,-0.0026052101229414285,-0.0024221719034303955,-0.0021907057678748352,-0.0019077714978510552,-0.0015703288749356124,-0.0011753376807047047,-0.00071975769673495024,-0.00020054870460248751,0.00038532951411600087,0.0010409171778444481,0.0017692545050060921,0.0025733817140249507,0.0034563390233241769,0.0044211666513278734,0.0054709048164591047,0.006608593737142069,0.0079092601829927195,0.0097418364291634169,0.012012612938615098,0.01454855726195905,0.017176636949803932,0.019723819552761236,0.022017072621439603,0.023882377686323526,0.025090199609235923,0.025698948438448298,0.025910488803624378,0.025926685334428427,0.025949402660524496,0.026180505411576752,0.026821858217249122,0.027856771072095093,0.028760951741261538,0.02955622938994917,0.030307357472502374,0.031079089443264638,0.031936178756580336,0.032943378866792911,0.034154965319547002,0.035434376694791742,0.036726831611182051,0.038041163781886662,0.039386206920075738,0.040770794738918002,0.042203760951583624,0.043693939271241274,0.045250163411061202,0.046881267084211989,0.048596084003863997,0.050403942795635315,0.052329366915053438,0.054370108231219946,0.056509516504417538,0.05873094149492656,0.061017732963029855,0.063353240669007702],"text":["baujahr: 1960.000<br />anteil_flaeche:  2.869139e-03<br />energie_quelle: Unbestimmt","baujahr: 1960.810<br />anteil_flaeche:  2.378502e-03<br />energie_quelle: Unbestimmt","baujahr: 1961.620<br />anteil_flaeche:  1.926396e-03<br />energie_quelle: Unbestimmt","baujahr: 1962.430<br />anteil_flaeche:  1.504359e-03<br />energie_quelle: Unbestimmt","baujahr: 1963.241<br />anteil_flaeche:  1.103928e-03<br />energie_quelle: Unbestimmt","baujahr: 1964.051<br />anteil_flaeche:  7.166383e-04<br />energie_quelle: Unbestimmt","baujahr: 1964.861<br />anteil_flaeche:  3.340280e-04<br />energie_quelle: Unbestimmt","baujahr: 1965.671<br />anteil_flaeche: -5.104635e-05<br />energie_quelle: Unbestimmt","baujahr: 1966.481<br />anteil_flaeche: -4.360406e-04<br />energie_quelle: Unbestimmt","baujahr: 1967.291<br />anteil_flaeche: -8.141160e-04<br />energie_quelle: Unbestimmt","baujahr: 1968.101<br />anteil_flaeche: -1.178415e-03<br />energie_quelle: Unbestimmt","baujahr: 1968.911<br />anteil_flaeche: -1.522080e-03<br />energie_quelle: Unbestimmt","baujahr: 1969.722<br />anteil_flaeche: -1.838255e-03<br />energie_quelle: Unbestimmt","baujahr: 1970.532<br />anteil_flaeche: -2.120080e-03<br />energie_quelle: Unbestimmt","baujahr: 1971.342<br />anteil_flaeche: -2.360700e-03<br />energie_quelle: Unbestimmt","baujahr: 1972.152<br />anteil_flaeche: -2.553257e-03<br />energie_quelle: Unbestimmt","baujahr: 1972.962<br />anteil_flaeche: -2.690892e-03<br />energie_quelle: Unbestimmt","baujahr: 1973.772<br />anteil_flaeche: -2.785874e-03<br />energie_quelle: Unbestimmt","baujahr: 1974.582<br />anteil_flaeche: -2.856705e-03<br />energie_quelle: Unbestimmt","baujahr: 1975.392<br />anteil_flaeche: -2.900390e-03<br />energie_quelle: Unbestimmt","baujahr: 1976.203<br />anteil_flaeche: -2.913888e-03<br />energie_quelle: Unbestimmt","baujahr: 1977.013<br />anteil_flaeche: -2.894159e-03<br />energie_quelle: Unbestimmt","baujahr: 1977.823<br />anteil_flaeche: -2.838164e-03<br />energie_quelle: Unbestimmt","baujahr: 1978.633<br />anteil_flaeche: -2.742861e-03<br />energie_quelle: Unbestimmt","baujahr: 1979.443<br />anteil_flaeche: -2.605210e-03<br />energie_quelle: Unbestimmt","baujahr: 1980.253<br />anteil_flaeche: -2.422172e-03<br />energie_quelle: Unbestimmt","baujahr: 1981.063<br />anteil_flaeche: -2.190706e-03<br />energie_quelle: Unbestimmt","baujahr: 1981.873<br />anteil_flaeche: -1.907771e-03<br />energie_quelle: Unbestimmt","baujahr: 1982.684<br />anteil_flaeche: -1.570329e-03<br />energie_quelle: Unbestimmt","baujahr: 1983.494<br />anteil_flaeche: -1.175338e-03<br />energie_quelle: Unbestimmt","baujahr: 1984.304<br />anteil_flaeche: -7.197577e-04<br />energie_quelle: Unbestimmt","baujahr: 1985.114<br />anteil_flaeche: -2.005487e-04<br />energie_quelle: Unbestimmt","baujahr: 1985.924<br />anteil_flaeche:  3.853295e-04<br />energie_quelle: Unbestimmt","baujahr: 1986.734<br />anteil_flaeche:  1.040917e-03<br />energie_quelle: Unbestimmt","baujahr: 1987.544<br />anteil_flaeche:  1.769255e-03<br />energie_quelle: Unbestimmt","baujahr: 1988.354<br />anteil_flaeche:  2.573382e-03<br />energie_quelle: Unbestimmt","baujahr: 1989.165<br />anteil_flaeche:  3.456339e-03<br />energie_quelle: Unbestimmt","baujahr: 1989.975<br />anteil_flaeche:  4.421167e-03<br />energie_quelle: Unbestimmt","baujahr: 1990.785<br />anteil_flaeche:  5.470905e-03<br />energie_quelle: Unbestimmt","baujahr: 1991.595<br />anteil_flaeche:  6.608594e-03<br />energie_quelle: Unbestimmt","baujahr: 1992.405<br />anteil_flaeche:  7.909260e-03<br />energie_quelle: Unbestimmt","baujahr: 1993.215<br />anteil_flaeche:  9.741836e-03<br />energie_quelle: Unbestimmt","baujahr: 1994.025<br />anteil_flaeche:  1.201261e-02<br />energie_quelle: Unbestimmt","baujahr: 1994.835<br />anteil_flaeche:  1.454856e-02<br />energie_quelle: Unbestimmt","baujahr: 1995.646<br />anteil_flaeche:  1.717664e-02<br />energie_quelle: Unbestimmt","baujahr: 1996.456<br />anteil_flaeche:  1.972382e-02<br />energie_quelle: Unbestimmt","baujahr: 1997.266<br />anteil_flaeche:  2.201707e-02<br />energie_quelle: Unbestimmt","baujahr: 1998.076<br />anteil_flaeche:  2.388238e-02<br />energie_quelle: Unbestimmt","baujahr: 1998.886<br />anteil_flaeche:  2.509020e-02<br />energie_quelle: Unbestimmt","baujahr: 1999.696<br />anteil_flaeche:  2.569895e-02<br />energie_quelle: Unbestimmt","baujahr: 2000.506<br />anteil_flaeche:  2.591049e-02<br />energie_quelle: Unbestimmt","baujahr: 2001.316<br />anteil_flaeche:  2.592669e-02<br />energie_quelle: Unbestimmt","baujahr: 2002.127<br />anteil_flaeche:  2.594940e-02<br />energie_quelle: Unbestimmt","baujahr: 2002.937<br />anteil_flaeche:  2.618051e-02<br />energie_quelle: Unbestimmt","baujahr: 2003.747<br />anteil_flaeche:  2.682186e-02<br />energie_quelle: Unbestimmt","baujahr: 2004.557<br />anteil_flaeche:  2.785677e-02<br />energie_quelle: Unbestimmt","baujahr: 2005.367<br />anteil_flaeche:  2.876095e-02<br />energie_quelle: Unbestimmt","baujahr: 2006.177<br />anteil_flaeche:  2.955623e-02<br />energie_quelle: Unbestimmt","baujahr: 2006.987<br />anteil_flaeche:  3.030736e-02<br />energie_quelle: Unbestimmt","baujahr: 2007.797<br />anteil_flaeche:  3.107909e-02<br />energie_quelle: Unbestimmt","baujahr: 2008.608<br />anteil_flaeche:  3.193618e-02<br />energie_quelle: Unbestimmt","baujahr: 2009.418<br />anteil_flaeche:  3.294338e-02<br />energie_quelle: Unbestimmt","baujahr: 2010.228<br />anteil_flaeche:  3.415497e-02<br />energie_quelle: Unbestimmt","baujahr: 2011.038<br />anteil_flaeche:  3.543438e-02<br />energie_quelle: Unbestimmt","baujahr: 2011.848<br />anteil_flaeche:  3.672683e-02<br />energie_quelle: Unbestimmt","baujahr: 2012.658<br />anteil_flaeche:  3.804116e-02<br />energie_quelle: Unbestimmt","baujahr: 2013.468<br />anteil_flaeche:  3.938621e-02<br />energie_quelle: Unbestimmt","baujahr: 2014.278<br />anteil_flaeche:  4.077079e-02<br />energie_quelle: Unbestimmt","baujahr: 2015.089<br />anteil_flaeche:  4.220376e-02<br />energie_quelle: Unbestimmt","baujahr: 2015.899<br />anteil_flaeche:  4.369394e-02<br />energie_quelle: Unbestimmt","baujahr: 2016.709<br />anteil_flaeche:  4.525016e-02<br />energie_quelle: Unbestimmt","baujahr: 2017.519<br />anteil_flaeche:  4.688127e-02<br />energie_quelle: Unbestimmt","baujahr: 2018.329<br />anteil_flaeche:  4.859608e-02<br />energie_quelle: Unbestimmt","baujahr: 2019.139<br />anteil_flaeche:  5.040394e-02<br />energie_quelle: Unbestimmt","baujahr: 2019.949<br />anteil_flaeche:  5.232937e-02<br />energie_quelle: Unbestimmt","baujahr: 2020.759<br />anteil_flaeche:  5.437011e-02<br />energie_quelle: Unbestimmt","baujahr: 2021.570<br />anteil_flaeche:  5.650952e-02<br />energie_quelle: Unbestimmt","baujahr: 2022.380<br />anteil_flaeche:  5.873094e-02<br />energie_quelle: Unbestimmt","baujahr: 2023.190<br />anteil_flaeche:  6.101773e-02<br />energie_quelle: Unbestimmt","baujahr: 2024.000<br />anteil_flaeche:  6.335324e-02<br />energie_quelle: Unbestimmt"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(0,191,196,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.23442072044290632,0.23592767468514311,0.23750062442960951,0.23913776966465969,0.24083731037864964,0.24259744655993351,0.24441637819686729,0.24629230527780505,0.2482234277911029,0.25020794572511473,0.25224400123812912,0.25432701989417128,0.25645954908878144,0.25864802025781775,0.2608988648371407,0.26321851426260834,0.26561339997008127,0.26808995339541747,0.27065460597447755,0.27331378914311955,0.27606196149668455,0.27866072605100212,0.28107339644573387,0.28337772855091864,0.2856514782365982,0.28797240137281155,0.29041825382959946,0.29306679147700321,0.29599577018506146,0.2992829458238162,0.30294846837544459,0.30648425105474891,0.3098549669603366,0.31318857390140298,0.31661302968713995,0.32025629212674295,0.3242463190294036,0.32871106820431772,0.33377849746067634,0.33957656460767605,0.3460210549504999,0.35202912350240023,0.35767559348481237,0.36325437531519655,0.36905937941100658,0.37538451618970281,0.38252369606873859,0.39077082946557506,0.4004198267976643,0.41176459848246905,0.42505587265146516,0.44015027593652495,0.45671614711810543,0.47442272997529555,0.49293926828716494,0.51193500583279794,0.53107918639127971,0.550041053741679,0.56848985166308608,0.58609482393456991,0.60304194265899436,0.62040670283028188,0.6381932740322277,0.65635133276458413,0.67483055552712357,0.69358061881959776,0.71255119914177945,0.73169197299342004,0.7509526168742926,0.77028280728414855,0.78966651517599296,0.80914636318979116,0.82873801639398048,0.84845661043670806,0.86831728096614236,0.88833516363043075,0.90852539407774224,0.928903107956223,0.94948344091404291,0.97028152859934824],"text":["baujahr: 1960.000<br />anteil_flaeche:  2.344207e-01<br />energie_quelle: Erneuerbare","baujahr: 1960.810<br />anteil_flaeche:  2.359277e-01<br />energie_quelle: Erneuerbare","baujahr: 1961.620<br />anteil_flaeche:  2.375006e-01<br />energie_quelle: Erneuerbare","baujahr: 1962.430<br />anteil_flaeche:  2.391378e-01<br />energie_quelle: Erneuerbare","baujahr: 1963.241<br />anteil_flaeche:  2.408373e-01<br />energie_quelle: Erneuerbare","baujahr: 1964.051<br />anteil_flaeche:  2.425974e-01<br />energie_quelle: Erneuerbare","baujahr: 1964.861<br />anteil_flaeche:  2.444164e-01<br />energie_quelle: Erneuerbare","baujahr: 1965.671<br />anteil_flaeche:  2.462923e-01<br />energie_quelle: Erneuerbare","baujahr: 1966.481<br />anteil_flaeche:  2.482234e-01<br />energie_quelle: Erneuerbare","baujahr: 1967.291<br />anteil_flaeche:  2.502079e-01<br />energie_quelle: Erneuerbare","baujahr: 1968.101<br />anteil_flaeche:  2.522440e-01<br />energie_quelle: Erneuerbare","baujahr: 1968.911<br />anteil_flaeche:  2.543270e-01<br />energie_quelle: Erneuerbare","baujahr: 1969.722<br />anteil_flaeche:  2.564595e-01<br />energie_quelle: Erneuerbare","baujahr: 1970.532<br />anteil_flaeche:  2.586480e-01<br />energie_quelle: Erneuerbare","baujahr: 1971.342<br />anteil_flaeche:  2.608989e-01<br />energie_quelle: Erneuerbare","baujahr: 1972.152<br />anteil_flaeche:  2.632185e-01<br />energie_quelle: Erneuerbare","baujahr: 1972.962<br />anteil_flaeche:  2.656134e-01<br />energie_quelle: Erneuerbare","baujahr: 1973.772<br />anteil_flaeche:  2.680900e-01<br />energie_quelle: Erneuerbare","baujahr: 1974.582<br />anteil_flaeche:  2.706546e-01<br />energie_quelle: Erneuerbare","baujahr: 1975.392<br />anteil_flaeche:  2.733138e-01<br />energie_quelle: Erneuerbare","baujahr: 1976.203<br />anteil_flaeche:  2.760620e-01<br />energie_quelle: Erneuerbare","baujahr: 1977.013<br />anteil_flaeche:  2.786607e-01<br />energie_quelle: Erneuerbare","baujahr: 1977.823<br />anteil_flaeche:  2.810734e-01<br />energie_quelle: Erneuerbare","baujahr: 1978.633<br />anteil_flaeche:  2.833777e-01<br />energie_quelle: Erneuerbare","baujahr: 1979.443<br />anteil_flaeche:  2.856515e-01<br />energie_quelle: Erneuerbare","baujahr: 1980.253<br />anteil_flaeche:  2.879724e-01<br />energie_quelle: Erneuerbare","baujahr: 1981.063<br />anteil_flaeche:  2.904183e-01<br />energie_quelle: Erneuerbare","baujahr: 1981.873<br />anteil_flaeche:  2.930668e-01<br />energie_quelle: Erneuerbare","baujahr: 1982.684<br />anteil_flaeche:  2.959958e-01<br />energie_quelle: Erneuerbare","baujahr: 1983.494<br />anteil_flaeche:  2.992829e-01<br />energie_quelle: Erneuerbare","baujahr: 1984.304<br />anteil_flaeche:  3.029485e-01<br />energie_quelle: Erneuerbare","baujahr: 1985.114<br />anteil_flaeche:  3.064843e-01<br />energie_quelle: Erneuerbare","baujahr: 1985.924<br />anteil_flaeche:  3.098550e-01<br />energie_quelle: Erneuerbare","baujahr: 1986.734<br />anteil_flaeche:  3.131886e-01<br />energie_quelle: Erneuerbare","baujahr: 1987.544<br />anteil_flaeche:  3.166130e-01<br />energie_quelle: Erneuerbare","baujahr: 1988.354<br />anteil_flaeche:  3.202563e-01<br />energie_quelle: Erneuerbare","baujahr: 1989.165<br />anteil_flaeche:  3.242463e-01<br />energie_quelle: Erneuerbare","baujahr: 1989.975<br />anteil_flaeche:  3.287111e-01<br />energie_quelle: Erneuerbare","baujahr: 1990.785<br />anteil_flaeche:  3.337785e-01<br />energie_quelle: Erneuerbare","baujahr: 1991.595<br />anteil_flaeche:  3.395766e-01<br />energie_quelle: Erneuerbare","baujahr: 1992.405<br />anteil_flaeche:  3.460211e-01<br />energie_quelle: Erneuerbare","baujahr: 1993.215<br />anteil_flaeche:  3.520291e-01<br />energie_quelle: Erneuerbare","baujahr: 1994.025<br />anteil_flaeche:  3.576756e-01<br />energie_quelle: Erneuerbare","baujahr: 1994.835<br />anteil_flaeche:  3.632544e-01<br />energie_quelle: Erneuerbare","baujahr: 1995.646<br />anteil_flaeche:  3.690594e-01<br />energie_quelle: Erneuerbare","baujahr: 1996.456<br />anteil_flaeche:  3.753845e-01<br />energie_quelle: Erneuerbare","baujahr: 1997.266<br />anteil_flaeche:  3.825237e-01<br />energie_quelle: Erneuerbare","baujahr: 1998.076<br />anteil_flaeche:  3.907708e-01<br />energie_quelle: Erneuerbare","baujahr: 1998.886<br />anteil_flaeche:  4.004198e-01<br />energie_quelle: Erneuerbare","baujahr: 1999.696<br />anteil_flaeche:  4.117646e-01<br />energie_quelle: Erneuerbare","baujahr: 2000.506<br />anteil_flaeche:  4.250559e-01<br />energie_quelle: Erneuerbare","baujahr: 2001.316<br />anteil_flaeche:  4.401503e-01<br />energie_quelle: Erneuerbare","baujahr: 2002.127<br />anteil_flaeche:  4.567161e-01<br />energie_quelle: Erneuerbare","baujahr: 2002.937<br />anteil_flaeche:  4.744227e-01<br />energie_quelle: Erneuerbare","baujahr: 2003.747<br />anteil_flaeche:  4.929393e-01<br />energie_quelle: Erneuerbare","baujahr: 2004.557<br />anteil_flaeche:  5.119350e-01<br />energie_quelle: Erneuerbare","baujahr: 2005.367<br />anteil_flaeche:  5.310792e-01<br />energie_quelle: Erneuerbare","baujahr: 2006.177<br />anteil_flaeche:  5.500411e-01<br />energie_quelle: Erneuerbare","baujahr: 2006.987<br />anteil_flaeche:  5.684899e-01<br />energie_quelle: Erneuerbare","baujahr: 2007.797<br />anteil_flaeche:  5.860948e-01<br />energie_quelle: Erneuerbare","baujahr: 2008.608<br />anteil_flaeche:  6.030419e-01<br />energie_quelle: Erneuerbare","baujahr: 2009.418<br />anteil_flaeche:  6.204067e-01<br />energie_quelle: Erneuerbare","baujahr: 2010.228<br />anteil_flaeche:  6.381933e-01<br />energie_quelle: Erneuerbare","baujahr: 2011.038<br />anteil_flaeche:  6.563513e-01<br />energie_quelle: Erneuerbare","baujahr: 2011.848<br />anteil_flaeche:  6.748306e-01<br />energie_quelle: Erneuerbare","baujahr: 2012.658<br />anteil_flaeche:  6.935806e-01<br />energie_quelle: Erneuerbare","baujahr: 2013.468<br />anteil_flaeche:  7.125512e-01<br />energie_quelle: Erneuerbare","baujahr: 2014.278<br />anteil_flaeche:  7.316920e-01<br />energie_quelle: Erneuerbare","baujahr: 2015.089<br />anteil_flaeche:  7.509526e-01<br />energie_quelle: Erneuerbare","baujahr: 2015.899<br />anteil_flaeche:  7.702828e-01<br />energie_quelle: Erneuerbare","baujahr: 2016.709<br />anteil_flaeche:  7.896665e-01<br />energie_quelle: Erneuerbare","baujahr: 2017.519<br />anteil_flaeche:  8.091464e-01<br />energie_quelle: Erneuerbare","baujahr: 2018.329<br />anteil_flaeche:  8.287380e-01<br />energie_quelle: Erneuerbare","baujahr: 2019.139<br />anteil_flaeche:  8.484566e-01<br />energie_quelle: Erneuerbare","baujahr: 2019.949<br />anteil_flaeche:  8.683173e-01<br />energie_quelle: Erneuerbare","baujahr: 2020.759<br />anteil_flaeche:  8.883352e-01<br />energie_quelle: Erneuerbare","baujahr: 2021.570<br />anteil_flaeche:  9.085254e-01<br />energie_quelle: Erneuerbare","baujahr: 2022.380<br />anteil_flaeche:  9.289031e-01<br />energie_quelle: Erneuerbare","baujahr: 2023.190<br />anteil_flaeche:  9.494834e-01<br />energie_quelle: Erneuerbare","baujahr: 2024.000<br />anteil_flaeche:  9.702815e-01<br />energie_quelle: Erneuerbare"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(124,174,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1964,1964.7215189873418,1965.4430379746836,1966.1645569620252,1966.8860759493671,1967.6075949367089,1968.3291139240507,1969.0506329113923,1969.7721518987341,1970.493670886076,1971.2151898734178,1971.9367088607594,1972.6582278481012,1973.379746835443,1974.1012658227849,1974.8227848101267,1975.5443037974683,1976.2658227848101,1976.9873417721519,1977.7088607594937,1978.4303797468353,1979.1518987341772,1979.873417721519,1980.5949367088608,1981.3164556962026,1982.0379746835442,1982.7594936708861,1983.4810126582279,1984.2025316455697,1984.9240506329113,1985.6455696202531,1986.367088607595,1987.0886075949368,1987.8101265822784,1988.5316455696202,1989.253164556962,1989.9746835443038,1990.6962025316457,1991.4177215189873,1992.1392405063291,1992.8607594936709,1993.5822784810127,1994.3037974683543,1995.0253164556962,1995.746835443038,1996.4683544303798,1997.1898734177216,1997.9113924050632,1998.632911392405,1999.3544303797469,2000.0759493670887,2000.7974683544303,2001.5189873417721,2002.2405063291139,2002.9620253164558,2003.6835443037974,2004.4050632911392,2005.126582278481,2005.8481012658228,2006.5696202531647,2007.2911392405063,2008.0126582278481,2008.7341772151899,2009.4556962025317,2010.1772151898733,2010.8987341772151,2011.620253164557,2012.3417721518988,2013.0632911392404,2013.7848101265822,2014.506329113924,2015.2278481012659,2015.9493670886077,2016.6708860759493,2017.3924050632911,2018.1139240506329,2018.8354430379748,2019.5569620253164,2020.2784810126582,2021],"y":[0.00018651775089435248,0.00020802781331852205,0.00022579704073004176,0.00023982543312890773,0.00025011299051512877,0.00025665971288869991,0.00025894510714640493,0.00025390126854275965,0.00024260382633774279,0.00022696248465878298,0.00020888694763330807,0.00019028691938875202,0.00017307210405253059,0.00015915220575207767,0.000150545318461908,0.00015536724845103934,0.00017706889388868544,0.00021468014458147578,0.00026723089033602179,0.00033375102095893904,0.00041327042625681633,0.00050481899603631937,0.00060742662010404081,0.00072012318826659635,0.00084193859033060165,0.00097190271610262953,0.0011090454553893789,0.0012523966979974251,0.0013998320992140716,0.0015304517976739147,0.0016378276243394735,0.0017233107509297167,0.0017882523491636584,0.0018340035907603003,0.0018619156474386864,0.001873339690917812,0.0018696268929166921,0.0018521284251543397,0.0018221954593497808,0.00178117916722201,0.0017304307204900487,0.0016713012908729111,0.0016051420500896329,0.0015333041698591858,0.0014571388219006046,0.0013779971779329019,0.0012972304096750926,0.0012161896888462159,0.0011362261871652349,0.0010586910763511882,0.00098493552812309055,0.00091631071419997633,0.00085416780630081601,0.00079985797614464619,0.00075473239545048045,0.00072014223593734237,0.00069543142738157061,0.00067189712342159149,0.00064835752091652206,0.00062481261986636243,0.00060126242027112007,0.00057770692213078014,0.00055414612544534968,0.00053058003021482934,0.00050700863643922595,0.00048343194411852504,0.00045984995325273393,0.00043626266384185256,0.00041267007588588836,0.00038907218938482652,0.00036546900433867454,0.00034186052074743225,0.00031824673861109975,0.00029462765792968442,0.00027100327870317146,0.00024737360093156824,0.00022373862461487487,0.00020009834975309867,0.00017645277634622484,0.00015280190439426078],"text":["baujahr: 1964.000<br />anteil_flaeche:  1.865178e-04<br />energie_quelle: Keine","baujahr: 1964.722<br />anteil_flaeche:  2.080278e-04<br />energie_quelle: Keine","baujahr: 1965.443<br />anteil_flaeche:  2.257970e-04<br />energie_quelle: Keine","baujahr: 1966.165<br />anteil_flaeche:  2.398254e-04<br />energie_quelle: Keine","baujahr: 1966.886<br />anteil_flaeche:  2.501130e-04<br />energie_quelle: Keine","baujahr: 1967.608<br />anteil_flaeche:  2.566597e-04<br />energie_quelle: Keine","baujahr: 1968.329<br />anteil_flaeche:  2.589451e-04<br />energie_quelle: Keine","baujahr: 1969.051<br />anteil_flaeche:  2.539013e-04<br />energie_quelle: Keine","baujahr: 1969.772<br />anteil_flaeche:  2.426038e-04<br />energie_quelle: Keine","baujahr: 1970.494<br />anteil_flaeche:  2.269625e-04<br />energie_quelle: Keine","baujahr: 1971.215<br />anteil_flaeche:  2.088869e-04<br />energie_quelle: Keine","baujahr: 1971.937<br />anteil_flaeche:  1.902869e-04<br />energie_quelle: Keine","baujahr: 1972.658<br />anteil_flaeche:  1.730721e-04<br />energie_quelle: Keine","baujahr: 1973.380<br />anteil_flaeche:  1.591522e-04<br />energie_quelle: Keine","baujahr: 1974.101<br />anteil_flaeche:  1.505453e-04<br />energie_quelle: Keine","baujahr: 1974.823<br />anteil_flaeche:  1.553672e-04<br />energie_quelle: Keine","baujahr: 1975.544<br />anteil_flaeche:  1.770689e-04<br />energie_quelle: Keine","baujahr: 1976.266<br />anteil_flaeche:  2.146801e-04<br />energie_quelle: Keine","baujahr: 1976.987<br />anteil_flaeche:  2.672309e-04<br />energie_quelle: Keine","baujahr: 1977.709<br />anteil_flaeche:  3.337510e-04<br />energie_quelle: Keine","baujahr: 1978.430<br />anteil_flaeche:  4.132704e-04<br />energie_quelle: Keine","baujahr: 1979.152<br />anteil_flaeche:  5.048190e-04<br />energie_quelle: Keine","baujahr: 1979.873<br />anteil_flaeche:  6.074266e-04<br />energie_quelle: Keine","baujahr: 1980.595<br />anteil_flaeche:  7.201232e-04<br />energie_quelle: Keine","baujahr: 1981.316<br />anteil_flaeche:  8.419386e-04<br />energie_quelle: Keine","baujahr: 1982.038<br />anteil_flaeche:  9.719027e-04<br />energie_quelle: Keine","baujahr: 1982.759<br />anteil_flaeche:  1.109045e-03<br />energie_quelle: Keine","baujahr: 1983.481<br />anteil_flaeche:  1.252397e-03<br />energie_quelle: Keine","baujahr: 1984.203<br />anteil_flaeche:  1.399832e-03<br />energie_quelle: Keine","baujahr: 1984.924<br />anteil_flaeche:  1.530452e-03<br />energie_quelle: Keine","baujahr: 1985.646<br />anteil_flaeche:  1.637828e-03<br />energie_quelle: Keine","baujahr: 1986.367<br />anteil_flaeche:  1.723311e-03<br />energie_quelle: Keine","baujahr: 1987.089<br />anteil_flaeche:  1.788252e-03<br />energie_quelle: Keine","baujahr: 1987.810<br />anteil_flaeche:  1.834004e-03<br />energie_quelle: Keine","baujahr: 1988.532<br />anteil_flaeche:  1.861916e-03<br />energie_quelle: Keine","baujahr: 1989.253<br />anteil_flaeche:  1.873340e-03<br />energie_quelle: Keine","baujahr: 1989.975<br />anteil_flaeche:  1.869627e-03<br />energie_quelle: Keine","baujahr: 1990.696<br />anteil_flaeche:  1.852128e-03<br />energie_quelle: Keine","baujahr: 1991.418<br />anteil_flaeche:  1.822195e-03<br />energie_quelle: Keine","baujahr: 1992.139<br />anteil_flaeche:  1.781179e-03<br />energie_quelle: Keine","baujahr: 1992.861<br />anteil_flaeche:  1.730431e-03<br />energie_quelle: Keine","baujahr: 1993.582<br />anteil_flaeche:  1.671301e-03<br />energie_quelle: Keine","baujahr: 1994.304<br />anteil_flaeche:  1.605142e-03<br />energie_quelle: Keine","baujahr: 1995.025<br />anteil_flaeche:  1.533304e-03<br />energie_quelle: Keine","baujahr: 1995.747<br />anteil_flaeche:  1.457139e-03<br />energie_quelle: Keine","baujahr: 1996.468<br />anteil_flaeche:  1.377997e-03<br />energie_quelle: Keine","baujahr: 1997.190<br />anteil_flaeche:  1.297230e-03<br />energie_quelle: Keine","baujahr: 1997.911<br />anteil_flaeche:  1.216190e-03<br />energie_quelle: Keine","baujahr: 1998.633<br />anteil_flaeche:  1.136226e-03<br />energie_quelle: Keine","baujahr: 1999.354<br />anteil_flaeche:  1.058691e-03<br />energie_quelle: Keine","baujahr: 2000.076<br />anteil_flaeche:  9.849355e-04<br />energie_quelle: Keine","baujahr: 2000.797<br />anteil_flaeche:  9.163107e-04<br />energie_quelle: Keine","baujahr: 2001.519<br />anteil_flaeche:  8.541678e-04<br />energie_quelle: Keine","baujahr: 2002.241<br />anteil_flaeche:  7.998580e-04<br />energie_quelle: Keine","baujahr: 2002.962<br />anteil_flaeche:  7.547324e-04<br />energie_quelle: Keine","baujahr: 2003.684<br />anteil_flaeche:  7.201422e-04<br />energie_quelle: Keine","baujahr: 2004.405<br />anteil_flaeche:  6.954314e-04<br />energie_quelle: Keine","baujahr: 2005.127<br />anteil_flaeche:  6.718971e-04<br />energie_quelle: Keine","baujahr: 2005.848<br />anteil_flaeche:  6.483575e-04<br />energie_quelle: Keine","baujahr: 2006.570<br />anteil_flaeche:  6.248126e-04<br />energie_quelle: Keine","baujahr: 2007.291<br />anteil_flaeche:  6.012624e-04<br />energie_quelle: Keine","baujahr: 2008.013<br />anteil_flaeche:  5.777069e-04<br />energie_quelle: Keine","baujahr: 2008.734<br />anteil_flaeche:  5.541461e-04<br />energie_quelle: Keine","baujahr: 2009.456<br />anteil_flaeche:  5.305800e-04<br />energie_quelle: Keine","baujahr: 2010.177<br />anteil_flaeche:  5.070086e-04<br />energie_quelle: Keine","baujahr: 2010.899<br />anteil_flaeche:  4.834319e-04<br />energie_quelle: Keine","baujahr: 2011.620<br />anteil_flaeche:  4.598500e-04<br />energie_quelle: Keine","baujahr: 2012.342<br />anteil_flaeche:  4.362627e-04<br />energie_quelle: Keine","baujahr: 2013.063<br />anteil_flaeche:  4.126701e-04<br />energie_quelle: Keine","baujahr: 2013.785<br />anteil_flaeche:  3.890722e-04<br />energie_quelle: Keine","baujahr: 2014.506<br />anteil_flaeche:  3.654690e-04<br />energie_quelle: Keine","baujahr: 2015.228<br />anteil_flaeche:  3.418605e-04<br />energie_quelle: Keine","baujahr: 2015.949<br />anteil_flaeche:  3.182467e-04<br />energie_quelle: Keine","baujahr: 2016.671<br />anteil_flaeche:  2.946277e-04<br />energie_quelle: Keine","baujahr: 2017.392<br />anteil_flaeche:  2.710033e-04<br />energie_quelle: Keine","baujahr: 2018.114<br />anteil_flaeche:  2.473736e-04<br />energie_quelle: Keine","baujahr: 2018.835<br />anteil_flaeche:  2.237386e-04<br />energie_quelle: Keine","baujahr: 2019.557<br />anteil_flaeche:  2.000983e-04<br />energie_quelle: Keine","baujahr: 2020.278<br />anteil_flaeche:  1.764528e-04<br />energie_quelle: Keine","baujahr: 2021.000<br />anteil_flaeche:  1.528019e-04<br />energie_quelle: Keine"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(199,124,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.7634224215876636,0.76223638626604462,0.76096443204823361,0.75960959764306102,0.75817492175935663,0.75666344310595102,0.75507820039167339,0.75342223232535444,0.75169857761582359,0.74991027497191176,0.74806052314427707,0.74616177537767703,0.74421222078291638,0.74220035003092122,0.74011465379261565,0.73794362273892544,0.73567574754077458,0.73329951886908951,0.73080342739479398,0.72817596378881411,0.72542278417758599,0.72288443006974246,0.72061483087700684,0.71850421480541082,0.71644281006098265,0.71432084484975333,0.7120285473777519,0.7094561458510078,0.70649386847555173,0.70303194345741227,0.69902528039465273,0.69503469295783538,0.69111531715032881,0.687141590396386,0.68298795012026525,0.67852883374621975,0.6736386786985078,0.66819192240138237,0.66206300227910209,0.65512635575591904,0.64740673045217567,0.63966530682729283,0.63188819725156065,0.62390952410569711,0.61556340977042967,0.60668397662647622,0.59710534705456442,0.58666164343541138,0.57518698814974578,0.56251550357828373,0.54848174065822608,0.53309299637920893,0.5165642350574482,0.49911940323253678,0.48098244744408591,0.46237731423169276,0.44352795013495372,0.42465830169348107,0.40599231544686609,0.38775393793472102,0.36981208791924874,0.35142775968673534,0.3326010619469687,0.31336960999006319,0.29377101910611175,0.27384290458522903,0.25362288171750769,0.2331485657930627,0.21245757210198632,0.19158751593439388,0.170548213084248,0.1493044301706821,0.12784453769942675,0.10615734641772864,0.084231667072810087,0.062056310411918003,0.039620087182274499,0.016911808131126721,-0.0060797159943035382,-0.029365674446768797],"text":["baujahr: 1960.000<br />anteil_flaeche:  7.634224e-01<br />energie_quelle: Fossil","baujahr: 1960.810<br />anteil_flaeche:  7.622364e-01<br />energie_quelle: Fossil","baujahr: 1961.620<br />anteil_flaeche:  7.609644e-01<br />energie_quelle: Fossil","baujahr: 1962.430<br />anteil_flaeche:  7.596096e-01<br />energie_quelle: Fossil","baujahr: 1963.241<br />anteil_flaeche:  7.581749e-01<br />energie_quelle: Fossil","baujahr: 1964.051<br />anteil_flaeche:  7.566634e-01<br />energie_quelle: Fossil","baujahr: 1964.861<br />anteil_flaeche:  7.550782e-01<br />energie_quelle: Fossil","baujahr: 1965.671<br />anteil_flaeche:  7.534222e-01<br />energie_quelle: Fossil","baujahr: 1966.481<br />anteil_flaeche:  7.516986e-01<br />energie_quelle: Fossil","baujahr: 1967.291<br />anteil_flaeche:  7.499103e-01<br />energie_quelle: Fossil","baujahr: 1968.101<br />anteil_flaeche:  7.480605e-01<br />energie_quelle: Fossil","baujahr: 1968.911<br />anteil_flaeche:  7.461618e-01<br />energie_quelle: Fossil","baujahr: 1969.722<br />anteil_flaeche:  7.442122e-01<br />energie_quelle: Fossil","baujahr: 1970.532<br />anteil_flaeche:  7.422004e-01<br />energie_quelle: Fossil","baujahr: 1971.342<br />anteil_flaeche:  7.401147e-01<br />energie_quelle: Fossil","baujahr: 1972.152<br />anteil_flaeche:  7.379436e-01<br />energie_quelle: Fossil","baujahr: 1972.962<br />anteil_flaeche:  7.356757e-01<br />energie_quelle: Fossil","baujahr: 1973.772<br />anteil_flaeche:  7.332995e-01<br />energie_quelle: Fossil","baujahr: 1974.582<br />anteil_flaeche:  7.308034e-01<br />energie_quelle: Fossil","baujahr: 1975.392<br />anteil_flaeche:  7.281760e-01<br />energie_quelle: Fossil","baujahr: 1976.203<br />anteil_flaeche:  7.254228e-01<br />energie_quelle: Fossil","baujahr: 1977.013<br />anteil_flaeche:  7.228844e-01<br />energie_quelle: Fossil","baujahr: 1977.823<br />anteil_flaeche:  7.206148e-01<br />energie_quelle: Fossil","baujahr: 1978.633<br />anteil_flaeche:  7.185042e-01<br />energie_quelle: Fossil","baujahr: 1979.443<br />anteil_flaeche:  7.164428e-01<br />energie_quelle: Fossil","baujahr: 1980.253<br />anteil_flaeche:  7.143208e-01<br />energie_quelle: Fossil","baujahr: 1981.063<br />anteil_flaeche:  7.120285e-01<br />energie_quelle: Fossil","baujahr: 1981.873<br />anteil_flaeche:  7.094561e-01<br />energie_quelle: Fossil","baujahr: 1982.684<br />anteil_flaeche:  7.064939e-01<br />energie_quelle: Fossil","baujahr: 1983.494<br />anteil_flaeche:  7.030319e-01<br />energie_quelle: Fossil","baujahr: 1984.304<br />anteil_flaeche:  6.990253e-01<br />energie_quelle: Fossil","baujahr: 1985.114<br />anteil_flaeche:  6.950347e-01<br />energie_quelle: Fossil","baujahr: 1985.924<br />anteil_flaeche:  6.911153e-01<br />energie_quelle: Fossil","baujahr: 1986.734<br />anteil_flaeche:  6.871416e-01<br />energie_quelle: Fossil","baujahr: 1987.544<br />anteil_flaeche:  6.829880e-01<br />energie_quelle: Fossil","baujahr: 1988.354<br />anteil_flaeche:  6.785288e-01<br />energie_quelle: Fossil","baujahr: 1989.165<br />anteil_flaeche:  6.736387e-01<br />energie_quelle: Fossil","baujahr: 1989.975<br />anteil_flaeche:  6.681919e-01<br />energie_quelle: Fossil","baujahr: 1990.785<br />anteil_flaeche:  6.620630e-01<br />energie_quelle: Fossil","baujahr: 1991.595<br />anteil_flaeche:  6.551264e-01<br />energie_quelle: Fossil","baujahr: 1992.405<br />anteil_flaeche:  6.474067e-01<br />energie_quelle: Fossil","baujahr: 1993.215<br />anteil_flaeche:  6.396653e-01<br />energie_quelle: Fossil","baujahr: 1994.025<br />anteil_flaeche:  6.318882e-01<br />energie_quelle: Fossil","baujahr: 1994.835<br />anteil_flaeche:  6.239095e-01<br />energie_quelle: Fossil","baujahr: 1995.646<br />anteil_flaeche:  6.155634e-01<br />energie_quelle: Fossil","baujahr: 1996.456<br />anteil_flaeche:  6.066840e-01<br />energie_quelle: Fossil","baujahr: 1997.266<br />anteil_flaeche:  5.971053e-01<br />energie_quelle: Fossil","baujahr: 1998.076<br />anteil_flaeche:  5.866616e-01<br />energie_quelle: Fossil","baujahr: 1998.886<br />anteil_flaeche:  5.751870e-01<br />energie_quelle: Fossil","baujahr: 1999.696<br />anteil_flaeche:  5.625155e-01<br />energie_quelle: Fossil","baujahr: 2000.506<br />anteil_flaeche:  5.484817e-01<br />energie_quelle: Fossil","baujahr: 2001.316<br />anteil_flaeche:  5.330930e-01<br />energie_quelle: Fossil","baujahr: 2002.127<br />anteil_flaeche:  5.165642e-01<br />energie_quelle: Fossil","baujahr: 2002.937<br />anteil_flaeche:  4.991194e-01<br />energie_quelle: Fossil","baujahr: 2003.747<br />anteil_flaeche:  4.809824e-01<br />energie_quelle: Fossil","baujahr: 2004.557<br />anteil_flaeche:  4.623773e-01<br />energie_quelle: Fossil","baujahr: 2005.367<br />anteil_flaeche:  4.435280e-01<br />energie_quelle: Fossil","baujahr: 2006.177<br />anteil_flaeche:  4.246583e-01<br />energie_quelle: Fossil","baujahr: 2006.987<br />anteil_flaeche:  4.059923e-01<br />energie_quelle: Fossil","baujahr: 2007.797<br />anteil_flaeche:  3.877539e-01<br />energie_quelle: Fossil","baujahr: 2008.608<br />anteil_flaeche:  3.698121e-01<br />energie_quelle: Fossil","baujahr: 2009.418<br />anteil_flaeche:  3.514278e-01<br />energie_quelle: Fossil","baujahr: 2010.228<br />anteil_flaeche:  3.326011e-01<br />energie_quelle: Fossil","baujahr: 2011.038<br />anteil_flaeche:  3.133696e-01<br />energie_quelle: Fossil","baujahr: 2011.848<br />anteil_flaeche:  2.937710e-01<br />energie_quelle: Fossil","baujahr: 2012.658<br />anteil_flaeche:  2.738429e-01<br />energie_quelle: Fossil","baujahr: 2013.468<br />anteil_flaeche:  2.536229e-01<br />energie_quelle: Fossil","baujahr: 2014.278<br />anteil_flaeche:  2.331486e-01<br />energie_quelle: Fossil","baujahr: 2015.089<br />anteil_flaeche:  2.124576e-01<br />energie_quelle: Fossil","baujahr: 2015.899<br />anteil_flaeche:  1.915875e-01<br />energie_quelle: Fossil","baujahr: 2016.709<br />anteil_flaeche:  1.705482e-01<br />energie_quelle: Fossil","baujahr: 2017.519<br />anteil_flaeche:  1.493044e-01<br />energie_quelle: Fossil","baujahr: 2018.329<br />anteil_flaeche:  1.278445e-01<br />energie_quelle: Fossil","baujahr: 2019.139<br />anteil_flaeche:  1.061573e-01<br />energie_quelle: Fossil","baujahr: 2019.949<br />anteil_flaeche:  8.423167e-02<br />energie_quelle: Fossil","baujahr: 2020.759<br />anteil_flaeche:  6.205631e-02<br />energie_quelle: Fossil","baujahr: 2021.570<br />anteil_flaeche:  3.962009e-02<br />energie_quelle: Fossil","baujahr: 2022.380<br />anteil_flaeche:  1.691181e-02<br />energie_quelle: Fossil","baujahr: 2023.190<br />anteil_flaeche: -6.079716e-03<br />energie_quelle: Fossil","baujahr: 2024.000<br />anteil_flaeche: -2.936567e-02<br />energie_quelle: Fossil"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":52.529680365296812,"r":7.3059360730593621,"b":37.260273972602747,"l":48.949771689497723},"paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.49592302674494454],"automargin":true,"type":"linear","autorange":false,"range":[1956.8,2027.2],"tickmode":"array","ticktext":["1960","1980","2000","2020"],"tickvals":[1960,1980,2000,2020],"categoryorder":"array","categoryarray":["1960","1980","2000","2020"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"annotations":[{"text":"Baujahr","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Anteil der gesamten Fläche","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.607305936073068},{"text":"Fossil","x":0.24796151337247227,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Erneuerbare","x":0.7520384866275277,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Unbestimmt","x":0.24796151337247227,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Keine","x":0.7520384866275277,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.51484018264840181,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.079348034599074649,1.0202638887516542],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75000000000000011,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[1956.8,2027.2],"tickmode":"array","ticktext":["1960","1980","2000","2020"],"tickvals":[1960,1980,2000,2020],"categoryorder":"array","categoryarray":["1960","1980","2000","2020"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.5040769732550554,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-0.079348034599074649,1.0202638887516542],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75000000000000011,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.48515981735159819],"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1ebb56afd9261":{"x":{},"y":{},"colour":{},"type":"scatter"},"1ebb5325eeb91":{"x":{},"y":{},"colour":{}},"1ebb523fef34f":{"x":{},"y":{},"colour":{}}},"cur_data":"1ebb56afd9261","visdat":{"1ebb56afd9261":["function (y) ","x"],"1ebb5325eeb91":["function (y) ","x"],"1ebb523fef34f":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="improved" class="level2">
+<h2 class="anchored" data-anchor-id="improved">Improved</h2>
+<p>Wir können das Tooltip mit dem <code>text()</code>-Aesthetic kontrollieren:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> gebaeude_transformiert <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> baujahr,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> anteil_flaeche,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour =</span> energie_quelle</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Text-Aesthetic für interactive tooltip definieren</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="fu">paste</span>(</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Baujahr:"</span>, baujahr, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Anteil:"</span>, scales<span class="sc">::</span><span class="fu">percent</span>(anteil_flaeche, <span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">decimal.mark =</span> <span class="st">","</span>), <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Energiequelle:"</span>, energie_quelle</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.4</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960"</span>,</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Kanton BL"</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Quelle: https://data.bl.ch/explore/dataset/12160/table"</span>,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Baujahr"</span>,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Anteil der gesamten Fläche"</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>energie_quelle)</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Angepasste tooltip</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>plotly_plot <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p, <span class="at">tooltip =</span> <span class="st">"text"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">hoverlabel =</span> <span class="fu">list</span>(</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">bgcolor =</span> <span class="st">"rgba(255, 255, 255, 0.8)"</span>, <span class="co"># transparenter weisser Hintergrund</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Arial"</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>), </span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">bordercolor =</span> <span class="st">"rgba(0, 0, 0, 0.2)"</span> <span class="co"># Rand mit leichter Transparenz</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="fu">paste0</span>(</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960"</span>,</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>        <span class="st">"&lt;sup&gt;Kanton BL&lt;/sup&gt;"</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Arial"</span>, <span class="at">size =</span> <span class="dv">18</span>, <span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="dv">0</span>, <span class="co"># Left-align</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">xanchor =</span> <span class="st">"left"</span>, </span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">yanchor =</span> <span class="st">"top"</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>plotly_plot</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0519c3f28db2f3938332" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-0519c3f28db2f3938332">{"x":{"data":[{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1970,1971,1973,1974,1975,1981,1990,1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.00044555518200929185,0.00021429073280404695,0.00056147018809251303,0.00044376851924614823,0.0020143917096590081,0.00010941779475273288,0.00052079482291368629,0.00028023709361548214,0.00021052884846734998,0.00013902173187712704,0.00050144221104392588,3.668789061138535e-05,2.4664359178841268e-05,0.00049851352331230507,0.0007672026937339025,0.001830640661538365,0.00013814168732396528,0.00013799670187882509,0.0039820426487093153,0.0029654414538535976,0.0016907618059048251,0.0006314501647690274,0.0040320365294573687,0.0046177288709357443,0.038940283369702185,0.06476568275135218,0.05925615523419394,0.033701437095351096,0.056859546265613049,0.0441280825303298,0.036231694414015622,0.057557904857794648,0.034110868841040552,0.042399315837086178,0.011780644401248748,0.0016721435923389152,0.0051399020370409302,0.0011606208183514632,0.0010211731334211327,0.03501329889589231,0.019391879739106561,0.018413383444278116,0.10109856527053979,0.072668683964156752,0.1467321185556989,0.040192251185828823],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,191,196,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.23521668158601441,0.22056839738635564,0.23072465645942658,0.18240272917639336,0.23761988428438735,0.2564376985334596,0.25885753046810456,0.20857460335046255,0.38592043212549926,0.26176578162495207,0.24386914162421869,0.37182843448386466,0.26720113054927358,0.23332397792122744,0.28045678393199214,0.2689843013559568,0.23661705908485117,0.18926356126376595,0.2654129596746741,0.28828943218634673,0.30311305887178602,0.29651166330761786,0.28472073663081526,0.30359412753913351,0.27660103553317528,0.37836436139560969,0.32058053220275218,0.36632916707729357,0.33741245660241831,0.32476268221574345,0.34419179095588281,0.28217741997375306,0.3000807280705991,0.33105062155885656,0.34067340067340068,0.42647246961570634,0.3987415595672506,0.40620399786885569,0.42256414326091335,0.41329095490749768,0.3697226746985483,0.44680928925353691,0.43921732958189735,0.40195963885274105,0.35311751210808057,0.4608269672159227,0.5536895312797927,0.57560626057299391,0.55454483510493324,0.5594613700065747,0.6891186114547132,0.79370740564698961,0.7751319136412369,0.8218479403373542,0.82961803873841433,0.85423447228875971,0.82022211096445319,0.85984803971228851,0.75860152060687436,0.83603282940636325,0.88496512405643857,0.82091214694717884,0.91208873879898356,0.83858097241123342,0.94859484531755023],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(124,174,0,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1964,1968,1974,1984,2004,2021],"y":[0.00018651775089435261,0.00025864972811703,0.0001512747362968931,0.001358804252258013,0.00070864134590874336,0.00015280190439426108],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(199,124,255,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.76433776323197633,0.77921731188084031,0.76871387335248087,0.81715350230436046,0.7601792062550593,0.74345288367178763,0.74062167470898177,0.79114515955592202,0.61361038929791634,0.73823421837504799,0.75599183664390412,0.62767012330509142,0.73279886945072636,0.76663933418816121,0.71936727697253211,0.73051718512073094,0.7633829409151488,0.81073643873623402,0.73458704032532596,0.71171056781365327,0.69688694112821403,0.70272113399864822,0.71527926336918479,0.69640587246086649,0.72204016021456674,0.62163563860439031,0.67941946779724782,0.63367083292270643,0.66258754339758175,0.67523731778425655,0.65397756838257881,0.71768443833892293,0.69978127522752209,0.66894937844114344,0.65534455667789004,0.57056208893044003,0.59956767862684457,0.5931645519663753,0.57340382020962932,0.58209131622156651,0.59133704193174952,0.48842502799511089,0.50152651518390878,0.56433892405190789,0.58931430028039766,0.49504495025374751,0.41007877430619166,0.36683583456921143,0.41134429605402623,0.39813931415633913,0.29910074414403803,0.20462045076067145,0.21972818432172214,0.17815205966264577,0.17038196126158572,0.14576552771124024,0.1786172682171954,0.13913078715429034,0.20638518049723331,0.14457529085453014,0.096621492499283368,0.077836485877887149,0.015242577236859704,0.014686909033067637,0.011212903496620913],"text":"","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,0.4)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1970,1971,1973,1974,1975,1981,1990,1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.00044555518200929185,0.00021429073280404695,0.00056147018809251303,0.00044376851924614823,0.0020143917096590081,0.00010941779475273288,0.00052079482291368629,0.00028023709361548214,0.00021052884846734998,0.00013902173187712704,0.00050144221104392588,3.668789061138535e-05,2.4664359178841268e-05,0.00049851352331230507,0.0007672026937339025,0.001830640661538365,0.00013814168732396528,0.00013799670187882509,0.0039820426487093153,0.0029654414538535976,0.0016907618059048251,0.0006314501647690274,0.0040320365294573687,0.0046177288709357443,0.038940283369702185,0.06476568275135218,0.05925615523419394,0.033701437095351096,0.056859546265613049,0.0441280825303298,0.036231694414015622,0.057557904857794648,0.034110868841040552,0.042399315837086178,0.011780644401248748,0.0016721435923389152,0.0051399020370409302,0.0011606208183514632,0.0010211731334211327,0.03501329889589231,0.019391879739106561,0.018413383444278116,0.10109856527053979,0.072668683964156752,0.1467321185556989,0.040192251185828823],"text":["Baujahr: 1960 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1961 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1962 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 1963 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1964 <br> Anteil: 0,2% <br> Energiequelle: Unbestimmt","Baujahr: 1965 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1966 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 1967 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1968 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1970 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1971 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 1973 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1974 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1975 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1981 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 1990 <br> Anteil: 0,2% <br> Energiequelle: Unbestimmt","Baujahr: 1991 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1992 <br> Anteil: 0,0% <br> Energiequelle: Unbestimmt","Baujahr: 1994 <br> Anteil: 0,4% <br> Energiequelle: Unbestimmt","Baujahr: 1995 <br> Anteil: 0,3% <br> Energiequelle: Unbestimmt","Baujahr: 1996 <br> Anteil: 0,2% <br> Energiequelle: Unbestimmt","Baujahr: 1997 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 1998 <br> Anteil: 0,4% <br> Energiequelle: Unbestimmt","Baujahr: 1999 <br> Anteil: 0,5% <br> Energiequelle: Unbestimmt","Baujahr: 2000 <br> Anteil: 3,9% <br> Energiequelle: Unbestimmt","Baujahr: 2001 <br> Anteil: 6,5% <br> Energiequelle: Unbestimmt","Baujahr: 2002 <br> Anteil: 5,9% <br> Energiequelle: Unbestimmt","Baujahr: 2003 <br> Anteil: 3,4% <br> Energiequelle: Unbestimmt","Baujahr: 2004 <br> Anteil: 5,7% <br> Energiequelle: Unbestimmt","Baujahr: 2005 <br> Anteil: 4,4% <br> Energiequelle: Unbestimmt","Baujahr: 2006 <br> Anteil: 3,6% <br> Energiequelle: Unbestimmt","Baujahr: 2007 <br> Anteil: 5,8% <br> Energiequelle: Unbestimmt","Baujahr: 2008 <br> Anteil: 3,4% <br> Energiequelle: Unbestimmt","Baujahr: 2009 <br> Anteil: 4,2% <br> Energiequelle: Unbestimmt","Baujahr: 2010 <br> Anteil: 1,2% <br> Energiequelle: Unbestimmt","Baujahr: 2011 <br> Anteil: 0,2% <br> Energiequelle: Unbestimmt","Baujahr: 2012 <br> Anteil: 0,5% <br> Energiequelle: Unbestimmt","Baujahr: 2016 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 2017 <br> Anteil: 0,1% <br> Energiequelle: Unbestimmt","Baujahr: 2018 <br> Anteil: 3,5% <br> Energiequelle: Unbestimmt","Baujahr: 2019 <br> Anteil: 1,9% <br> Energiequelle: Unbestimmt","Baujahr: 2020 <br> Anteil: 1,8% <br> Energiequelle: Unbestimmt","Baujahr: 2021 <br> Anteil: 10,1% <br> Energiequelle: Unbestimmt","Baujahr: 2022 <br> Anteil: 7,3% <br> Energiequelle: Unbestimmt","Baujahr: 2023 <br> Anteil: 14,7% <br> Energiequelle: Unbestimmt","Baujahr: 2024 <br> Anteil: 4,0% <br> Energiequelle: Unbestimmt"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,191,196,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.23521668158601441,0.22056839738635564,0.23072465645942658,0.18240272917639336,0.23761988428438735,0.2564376985334596,0.25885753046810456,0.20857460335046255,0.38592043212549926,0.26176578162495207,0.24386914162421869,0.37182843448386466,0.26720113054927358,0.23332397792122744,0.28045678393199214,0.2689843013559568,0.23661705908485117,0.18926356126376595,0.2654129596746741,0.28828943218634673,0.30311305887178602,0.29651166330761786,0.28472073663081526,0.30359412753913351,0.27660103553317528,0.37836436139560969,0.32058053220275218,0.36632916707729357,0.33741245660241831,0.32476268221574345,0.34419179095588281,0.28217741997375306,0.3000807280705991,0.33105062155885656,0.34067340067340068,0.42647246961570634,0.3987415595672506,0.40620399786885569,0.42256414326091335,0.41329095490749768,0.3697226746985483,0.44680928925353691,0.43921732958189735,0.40195963885274105,0.35311751210808057,0.4608269672159227,0.5536895312797927,0.57560626057299391,0.55454483510493324,0.5594613700065747,0.6891186114547132,0.79370740564698961,0.7751319136412369,0.8218479403373542,0.82961803873841433,0.85423447228875971,0.82022211096445319,0.85984803971228851,0.75860152060687436,0.83603282940636325,0.88496512405643857,0.82091214694717884,0.91208873879898356,0.83858097241123342,0.94859484531755023],"text":["Baujahr: 1960 <br> Anteil: 23,5% <br> Energiequelle: Erneuerbare","Baujahr: 1961 <br> Anteil: 22,1% <br> Energiequelle: Erneuerbare","Baujahr: 1962 <br> Anteil: 23,1% <br> Energiequelle: Erneuerbare","Baujahr: 1963 <br> Anteil: 18,2% <br> Energiequelle: Erneuerbare","Baujahr: 1964 <br> Anteil: 23,8% <br> Energiequelle: Erneuerbare","Baujahr: 1965 <br> Anteil: 25,6% <br> Energiequelle: Erneuerbare","Baujahr: 1966 <br> Anteil: 25,9% <br> Energiequelle: Erneuerbare","Baujahr: 1967 <br> Anteil: 20,9% <br> Energiequelle: Erneuerbare","Baujahr: 1968 <br> Anteil: 38,6% <br> Energiequelle: Erneuerbare","Baujahr: 1969 <br> Anteil: 26,2% <br> Energiequelle: Erneuerbare","Baujahr: 1970 <br> Anteil: 24,4% <br> Energiequelle: Erneuerbare","Baujahr: 1971 <br> Anteil: 37,2% <br> Energiequelle: Erneuerbare","Baujahr: 1972 <br> Anteil: 26,7% <br> Energiequelle: Erneuerbare","Baujahr: 1973 <br> Anteil: 23,3% <br> Energiequelle: Erneuerbare","Baujahr: 1974 <br> Anteil: 28,0% <br> Energiequelle: Erneuerbare","Baujahr: 1975 <br> Anteil: 26,9% <br> Energiequelle: Erneuerbare","Baujahr: 1976 <br> Anteil: 23,7% <br> Energiequelle: Erneuerbare","Baujahr: 1977 <br> Anteil: 18,9% <br> Energiequelle: Erneuerbare","Baujahr: 1978 <br> Anteil: 26,5% <br> Energiequelle: Erneuerbare","Baujahr: 1979 <br> Anteil: 28,8% <br> Energiequelle: Erneuerbare","Baujahr: 1980 <br> Anteil: 30,3% <br> Energiequelle: Erneuerbare","Baujahr: 1981 <br> Anteil: 29,7% <br> Energiequelle: Erneuerbare","Baujahr: 1982 <br> Anteil: 28,5% <br> Energiequelle: Erneuerbare","Baujahr: 1983 <br> Anteil: 30,4% <br> Energiequelle: Erneuerbare","Baujahr: 1984 <br> Anteil: 27,7% <br> Energiequelle: Erneuerbare","Baujahr: 1985 <br> Anteil: 37,8% <br> Energiequelle: Erneuerbare","Baujahr: 1986 <br> Anteil: 32,1% <br> Energiequelle: Erneuerbare","Baujahr: 1987 <br> Anteil: 36,6% <br> Energiequelle: Erneuerbare","Baujahr: 1988 <br> Anteil: 33,7% <br> Energiequelle: Erneuerbare","Baujahr: 1989 <br> Anteil: 32,5% <br> Energiequelle: Erneuerbare","Baujahr: 1990 <br> Anteil: 34,4% <br> Energiequelle: Erneuerbare","Baujahr: 1991 <br> Anteil: 28,2% <br> Energiequelle: Erneuerbare","Baujahr: 1992 <br> Anteil: 30,0% <br> Energiequelle: Erneuerbare","Baujahr: 1993 <br> Anteil: 33,1% <br> Energiequelle: Erneuerbare","Baujahr: 1994 <br> Anteil: 34,1% <br> Energiequelle: Erneuerbare","Baujahr: 1995 <br> Anteil: 42,6% <br> Energiequelle: Erneuerbare","Baujahr: 1996 <br> Anteil: 39,9% <br> Energiequelle: Erneuerbare","Baujahr: 1997 <br> Anteil: 40,6% <br> Energiequelle: Erneuerbare","Baujahr: 1998 <br> Anteil: 42,3% <br> Energiequelle: Erneuerbare","Baujahr: 1999 <br> Anteil: 41,3% <br> Energiequelle: Erneuerbare","Baujahr: 2000 <br> Anteil: 37,0% <br> Energiequelle: Erneuerbare","Baujahr: 2001 <br> Anteil: 44,7% <br> Energiequelle: Erneuerbare","Baujahr: 2002 <br> Anteil: 43,9% <br> Energiequelle: Erneuerbare","Baujahr: 2003 <br> Anteil: 40,2% <br> Energiequelle: Erneuerbare","Baujahr: 2004 <br> Anteil: 35,3% <br> Energiequelle: Erneuerbare","Baujahr: 2005 <br> Anteil: 46,1% <br> Energiequelle: Erneuerbare","Baujahr: 2006 <br> Anteil: 55,4% <br> Energiequelle: Erneuerbare","Baujahr: 2007 <br> Anteil: 57,6% <br> Energiequelle: Erneuerbare","Baujahr: 2008 <br> Anteil: 55,5% <br> Energiequelle: Erneuerbare","Baujahr: 2009 <br> Anteil: 55,9% <br> Energiequelle: Erneuerbare","Baujahr: 2010 <br> Anteil: 68,9% <br> Energiequelle: Erneuerbare","Baujahr: 2011 <br> Anteil: 79,4% <br> Energiequelle: Erneuerbare","Baujahr: 2012 <br> Anteil: 77,5% <br> Energiequelle: Erneuerbare","Baujahr: 2013 <br> Anteil: 82,2% <br> Energiequelle: Erneuerbare","Baujahr: 2014 <br> Anteil: 83,0% <br> Energiequelle: Erneuerbare","Baujahr: 2015 <br> Anteil: 85,4% <br> Energiequelle: Erneuerbare","Baujahr: 2016 <br> Anteil: 82,0% <br> Energiequelle: Erneuerbare","Baujahr: 2017 <br> Anteil: 86,0% <br> Energiequelle: Erneuerbare","Baujahr: 2018 <br> Anteil: 75,9% <br> Energiequelle: Erneuerbare","Baujahr: 2019 <br> Anteil: 83,6% <br> Energiequelle: Erneuerbare","Baujahr: 2020 <br> Anteil: 88,5% <br> Energiequelle: Erneuerbare","Baujahr: 2021 <br> Anteil: 82,1% <br> Energiequelle: Erneuerbare","Baujahr: 2022 <br> Anteil: 91,2% <br> Energiequelle: Erneuerbare","Baujahr: 2023 <br> Anteil: 83,9% <br> Energiequelle: Erneuerbare","Baujahr: 2024 <br> Anteil: 94,9% <br> Energiequelle: Erneuerbare"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(124,174,0,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(124,174,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1964,1968,1974,1984,2004,2021],"y":[0.00018651775089435261,0.00025864972811703,0.0001512747362968931,0.001358804252258013,0.00070864134590874336,0.00015280190439426108],"text":["Baujahr: 1964 <br> Anteil: 0,0% <br> Energiequelle: Keine","Baujahr: 1968 <br> Anteil: 0,0% <br> Energiequelle: Keine","Baujahr: 1974 <br> Anteil: 0,0% <br> Energiequelle: Keine","Baujahr: 1984 <br> Anteil: 0,1% <br> Energiequelle: Keine","Baujahr: 2004 <br> Anteil: 0,1% <br> Energiequelle: Keine","Baujahr: 2021 <br> Anteil: 0,0% <br> Energiequelle: Keine"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(199,124,255,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(199,124,255,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"y":[0.76433776323197633,0.77921731188084031,0.76871387335248087,0.81715350230436046,0.7601792062550593,0.74345288367178763,0.74062167470898177,0.79114515955592202,0.61361038929791634,0.73823421837504799,0.75599183664390412,0.62767012330509142,0.73279886945072636,0.76663933418816121,0.71936727697253211,0.73051718512073094,0.7633829409151488,0.81073643873623402,0.73458704032532596,0.71171056781365327,0.69688694112821403,0.70272113399864822,0.71527926336918479,0.69640587246086649,0.72204016021456674,0.62163563860439031,0.67941946779724782,0.63367083292270643,0.66258754339758175,0.67523731778425655,0.65397756838257881,0.71768443833892293,0.69978127522752209,0.66894937844114344,0.65534455667789004,0.57056208893044003,0.59956767862684457,0.5931645519663753,0.57340382020962932,0.58209131622156651,0.59133704193174952,0.48842502799511089,0.50152651518390878,0.56433892405190789,0.58931430028039766,0.49504495025374751,0.41007877430619166,0.36683583456921143,0.41134429605402623,0.39813931415633913,0.29910074414403803,0.20462045076067145,0.21972818432172214,0.17815205966264577,0.17038196126158572,0.14576552771124024,0.1786172682171954,0.13913078715429034,0.20638518049723331,0.14457529085453014,0.096621492499283368,0.077836485877887149,0.015242577236859704,0.014686909033067637,0.011212903496620913],"text":["Baujahr: 1960 <br> Anteil: 76,4% <br> Energiequelle: Fossil","Baujahr: 1961 <br> Anteil: 77,9% <br> Energiequelle: Fossil","Baujahr: 1962 <br> Anteil: 76,9% <br> Energiequelle: Fossil","Baujahr: 1963 <br> Anteil: 81,7% <br> Energiequelle: Fossil","Baujahr: 1964 <br> Anteil: 76,0% <br> Energiequelle: Fossil","Baujahr: 1965 <br> Anteil: 74,3% <br> Energiequelle: Fossil","Baujahr: 1966 <br> Anteil: 74,1% <br> Energiequelle: Fossil","Baujahr: 1967 <br> Anteil: 79,1% <br> Energiequelle: Fossil","Baujahr: 1968 <br> Anteil: 61,4% <br> Energiequelle: Fossil","Baujahr: 1969 <br> Anteil: 73,8% <br> Energiequelle: Fossil","Baujahr: 1970 <br> Anteil: 75,6% <br> Energiequelle: Fossil","Baujahr: 1971 <br> Anteil: 62,8% <br> Energiequelle: Fossil","Baujahr: 1972 <br> Anteil: 73,3% <br> Energiequelle: Fossil","Baujahr: 1973 <br> Anteil: 76,7% <br> Energiequelle: Fossil","Baujahr: 1974 <br> Anteil: 71,9% <br> Energiequelle: Fossil","Baujahr: 1975 <br> Anteil: 73,1% <br> Energiequelle: Fossil","Baujahr: 1976 <br> Anteil: 76,3% <br> Energiequelle: Fossil","Baujahr: 1977 <br> Anteil: 81,1% <br> Energiequelle: Fossil","Baujahr: 1978 <br> Anteil: 73,5% <br> Energiequelle: Fossil","Baujahr: 1979 <br> Anteil: 71,2% <br> Energiequelle: Fossil","Baujahr: 1980 <br> Anteil: 69,7% <br> Energiequelle: Fossil","Baujahr: 1981 <br> Anteil: 70,3% <br> Energiequelle: Fossil","Baujahr: 1982 <br> Anteil: 71,5% <br> Energiequelle: Fossil","Baujahr: 1983 <br> Anteil: 69,6% <br> Energiequelle: Fossil","Baujahr: 1984 <br> Anteil: 72,2% <br> Energiequelle: Fossil","Baujahr: 1985 <br> Anteil: 62,2% <br> Energiequelle: Fossil","Baujahr: 1986 <br> Anteil: 67,9% <br> Energiequelle: Fossil","Baujahr: 1987 <br> Anteil: 63,4% <br> Energiequelle: Fossil","Baujahr: 1988 <br> Anteil: 66,3% <br> Energiequelle: Fossil","Baujahr: 1989 <br> Anteil: 67,5% <br> Energiequelle: Fossil","Baujahr: 1990 <br> Anteil: 65,4% <br> Energiequelle: Fossil","Baujahr: 1991 <br> Anteil: 71,8% <br> Energiequelle: Fossil","Baujahr: 1992 <br> Anteil: 70,0% <br> Energiequelle: Fossil","Baujahr: 1993 <br> Anteil: 66,9% <br> Energiequelle: Fossil","Baujahr: 1994 <br> Anteil: 65,5% <br> Energiequelle: Fossil","Baujahr: 1995 <br> Anteil: 57,1% <br> Energiequelle: Fossil","Baujahr: 1996 <br> Anteil: 60,0% <br> Energiequelle: Fossil","Baujahr: 1997 <br> Anteil: 59,3% <br> Energiequelle: Fossil","Baujahr: 1998 <br> Anteil: 57,3% <br> Energiequelle: Fossil","Baujahr: 1999 <br> Anteil: 58,2% <br> Energiequelle: Fossil","Baujahr: 2000 <br> Anteil: 59,1% <br> Energiequelle: Fossil","Baujahr: 2001 <br> Anteil: 48,8% <br> Energiequelle: Fossil","Baujahr: 2002 <br> Anteil: 50,2% <br> Energiequelle: Fossil","Baujahr: 2003 <br> Anteil: 56,4% <br> Energiequelle: Fossil","Baujahr: 2004 <br> Anteil: 58,9% <br> Energiequelle: Fossil","Baujahr: 2005 <br> Anteil: 49,5% <br> Energiequelle: Fossil","Baujahr: 2006 <br> Anteil: 41,0% <br> Energiequelle: Fossil","Baujahr: 2007 <br> Anteil: 36,7% <br> Energiequelle: Fossil","Baujahr: 2008 <br> Anteil: 41,1% <br> Energiequelle: Fossil","Baujahr: 2009 <br> Anteil: 39,8% <br> Energiequelle: Fossil","Baujahr: 2010 <br> Anteil: 29,9% <br> Energiequelle: Fossil","Baujahr: 2011 <br> Anteil: 20,5% <br> Energiequelle: Fossil","Baujahr: 2012 <br> Anteil: 22,0% <br> Energiequelle: Fossil","Baujahr: 2013 <br> Anteil: 17,8% <br> Energiequelle: Fossil","Baujahr: 2014 <br> Anteil: 17,0% <br> Energiequelle: Fossil","Baujahr: 2015 <br> Anteil: 14,6% <br> Energiequelle: Fossil","Baujahr: 2016 <br> Anteil: 17,9% <br> Energiequelle: Fossil","Baujahr: 2017 <br> Anteil: 13,9% <br> Energiequelle: Fossil","Baujahr: 2018 <br> Anteil: 20,6% <br> Energiequelle: Fossil","Baujahr: 2019 <br> Anteil: 14,5% <br> Energiequelle: Fossil","Baujahr: 2020 <br> Anteil: 9,7% <br> Energiequelle: Fossil","Baujahr: 2021 <br> Anteil: 7,8% <br> Energiequelle: Fossil","Baujahr: 2022 <br> Anteil: 1,5% <br> Energiequelle: Fossil","Baujahr: 2023 <br> Anteil: 1,5% <br> Energiequelle: Fossil","Baujahr: 2024 <br> Anteil: 1,1% <br> Energiequelle: Fossil"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":0.40000000000000002,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.0028691392756977937,0.002378501558648155,0.0019263958952524722,0.0015043589947229831,0.001103927566271431,0.00071663831911002401,0.00033402796245052578,-5.1046346287860595e-05,-0.00043604061520096624,-0.00081411598843113752,-0.0011784150580204191,-0.0015220804160104417,-0.0018382546544432313,-0.0021200803653604458,-0.0023607001408040753,-0.0025532565728158207,-0.0026908922534376219,-0.0027858743578546494,-0.0028567054347944042,-0.0029003901246548473,-0.0029138882090123967,-0.0028941594694434384,-0.0028381636875243559,-0.0027428606448315724,-0.0026052101229414285,-0.0024221719034303955,-0.0021907057678748352,-0.0019077714978510552,-0.0015703288749356124,-0.0011753376807047047,-0.00071975769673495024,-0.00020054870460248751,0.00038532951411600087,0.0010409171778444481,0.0017692545050060921,0.0025733817140249507,0.0034563390233241769,0.0044211666513278734,0.0054709048164591047,0.006608593737142069,0.0079092601829927195,0.0097418364291634169,0.012012612938615098,0.01454855726195905,0.017176636949803932,0.019723819552761236,0.022017072621439603,0.023882377686323526,0.025090199609235923,0.025698948438448298,0.025910488803624378,0.025926685334428427,0.025949402660524496,0.026180505411576752,0.026821858217249122,0.027856771072095093,0.028760951741261538,0.02955622938994917,0.030307357472502374,0.031079089443264638,0.031936178756580336,0.032943378866792911,0.034154965319547002,0.035434376694791742,0.036726831611182051,0.038041163781886662,0.039386206920075738,0.040770794738918002,0.042203760951583624,0.043693939271241274,0.045250163411061202,0.046881267084211989,0.048596084003863997,0.050403942795635315,0.052329366915053438,0.054370108231219946,0.056509516504417538,0.05873094149492656,0.061017732963029855,0.063353240669007702],"text":"","type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(0,191,196,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.23442072044290632,0.23592767468514311,0.23750062442960951,0.23913776966465969,0.24083731037864964,0.24259744655993351,0.24441637819686729,0.24629230527780505,0.2482234277911029,0.25020794572511473,0.25224400123812912,0.25432701989417128,0.25645954908878144,0.25864802025781775,0.2608988648371407,0.26321851426260834,0.26561339997008127,0.26808995339541747,0.27065460597447755,0.27331378914311955,0.27606196149668455,0.27866072605100212,0.28107339644573387,0.28337772855091864,0.2856514782365982,0.28797240137281155,0.29041825382959946,0.29306679147700321,0.29599577018506146,0.2992829458238162,0.30294846837544459,0.30648425105474891,0.3098549669603366,0.31318857390140298,0.31661302968713995,0.32025629212674295,0.3242463190294036,0.32871106820431772,0.33377849746067634,0.33957656460767605,0.3460210549504999,0.35202912350240023,0.35767559348481237,0.36325437531519655,0.36905937941100658,0.37538451618970281,0.38252369606873859,0.39077082946557506,0.4004198267976643,0.41176459848246905,0.42505587265146516,0.44015027593652495,0.45671614711810543,0.47442272997529555,0.49293926828716494,0.51193500583279794,0.53107918639127971,0.550041053741679,0.56848985166308608,0.58609482393456991,0.60304194265899436,0.62040670283028188,0.6381932740322277,0.65635133276458413,0.67483055552712357,0.69358061881959776,0.71255119914177945,0.73169197299342004,0.7509526168742926,0.77028280728414855,0.78966651517599296,0.80914636318979116,0.82873801639398048,0.84845661043670806,0.86831728096614236,0.88833516363043075,0.90852539407774224,0.928903107956223,0.94948344091404291,0.97028152859934824],"text":"","type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(124,174,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1964,1964.7215189873418,1965.4430379746836,1966.1645569620252,1966.8860759493671,1967.6075949367089,1968.3291139240507,1969.0506329113923,1969.7721518987341,1970.493670886076,1971.2151898734178,1971.9367088607594,1972.6582278481012,1973.379746835443,1974.1012658227849,1974.8227848101267,1975.5443037974683,1976.2658227848101,1976.9873417721519,1977.7088607594937,1978.4303797468353,1979.1518987341772,1979.873417721519,1980.5949367088608,1981.3164556962026,1982.0379746835442,1982.7594936708861,1983.4810126582279,1984.2025316455697,1984.9240506329113,1985.6455696202531,1986.367088607595,1987.0886075949368,1987.8101265822784,1988.5316455696202,1989.253164556962,1989.9746835443038,1990.6962025316457,1991.4177215189873,1992.1392405063291,1992.8607594936709,1993.5822784810127,1994.3037974683543,1995.0253164556962,1995.746835443038,1996.4683544303798,1997.1898734177216,1997.9113924050632,1998.632911392405,1999.3544303797469,2000.0759493670887,2000.7974683544303,2001.5189873417721,2002.2405063291139,2002.9620253164558,2003.6835443037974,2004.4050632911392,2005.126582278481,2005.8481012658228,2006.5696202531647,2007.2911392405063,2008.0126582278481,2008.7341772151899,2009.4556962025317,2010.1772151898733,2010.8987341772151,2011.620253164557,2012.3417721518988,2013.0632911392404,2013.7848101265822,2014.506329113924,2015.2278481012659,2015.9493670886077,2016.6708860759493,2017.3924050632911,2018.1139240506329,2018.8354430379748,2019.5569620253164,2020.2784810126582,2021],"y":[0.00018651775089435248,0.00020802781331852205,0.00022579704073004176,0.00023982543312890773,0.00025011299051512877,0.00025665971288869991,0.00025894510714640493,0.00025390126854275965,0.00024260382633774279,0.00022696248465878298,0.00020888694763330807,0.00019028691938875202,0.00017307210405253059,0.00015915220575207767,0.000150545318461908,0.00015536724845103934,0.00017706889388868544,0.00021468014458147578,0.00026723089033602179,0.00033375102095893904,0.00041327042625681633,0.00050481899603631937,0.00060742662010404081,0.00072012318826659635,0.00084193859033060165,0.00097190271610262953,0.0011090454553893789,0.0012523966979974251,0.0013998320992140716,0.0015304517976739147,0.0016378276243394735,0.0017233107509297167,0.0017882523491636584,0.0018340035907603003,0.0018619156474386864,0.001873339690917812,0.0018696268929166921,0.0018521284251543397,0.0018221954593497808,0.00178117916722201,0.0017304307204900487,0.0016713012908729111,0.0016051420500896329,0.0015333041698591858,0.0014571388219006046,0.0013779971779329019,0.0012972304096750926,0.0012161896888462159,0.0011362261871652349,0.0010586910763511882,0.00098493552812309055,0.00091631071419997633,0.00085416780630081601,0.00079985797614464619,0.00075473239545048045,0.00072014223593734237,0.00069543142738157061,0.00067189712342159149,0.00064835752091652206,0.00062481261986636243,0.00060126242027112007,0.00057770692213078014,0.00055414612544534968,0.00053058003021482934,0.00050700863643922595,0.00048343194411852504,0.00045984995325273393,0.00043626266384185256,0.00041267007588588836,0.00038907218938482652,0.00036546900433867454,0.00034186052074743225,0.00031824673861109975,0.00029462765792968442,0.00027100327870317146,0.00024737360093156824,0.00022373862461487487,0.00020009834975309867,0.00017645277634622484,0.00015280190439426078],"text":"","type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(199,124,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1960,1960.8101265822784,1961.620253164557,1962.4303797468353,1963.2405063291139,1964.0506329113923,1964.8607594936709,1965.6708860759493,1966.4810126582279,1967.2911392405063,1968.1012658227849,1968.9113924050632,1969.7215189873418,1970.5316455696202,1971.3417721518988,1972.1518987341772,1972.9620253164558,1973.7721518987341,1974.5822784810127,1975.3924050632911,1976.2025316455697,1977.0126582278481,1977.8227848101267,1978.632911392405,1979.4430379746836,1980.253164556962,1981.0632911392404,1981.873417721519,1982.6835443037974,1983.493670886076,1984.3037974683543,1985.1139240506329,1985.9240506329113,1986.7341772151899,1987.5443037974683,1988.3544303797469,1989.1645569620252,1989.9746835443038,1990.7848101265822,1991.5949367088608,1992.4050632911392,1993.2151898734178,1994.0253164556962,1994.8354430379748,1995.6455696202531,1996.4556962025317,1997.2658227848101,1998.0759493670887,1998.8860759493671,1999.6962025316457,2000.506329113924,2001.3164556962026,2002.126582278481,2002.9367088607596,2003.746835443038,2004.5569620253164,2005.367088607595,2006.1772151898733,2006.9873417721519,2007.7974683544303,2008.6075949367089,2009.4177215189873,2010.2278481012659,2011.0379746835442,2011.8481012658228,2012.6582278481012,2013.4683544303798,2014.2784810126582,2015.0886075949368,2015.8987341772151,2016.7088607594937,2017.5189873417721,2018.3291139240507,2019.1392405063291,2019.9493670886077,2020.7594936708861,2021.5696202531647,2022.379746835443,2023.1898734177216,2024],"y":[0.7634224215876636,0.76223638626604462,0.76096443204823361,0.75960959764306102,0.75817492175935663,0.75666344310595102,0.75507820039167339,0.75342223232535444,0.75169857761582359,0.74991027497191176,0.74806052314427707,0.74616177537767703,0.74421222078291638,0.74220035003092122,0.74011465379261565,0.73794362273892544,0.73567574754077458,0.73329951886908951,0.73080342739479398,0.72817596378881411,0.72542278417758599,0.72288443006974246,0.72061483087700684,0.71850421480541082,0.71644281006098265,0.71432084484975333,0.7120285473777519,0.7094561458510078,0.70649386847555173,0.70303194345741227,0.69902528039465273,0.69503469295783538,0.69111531715032881,0.687141590396386,0.68298795012026525,0.67852883374621975,0.6736386786985078,0.66819192240138237,0.66206300227910209,0.65512635575591904,0.64740673045217567,0.63966530682729283,0.63188819725156065,0.62390952410569711,0.61556340977042967,0.60668397662647622,0.59710534705456442,0.58666164343541138,0.57518698814974578,0.56251550357828373,0.54848174065822608,0.53309299637920893,0.5165642350574482,0.49911940323253678,0.48098244744408591,0.46237731423169276,0.44352795013495372,0.42465830169348107,0.40599231544686609,0.38775393793472102,0.36981208791924874,0.35142775968673534,0.3326010619469687,0.31336960999006319,0.29377101910611175,0.27384290458522903,0.25362288171750769,0.2331485657930627,0.21245757210198632,0.19158751593439388,0.170548213084248,0.1493044301706821,0.12784453769942675,0.10615734641772864,0.084231667072810087,0.062056310411918003,0.039620087182274499,0.016911808131126721,-0.0060797159943035382,-0.029365674446768797],"text":"","type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.7795275590551185,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":52.529680365296812,"r":7.3059360730593621,"b":37.260273972602747,"l":48.949771689497723},"paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Anteil Gebäudefläche pro Energiequelle und Baujahr ab 1960<br><sup>Kanton BL<\/sup>","font":{"color":"black","family":"Arial","size":18},"x":0,"xref":"paper","xanchor":"left","yanchor":"top"},"xaxis":{"domain":[0,0.49592302674494454],"automargin":true,"type":"linear","autorange":false,"range":[1956.8,2027.2],"tickmode":"array","ticktext":["1960","1980","2000","2020"],"tickvals":[1960,1980,2000,2020],"categoryorder":"array","categoryarray":["1960","1980","2000","2020"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"annotations":[{"text":"Baujahr","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Anteil der gesamten Fläche","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-33.607305936073068},{"text":"Fossil","x":0.24796151337247227,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Erneuerbare","x":0.7520384866275277,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Unbestimmt","x":0.24796151337247227,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Keine","x":0.7520384866275277,"y":0.48515981735159819,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.51484018264840181,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.079348034599074649,1.0202638887516542],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75000000000000011,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0.51484018264840181,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":0.49592302674494454,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":0.48515981735159819},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","layer":"below","x0":0.5040769732550554,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":0.48515981735159819,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[1956.8,2027.2],"tickmode":"array","ticktext":["1960","1980","2000","2020"],"tickvals":[1960,1980,2000,2020],"categoryorder":"array","categoryarray":["1960","1980","2000","2020"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.5040769732550554,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-0.079348034599074649,1.0202638887516542],"tickmode":"array","ticktext":["0%","25%","50%","75%","100%"],"tickvals":[0,0.25,0.5,0.75000000000000011,1],"categoryorder":"array","categoryarray":["0%","25%","50%","75%","100%"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.48515981735159819],"gridcolor":"rgba(235,235,235,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative","hoverlabel":{"bgcolor":"rgba(255, 255, 255, 0.8)","font":{"family":"Arial","size":10,"color":"black"},"bordercolor":"rgba(0, 0, 0, 0.2)"}},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1ebb578113784":{"x":{},"y":{},"colour":{},"type":"scatter"},"1ebb52692f0ec":{"x":{},"y":{},"colour":{},"text":{}},"1ebb5573a46ad":{"x":{},"y":{},"colour":{}}},"cur_data":"1ebb578113784","visdat":{"1ebb578113784":["function (y) ","x"],"1ebb52692f0ec":["function (y) ","x"],"1ebb5573a46ad":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Kopiert");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Kopiert");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2025 Amt für Daten und Statistik Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

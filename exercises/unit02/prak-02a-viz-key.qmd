@@ -1,0 +1,150 @@
+---
+title: "Praktikum 02a - Visualisierung: Streudiagramm"
+author: "___"
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|------------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages und Daten Laden
+
+Wir beginnen **immer** mit `library(tidyverse)`, weil es die neun *core* Packages enthält, unter anderem `ggplot2`.
+
+![](img/tidyverse-packages-with-lubridate.png)
+
+Wir werden mit den `penguins` Daten arbeiten, die im Package `palmerpenguins` enthalten sind.
+
+:::{.text-center}
+![](img/penguins_logo.png)
+:::
+
+Zusätzlich möchten wir die Function `scale_colour_colorblind()` benützen und dafür brauchen wir das Package `ggthemes`.
+
+```{r}
+library(palmerpenguins)
+library(ggthemes)
+library(tidyverse)
+```
+
+Es gibt mehrere Methoden Daten zu erkunden:
+
+```{r}
+glimpse(penguins)
+# summary(penguins)
+```
+
+# Streudiagramm
+
+Wir wollen ein Streudiagramm von `body_mass_g` gegen `flipper_length_mm` erstellen.
+
+![](img/plt.png)
+
+```{r}
+#| warning: false
+#| message: false
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  # Streudiagramm
+  geom_point(mapping = aes( 
+    colour = species,
+    shape = species
+  )) +
+  # Linie
+  geom_smooth(method = "lm") +
+  # Titeln
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo penguins",
+    x = "Flipper length (mm)",
+    y = "Body mass (g)",
+    colour = "Species",
+    shape = "Species"
+  ) +
+  # farbenblindenfreundliche Farbgebung
+  scale_colour_colorblind()
+```
+
+`mapping = aes(xxx)` kann in `ggplot()` oder `geom_xxx()` sein. Sorgfältig auswählen!
+
+# Ihr seid dran!
+
+1.  Erstelle ein Streudiagramm von `bill_depth_mm` gegen `bill_length_mm`. Das heisst:
+
+-   Erstelle ein Streudiagramm mit `bill_depth_mm` auf der y-Achse und `bill_length_mm` auf der x-Achse.
+
+-   Beschreibe die Beziehung zwischen diesen beiden Variablen mit `geom_smooth()`.
+
+-   Ordne die Variable `species` zur `colour`-*Aesthetic*.
+
+```{r}
+ggplot(data = penguins,
+       mapping = aes(
+         x = bill_length_mm,
+         y = bill_depth_mm,
+         colour = species
+       )) +
+  geom_point() +
+  geom_smooth(method= "lm") 
+```
+
+2.  Füge einen Titel, Achsen-Titel und eine *caption* zu dem Diagramm hinzu: "Die Daten stammen aus dem Paket `palmerpenguins`". Tipp: wirf einen Blick in die Dokumentation von `labs()`.
+
+```{r}
+ggplot(data = penguins,
+       mapping = aes(
+         x = bill_length_mm,
+         y = bill_depth_mm,
+         colour = species
+       )) +
+  geom_point() +
+  geom_smooth(method= "lm") +
+  labs(
+    x = "Schnabellenge (mm)",
+    y = "Schnabeltiefe (mm)",
+    colour = "Art",
+    title = "Schnabeltiefe vs Schnabellenge von Pinguinen",
+    caption = "Datenquelle: palmerpenguins"
+  )
+```
+
+3.  Benutze `scale_colour_colorblind()` um die Farben zu änderen und [`theme_light()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) um den Aspekt zu verbessern.
+
+```{r}
+ggplot(data = penguins,
+       mapping = aes(
+         x = bill_length_mm,
+         y = bill_depth_mm,
+         colour = species
+       )) +
+  geom_point() +
+  geom_smooth(method= "lm") +
+  labs(
+    x = "Schnabellenge (mm)",
+    y = "Schnabeltiefe (mm)",
+    colour = "Art",
+    title = "Schnabeltiefe vs Schnabellenge von Pinguinen",
+    caption = "Datenquelle: palmerpenguins"
+  ) +
+  scale_colour_colorblind()
+```
+
+Beachtet, dass ihr die Argumente `data` und `mapping` in `ggplot()` weglassen könntet.
+
+5.  Speichert das Plot im `png`-Format.
+
+```{r}
+# ggsave(filename = "plt_penguins.png")
+```

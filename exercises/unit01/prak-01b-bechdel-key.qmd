@@ -1,0 +1,171 @@
+---
+title: "Praktikum 01b - Quarto: Bechdel"
+author: ""
+format: html
+editor: visual
+---
+
+Der [Bechdel-Test](https://de.wikipedia.org/wiki/Bechdel-Test) fragt, ob in einem Film mindestens zwei Frauen zu sehen sind, die über alles andere als einen Mann miteinander reden. Um den Test zu bestehen, muss ein Film drei Grundvoraussetzungen erfüllen:
+
+-   Es gibt mindestens zwei Frauenrollen
+-   Sie sprechen miteinander
+-   Sie unterhalten sich über etwas anderes als einen Mann.
+
+![Art by Srravya \[CC0\], via Wikimedia Commons](img/BechdelTest-768x310.jpg)
+
+In dieser Minianalyse arbeiten wir mit den Daten, die in der *FiveThirtyEight*-Geschichte mit dem Titel ["The Dollar-And-Cents Case Against Hollywood's Exclusion of Women"](https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/) benutzt wurden.
+
+# Eure Aufgaben
+
+-   Bericht erstellen:
+
+    -   Clicke auf den `Render` Knopf oben,
+
+    -   oder `Ctrl + Shift + K`
+
+-   die `___` Lücken ausfüllen.
+
+# R Code-Chunk
+
+Füge einen eigenen Code-chunk hinzu:
+
+-   Tastatur-Abkürzung: `Ctrl + Shift + I`
+
+-   Add Chunk ![](img/notebook-insert-chunk.png) oben rechts
+
+-   oder ```` ```{r}``` ```` eintippen
+
+Führe den Code aus:
+
+-   zeilenweise mit `Ctrl + Enter`
+
+-   den gesamten Code mit der grünen Play-Taste
+
+-   wähle eine Option im `Run`-Menu oben rechts
+
+Inline Code könntest du mit `` `r` `` inserieren.
+
+# Daten und Packages
+
+Wir beginnen mit dem Laden der Packages, die wir verwenden werden.
+
+```{r}
+#| label: load-packages
+#| warning: false
+#| message: false
+
+install.packages("fivethirtyeight")
+library(fivethirtyeight)
+library(tidyverse)
+```
+
+Der Datensatz enthält Informationen zu `r nrow(bechdel)` Filme, die zwischen `r min(bechdel$year)` und `r max(bechdel$year)` veröffentlicht wurden.
+
+Wir konzentrieren unsere Analyse jedoch auf Filme, die zwischen 1990 und 2013 veröffentlicht wurden.
+
+```{r}
+bechdel90_13 <- bechdel |>  
+  filter(between(year, 1990, 2013))
+```
+
+Es gibt `r nrow(bechdel90_13)` solche Filme.
+
+```{r}
+glimpse(bechdel90_13)
+```
+
+Die finanziellen Variablen, auf die wir uns konzentrieren werden, sind die folgenden:
+
+-   `budget_2013`: Budget in inflationsbereinigten Dollar für 2013
+-   `domgross_2013`: Inlandsbrutto (USA) in inflationsbereinigten Dollar für 2013
+-   `intgross_2013`: Gesamtes internationales Brutto in 2013 inflationsbereinigten Dollar
+
+Und wir werden auch die Variable `binary` und `clean_test` für die **Gruppierung** verwenden.
+
+# Analyse
+
+Wie varieren die *median* Budget und Brutto, je nachdem, ob der Film den Bechdel-Test bestanden hat? (Info in der `binary` Variable)
+
+```{r}
+bechdel90_13 |> 
+  group_by(binary) |> 
+  summarise(
+    med_budget = median(budget_2013),
+    med_domgross = median(domgross_2013, na.rm = TRUE),
+    med_intgross = median(intgross_2013, na.rm = TRUE)
+    )
+```
+
+Schauen wir uns als Nächstes an, wie sich die *median* Budget and Brutto anhand eines detaillierteren Indikators des Bechdel-Testergebnisses unterscheiden (`clean_test`):
+
+-   `ok` = besteht den Test
+-   `dubious` = zweifelhaft
+-   `men` = Frauen reden nur über Männer
+-   `notalk` = Frauen reden nicht miteinander
+-   `nowomen` = weniger als zwei Frauen
+
+```{r}
+bechdel90_13 |> 
+  group_by(clean_test) |>
+  summarise(
+    med_budget = median(budget_2013),
+    med_domgross = median(domgross_2013, na.rm = TRUE),
+    med_intgross = median(intgross_2013, na.rm = TRUE)
+    )
+```
+
+Um zu bewerten, wie sich die Kapitalrendite (*return on investment*) zwischen Filmen, die den Bechdel-Test bestehen und nicht bestehen, unterscheidet, erstellen wir zunächst eine neue Variable namens `roi` als Verhältnis von Brutto zu Budget.
+
+```{r}
+bechdel90_13 <- bechdel90_13 |> 
+  mutate(roi = (intgross_2013 + domgross_2013) / budget_2013)
+```
+
+Welche Filme haben die höchste Kapitalrendite?
+
+```{r}
+bechdel90_13 |> 
+  arrange(desc(roi))  |>  
+  select(title, roi, year)
+```
+
+Hier ist eine Visualisierung der Kapitalrendite nach Testergebnis. Aufgrund einiger extremer Beobachtungen ist es jedoch schwierig, die Verteilungen zu erkennen.
+
+```{r}
+#| warning: false
+
+ggplot(data = bechdel90_13, 
+       mapping = aes(x = clean_test, y = roi, color = binary)) +
+  geom_boxplot() +
+  labs(
+    title = "Return on investment vs. Bechdel test result",
+    x = "Detailed Bechdel test result",
+    y = "Return on investment",
+    color = "Binary Bechdel test result"
+    )
+```
+
+Was sind das für Filme mit *sehr* hoher Kapitalrendite?
+
+```{r}
+bechdel90_13 |> 
+  filter(roi > 400) |>
+  select(title, budget_2013, domgross_2013, year)
+```
+
+Wenn wir die Filme mit `roi < 15`vergrössern, erhalten wir einen besseren Überblick über den Vergleich der Mediane zwischen den Kategorien:
+
+```{r}
+#| warning: false
+
+ggplot(data = bechdel90_13, mapping = aes(x = clean_test, y = roi, color = binary)) +
+  geom_boxplot() +
+  labs(
+    title = "Return on investment vs. Bechdel test result",
+    subtitle = "Zoomed in on films with return on investemnt \u2264 15", # Etwas über das Vergrössern auf eine bestimmte Ebene
+    x = "Detailed Bechdel test result",
+    y = "Return on investment",
+    color = "Binary Bechdel test result"
+    ) +
+  coord_cartesian(ylim = c(0, 15))
+```

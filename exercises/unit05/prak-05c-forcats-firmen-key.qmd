@@ -1,0 +1,102 @@
+---
+title: "Praktikum 5c: `{forcats}`"
+date: last-modified
+format: html
+---
+
+# Tastaturkürzel
+
+|  |  |
+|---------------------------------------------------|---------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Packages laden
+
+- Ladet Packages `janitor` und `tidyverse`.
+
+```{r}
+library(janitor)
+library(tidyverse)
+```
+
+
+# Daten laden
+
+- Lest die Firmen- und Raumgliederungsdaten ein und macht die Namen sauber (`janitor::clean_names()`)
+
+    - data/ogd_12460_firmen_clean.csv
+    - data/ogd-10110-raumgliederung.csv
+    
+    
+```{r}
+firmen <- read_csv("data/ogd_12460_firmen_clean.csv")
+raumgliederung <- read_delim("data/ogd-10110-raumgliederung.csv", delim = ";")
+```
+
+- Erkundet die Daten mit `glimpse()` und `summary()`.
+```{r}
+glimpse(firmen)
+```
+
+```{r}
+glimpse(raumgliederung)
+```
+```{r}
+raumgliederung <- raumgliederung |> clean_names()
+```
+
+# Daten transformieren
+
+- Wie viele Kategorien von *rechtsform* gibt es?
+
+```{r}
+firmen |> count(rechtsform)
+```
+
+- Fügt die Firmen- und Raumgliederungsdaten zusammen (Achtung! verschiedene Variablenamen, `join_by()`)
+- Entfernt das Jahr 2025
+- Verwendet `fct_lump` um drei Kategorien der Rechstform zu behalten (other_level = "Anders")
+- Verwendet `count()` um das Ergebnis zu checken
+
+```{r}
+firmen_joined <- firmen |>
+  left_join(y = raumgliederung, join_by(firmensitz_code == bfs_nummer, firmensitz == gemeinde)) |>
+  relocate(starts_with("bezirk"), .after = firmensitz) |> 
+    filter(jahr != 2025) |> 
+  mutate(
+    rechtsform_gruppiert = fct_lump(rechtsform, n = 3, other_level = "Anders")
+  )
+firmen_joined |> count(rechtsform_gruppiert, rechtsform)
+```
+
+# Daten visualisieren
+
+- Erstellt ein Balkendiagram der neuen gruppierte Rechtsform-Variable
+- Benutzt `fct_infreq()` um die Balken absteigend zu ordnen 
+- Erstellt ein Balkendiagramm der neuen gruppierte Rechtsform-Variable und dem Bezirk (Facettierung: `facet_grid(rechtsform_gruppiert ~ bezirk)`)
+
+```{r}
+firmen_joined |> 
+  mutate(jahr = factor(jahr)) |> 
+  mutate(rechtsform_gruppiert = fct_infreq(rechtsform_gruppiert)) |>
+  mutate(bezirk = fct_infreq(bezirk)) |> 
+  ggplot(aes(x = jahr, fill = rechtsform_gruppiert)) +
+  geom_bar() +
+  facet_grid(rechtsform_gruppiert ~ bezirk) +
+  theme_minimal() +
+   theme(legend.position = "none",
+         axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(
+    x = "",
+    y = "Anzahl",
+    fill = "",
+    title = "Anzahl Firmen pro Rechtsform und Bezirk, BL",
+    caption = "https://data.bl.ch/explore/dataset/12460"
+  )
+
+```

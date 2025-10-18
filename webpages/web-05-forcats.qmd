@@ -1,0 +1,45 @@
+---
+title: "Unit 5"
+subtitle: "Daten rekodieren"
+params:
+  unit: 5
+---
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+## {{< fa bullseye >}} Ziele
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+Am Ende dieser Woche kannst du:
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+<!-- `r paste0("- ", lobj, "\n")` -->
+
+<!-- `r  purrr::map(lobj, \(x) paste0("- ", x, "\n"))` -->
+
+## {{< fa display >}} Folien
+
+[Folien im Vollbild anzeigen](../slides/slide-05-forcats.qmd) \| [Folien als PDF herunterladen](../slides/slide-05-forcats.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-05-forcats.html title="Unit 5 - Forcats and recoding" style="border: 1px solid #123233;"></iframe>
+```
+## {{< fa code >}} Praktika
+
+-   [prak-05a-type-coercion.qmd](../exercises/unit05/prak-05a-type-coercion.qmd)
+-   [prak-05b-cond-mutate.qmd](../exercises/unit05/prak-05b-cond-mutate.qmd)
+-   [prak-05c-forcats-firmen.qmd](../exercises/unit05/prak-05c-forcats-firmen.qmd)
+-   [prak-05d-cond-mutate-forcats.qmd](../exercises/unit05/prak-05d-cond-mutate-forcats.qmd)
+
+## {{< fa book >}} Lektüre
+
+-   [R for data science: Chapter 12.5 - Conditional transformations](https://r4ds.hadley.nz/logicals.html#conditional-transformations)
+-   [R for data science: Chapter 16 - Factors](https://r4ds.hadley.nz/factors)

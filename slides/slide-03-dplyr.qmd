@@ -1,0 +1,635 @@
+---
+title: "Daten transformieren mit `{dplyr}`"
+subtitle: "Unit 3" 
+date: ""
+format: 
+  revealjs
+params:
+  unit: 3
+---
+
+```{r setup, include=FALSE}
+source(here::here("_init.R"))
+```
+
+##
+
+![](img/r_rollercoaster.png)
+
+
+# Ziele für heute {background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |>
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+## Daten-Transformation mit `{dplyr}`
+
+::: columns
+::: {.column width="30%"}
+![](img/dplyr-part-of-tidyverse.png)
+:::
+
+::: {.column width="70%"}
+
+
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Zeilen**: filtern, anordnen
+:::
+
+**Spalten**: auswählen, anordnen, umbenennen, erstellen
+
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Gruppen**: zusammenfassen, zählen
+
+**Tabellen**: zusammenfügen
+:::
+:::
+
+:::
+
+# Spalten transformieren {background-color="#e6f2f2"}
+
+`select()`, `relocate()`, `rename()`, `mutate()`
+
+## {background-image="img/starwars.jpg" background-size="contain"}
+
+## Daten
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2|3-13"
+library(tidyverse)
+glimpse(starwars)
+```
+
+## Spalten auswählen
+
+![`select(Datensatz, Spalten)`](img/dplyr/dplyr-select-range.png)
+
+## Spalten auswählen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+select(starwars, name, mass)
+```
+
+## Spalten auswählen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+select(starwars, -height)
+```
+
+
+## Spalten auswählen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+select(starwars, name:mass)
+```
+
+## Spalten auswählen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+select(starwars, starts_with("h"))
+```
+
+## Spalten auswählen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+select(starwars, ends_with("color"))
+```
+
+::: fragment
+[Selection helpers](https://tidyselect.r-lib.org/reference/language.html): `contains("s")`, `where(is.numeric)`, `everything()`
+:::
+
+## Eine Spalte verschieben {auto-animate="true"}
+
+![`relocate(Datensatz, Spalten_zu_verschieben)`](img/dplyr/dplyr-relocate.png)
+
+## Eine Spalte verschieben {auto-animate="true"}
+
+::: columns
+::: column
+```{r}
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+starwars
+```
+:::
+
+::: column
+::: fragment
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|2"
+relocate(starwars, mass)
+```
+:::
+:::
+:::
+
+## Eine Spalte verschieben {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|2"
+relocate(starwars, mass, .before = height)
+```
+
+
+## Eine Spalte umbenennen {auto-animate="true"}
+![`rename(Datensatz, neuer_name = alter_name)`](img/dplyr/dplyr-rename.png)
+
+## Eine Spalte umbenennen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|2"
+rename(starwars, gewicht = mass)
+```
+
+## Eine neue Spalte erstellen {auto-animate="true"}
+
+![`mutate(Datensatz, neue_spalte = Wert_neuer_spalte)`](img/dplyr/dplyr-mutate.png)
+
+## Eine neue Spalte erstellen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|1|2|15-16"
+mutate(starwars, height_m = height / 100)
+```
+
+## Eine neue Spalte erstellen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "|3-4"
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+mutate(
+  starwars,
+  height_m = height / 100,
+  .after = height
+)
+```
+
+## Mehrere Spalten erstellen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "3-5"
+#| class-output: highlight
+#| output-line-numbers: "|1-2"
+mutate(
+  starwars,
+  height_m = height / 100,
+  bmi = mass / height_m^2,
+  .after = mass
+)
+```
+
+## Praktikum: Spalten-Transformation mit `{dplyr}`
+
+[prak-03a-spalten-abstimmung.qmd](../exercises/unit03/prak-03a-spalten-abstimmung.qmd)
+
+`r countdown(minutes = 20, seconds = 0, update_every = 20, start_immediately = TRUE, play_sound = TRUE, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#|
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# The Pipe {background-color="#e6f2f2"}
+
+::: notes
+In der Programmierung ist eine Pipe eine Technik zur Weitergabe von Informationen von einem Prozess zu einem anderen.
+
+Wir haben bereits gesehen, wie man die `pipe` mit einfachen `{dplyr}`-Funktionen verwendet. Aber ihre Stärke kommt voll zur Geltung, wenn wir mehrere Funktionen mit demselben *dataframe* kombinieren wollen.
+:::
+
+## The Pipe `|>` {.smaller}
+
+1.  `filter`: mass \< 300
+2.  `mutate`: height_m, bmi
+3.  `select`: name, species, sex, bmi
+4.  `arrange`: desc(bmi)
+
+::: fragment
+```{r}
+#| output-location: fragment
+
+arrange(select(mutate(filter(starwars, mass < 300), height_m = height / 100, bmi = mass / height_m^2), name, species, sex, bmi), desc(bmi))
+```
+:::
+
+## The Pipe `|>` {.smaller}
+
+1.  `filter`: mass \< 300
+2.  `mutate`: height_m, bmi
+3.  `select`: name, species, sex, bmi
+4.  `arrange`: desc(bmi)
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|4|3,5-7|2,8-9|1,10-11"
+arrange(
+  select(
+    mutate(
+      filter(starwars, mass < 300),
+      height_m = height / 100,
+      bmi = mass / height_m^2
+    ),
+    name, species, sex, bmi
+  ),
+  desc(bmi)
+)
+```
+
+::: notes
+Wir könnten das ganze durch Einrückungen zumindest etwas lesbarer gestalten.
+
+Das ist schon etwas besser, aber immer noch nicht sonderlich intuitiv zu lesen -- und schliessen wir nur eine Klammer an der falschen Stelle oder vergessen sie gar ganz, fliegt uns der gesamte Code um die Ohren.
+:::
+
+## The Pipe `|>`
+
+```{r}
+#| eval: false
+#| code-line-numbers: "1|2-5|6|7"
+df1 <- filter(starwars, mass < 300)
+df2 <- mutate(df1,
+  height_m = height / 100,
+  bmi = mass / height_m^2
+)
+df3 <- select(df2, name, species, sex, bmi)
+arrange(df3, desc(bmi))
+```
+
+::: fragment
+<br>
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|1|2|3-6|7|8"
+starwars |>
+  filter(mass < 300) |>
+  mutate(
+    height_m = height / 100,
+    bmi = mass / height_m^2
+  ) |>
+  select(name, species, sex, bmi) |>
+  arrange(desc(bmi))
+```
+:::
+
+::: notes
+Natürlich könnten wir die Schritte der Analyse auch einzeln durchgehen und jeweils einem neuen "Objekt" zuweisen.
+
+Mit dem Pipe-Operator `|>` können wir diese Schritte in einer logischen Lesereihenfolge ohne die Erstellung von redundanten Objekten durchführen.
+
+Während beide Formen ihre Zeit und ihren Ort haben, erzeugt das Pipe im Allgemeinen Datenanalysecode, der einfacher zu schreiben und zu lesen ist.
+:::
+
+## The Pipe `%>%`
+
+::: columns
+::: {.column width="50%"}
+![](img/pipe/magritte.jpg)
+:::
+
+::: {.column width="50%"}
+<!-- ![](img/pipe/magrittr-hex.png) -->
+
+[![](img/pipe/Base-R-Pipe_thumbnail.webp)](https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/)
+:::
+:::
+
+::: fragment
+Ctrl + ⇧ + M = `|>`
+:::
+
+::: notes
+Der ursprüngliche Pipe-Operator wurde zuerst im Paket `magrittr` implementiert und in tidyverse integriert.
+
+Für unsere Zwecke sind base und magrittr gleichwertig. Siehe Unterschiede hier https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/
+:::
+
+##  {background-image="img/pipe/native-pipe-rstudio.png" background-size="contain"}
+
+::: notes
+Die native Pipe ist nun Teil von R und kann in `Global Options` ausgewählt werden.
+:::
+
+## Pipe vs Layer
+
+-   `|>` in `{dplyr}` pipelines: die Ausgabe der vorherigen Codezeile als erste Eingabe der nächsten Codezeile
+
+::: incremental
+-   `+` in `ggplot2` für Schichten: wir erstellen Schichten die durch `+` getrennt sind
+:::
+
+
+## Praktikum: `{dplyr}` und `|>`
+
+[prak-03a-spalten-abstimmung.qmd](../exercises/unit03/prak-03a-spalten-abstimmung.qmd)
+
+`r countdown(minutes = 10, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+## Daten-Transformation mit `{dplyr}` {visibility="hidden"}
+
+::: columns
+::: {.column width="35%"}
+![](img/dplyr-part-of-tidyverse.png)
+:::
+
+::: {.column width="65%"}
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Zeilen**: `filter()`, `arrange()`, `distinct()`
+
+**Spalten**: `mutate()`, `select()`, `rename()`, `relocate()`
+:::
+
+**Gruppen**: `group_by()`, `summarise()`
+
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Tabellen**: `***_join()`
+:::
+:::
+:::
+
+# Daten-Transformation mit `{dplyr}`
+
+::: columns
+::: {.column width="35%"}
+![](img/dplyr-part-of-tidyverse.png)
+:::
+
+::: {.column width="65%"}
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Zeilen**: auswählen, anordnen
+
+**Spalten**: auswählen, anordnen, umbenennen, erstellen
+:::
+
+**Gruppen**: zusammenfassen, zählen
+
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Tabellen**: zusammenfügen.
+:::
+:::
+:::
+
+# Daten gruppieren mit `{dplyr}` {background-color="#e6f2f2"}
+
+`group_by()`, `summarise()`, `count()`
+
+## {background-image="img/penguins/penguins.png"}
+
+## Daten {auto-animate="true"}
+
+```{r}
+glimpse(penguins)
+```
+
+::: notes
+Die wichtigste gruppierte Operation ist eine Zusammenfassung. Wenn die Zusammenfassung zur Berechnung einer einzigen zusammenfassenden Statistik verwendet wird, reduziert sie den *dataframe* auf eine einzige Zeile für jede Gruppe.
+:::
+
+## Daten zusammenfassen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "|1|2-4"
+#| eval: false
+penguins |>
+  summarise(
+    average_weight = mean(body_mass_g, na.rm = TRUE)
+  )
+```
+
+::: notes
+Mit der Funktion `summarise()` wird ein neuer Dataframe erstellt. Der Dataframe enthält eine Spalte für jede angegebene zusammenfassende Statistik. Dieser enthält eine Zeile für jede Kombination von Gruppierungsvariablen.
+:::
+
+## Daten zusammenfassen {visibility="uncounted"}
+
+```{r}
+#| class-output: highlight
+#| output-line-numbers: "|1|2-4"
+penguins |>
+  summarise(
+    average_weight = mean(body_mass_g, na.rm = TRUE)
+  )
+```
+
+
+## Daten gruppieren {auto-animate="true"}
+
+![`group_by(Datensatz, Gruppierungsvariablen)`](img/dplyr/dplyr-groups.png)
+
+
+## Daten gruppieren
+
+```{r}
+summary(penguins)
+```
+
+## Daten gruppieren {auto-animate="true" visibility="hidden"}
+
+::: columns
+
+::: {.column width="33%"}
+```{r}
+penguins |>
+  distinct(sex)
+```
+:::
+
+::: {.column width="33%"}
+::: fragment
+```{r}
+penguins |>
+  distinct(species)
+```
+:::
+:::
+
+::: {.column width="33%"}
+::: fragment
+```{r}
+penguins |>
+  distinct(island)
+```
+:::
+:::
+
+:::
+
+## Daten gruppieren {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|2"
+penguins |>
+  group_by(species)
+```
+
+::: notes
+Die Funktion `group_by()` wird genutzt um einen existierenden Dataframe in einen gruppierten Dataframe zu konvertieren, sodass die folgenden Anweisungen auf der Ebene der Gruppen angewandt werden.
+:::
+
+## Eine Gruppe zusammenfassen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+penguins |>
+  group_by(species) |>
+  summarise(
+    average_weight = mean(body_mass_g, na.rm = TRUE)
+  )
+```
+
+
+## Eine Gruppe zusammenfassen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "|4"
+#| output-location: fragment
+penguins |>
+  summarise(
+    average_weight = mean(body_mass_g, na.rm = TRUE),
+    .by = species
+  )
+```
+
+::: notes
+Wir wollen wissen, wie gross ist jede Species im Durschnitt.
+:::
+
+## Eine Gruppe mehrfach zusammenfassen {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3-6"
+#| output-location: fragment
+penguins |>
+  group_by(species) |>
+  summarise(
+    average_weight = mean(body_mass_g, na.rm = TRUE),
+    average_flipper_length = mean(flipper_length_mm, na.rm = TRUE)
+  )
+```
+
+::: notes
+Ihr könnt in einem einzigen `summarise()` mehrere Zusammenfassungen erstellen. 
+:::
+
+## Mehrere Gruppen zusammenfassen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+penguins |>
+  group_by(species, island) |>
+  summarise(average_weight = mean(body_mass_g, na.rm = TRUE))
+```
+
+::: notes
+Wir wollen wissen, wie gross ist jede Species auf jeder Insel im Durschnitt.
+:::
+
+## Frequenzen {auto-animate="true"}
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "1-2|3"
+penguins |>
+  group_by(species) |>
+  summarise(n = n())
+```
+:::
+
+::: {.column width="50%"}
+::: fragment
+```{r}
+#| output-location: fragment
+penguins |> count(species)
+```
+:::
+:::
+:::
+
+::: fragment
+`group_by()` + `summarise()` + `n()` :left_right_arrow: `count()`
+:::
+
+::: fragment
+> Most of data science is counting, and sometimes dividing.
+>
+> -- *Hadley Wickham*
+:::
+
+::: notes
+Es gibt verschiedene nützliche Zusammenfassungen, aber eine sehr nützliche Zusammenfassung ist `n()`, die die Anzahl der Zeilen in jeder Gruppe zurückgibt.
+
+Means und Counts können dich in Data Science überraschend weit bringen!
+:::
+
+## Praktikum 03b: Gruppen zusammenfassen
+
+[prak-3b-groups-penguins.qmd](../exercises/unit03/prak-3b-groups-penguins.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#|
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+## Praktikum 03c: Gebäude und Energiequelle
+
+[prak-03c-dplyr-gebaeude.qmd](../exercises/unit03/prak-03c-dplyr-gebaeude.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Danke! :first_quarter_moon: {background-color="#e6f2f2"}
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide-03-dplyr.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).

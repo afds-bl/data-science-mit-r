@@ -1,0 +1,68 @@
+---
+title: "Praktium 05b: Bedingt `mutate()`"
+author: "___"
+execute: 
+  eval: false
+---
+
+# Tastaturkürzel
+
+|  |  |
+|----------------------------------------------|--------------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# OGD-Datensätze
+
+Wir werden mit zwei OGD-Datensätze arbeiten:
+
+-   [Abstimmungsarchiv](https://data.bl.ch/explore/dataset/11990/table)
+-   [Gebäude](https://data.bl.ch/explore/dataset/12160/table)
+
+Man könnte OGD-Daten direkt aus dem OGd-Portal so einlesen:
+
+```{r}
+abstimmung <- read.delim("https://baselland.opendatasoft.com/api/explore/v2.1/catalog/datasets/11990/exports/csv", sep = ";")
+```
+
+```{r}
+gebaeude <- read.delim("https://baselland.opendatasoft.com/api/explore/v2.1/catalog/datasets/12160/exports/csv", sep = ";")
+```
+
+**Achtung** aktuell `read.delim()` statt `read_delim()`.
+
+# Packages laden
+
+1.  Lädt das `tidyverse`-Package.
+
+# `if_else()`
+
+2.  Lädt die Daten "data/ogd_abstimmungsarchiv_11990.csv".
+3.  Erkundet die Daten: `glimpse()`, `summary()`, `View()`
+4.  Was ist die durchschnittliche Wahlbeteiligung? (`summary()`, `summarise() + mean()`, `summarise() + median()`)
+5.  Erstellt eine neue kategorielle Variable `turnout_cat`, die zwei Niveaus hat:
+    -   unterdurchschnittlich
+    -   überdurchschnittlich
+
+# `case_when()`
+
+8.  Lädt die Daten "data/ogd_gebaeude12160.csv"
+9.  Erkundet die Daten: `glimpse()`, `summary()`, `View()`
+10. Behaltet nur die folgenden Spalten:
+    -   "gemeindenummer_bfs"\
+    -   "gemeindename"\
+    -   "baujahr_des_gebaeudes"\
+    -   "energie_waermequelle_heizung_primaer_code"\
+    -   "energie_waermequelle_heizung_primaer_bezeichnung"
+    -   "gebaeudeflaeche"\
+    -   "anzahl_geschosse"
+11. Wie viele verschiedene Primäre Wärmequellen gibt es?
+12. Verwendet `case_when()` und die Variable `energie_waermequelle_heizung_primaer_bezeichnung` um eine neue Variable der Wärmequelle zu erstellen, die vier Kategorien hat:
+    -   Gas, Heizöl → Fossil
+    -   Keine → Keine
+    -   Unbestimmt → Unbestimmt
+    -   alle andere Quellen → Erneuerbare

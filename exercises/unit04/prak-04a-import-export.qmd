@@ -1,0 +1,66 @@
+---
+title: "Praktikum 4a: Daten importieren und exportieren"
+execute: 
+  error: true
+---
+
+# Tastaturkürzel
+
+|  |  |
+|-----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Aufgaben
+
+## Packages laden
+
+1.  Ladet die Packages `tidyverse`, `writexl` und `janitor`
+
+## Daten importieren
+
+2.  Importiert die "data/ogd_12030_wetter.csv"-Datei mit `read_csv2()`. Das sind die Tagesdaten der NBCN-Station (Swiss National Basic Climate Network) Basel-Binningen vom [OGD-Portal](https://data.bl.ch/explore/dataset/12030/table/?disjunctive.jahr&sort=date&q.timerange.date=date:%5B1900-01-01+TO+2024-12-31%5D).
+
+```{r}
+# wetter <- 
+```
+
+3.  Bereinigt die Namen mit der `janitor::clean_names()`-Funktion
+
+4.  Verwendet `group_by()` und `summarise()` um die durschnittliche maximale Tagestemperatur (`tagesmaximum_lufttemperatur`) pro Jahr zu rechnen:
+
+```{r}
+# wetter_summary <- wetter |>
+#   group_by(___) |>
+#   summarise(temp_max = ___)
+```
+
+5.  Lest die Warnung/Fehlermeldung. Wie könntet ihr das Problem beheben?
+
+    1.  Option 1: `readr::parse_number()`
+    2.  Option 2: `read_delim()`
+
+## Daten exportieren
+
+6.  Speichert das Ergebnis in einer csv-Datei und einer xlsx-Datei
+
+## Datenkodierung
+
+7.  Ladet "data/urbanisierung-grad_1521.csv" mit `read_delim`
+
+```{r}
+# urb_grad <- ___
+# glimpse(urb_grad)
+```
+
+8.  Etwas stimmt mit den Characters nicht, warum? Benutzt die `readr::guess_encoding()`-Funktion
+
+9.  Wie könntet ihr das Problem beheben? Hint: `?readr::locale`.
+
+```{r}
+# urb_grad <- ___("data/urbanisierung-grad_1521.csv", delim = ";", locale = locale(encoding = ___))
+```

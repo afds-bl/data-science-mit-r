@@ -1,0 +1,119 @@
+---
+title: "Praktikum 02c - Zeilen transformieren mit `dplyr`"
+author: ""
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|--------------------------------------------------------------|------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# R-Packages laden
+
+1.  Lade `tidyverse` und `palmerpenguins`Packages.
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+
+# Daten erkunden
+
+2.  Benutze `head()`, `summary()`, `str()` und `glimpse()` um die Daten zu erkunden:
+
+```{r}
+head(penguins)
+```
+
+
+# `filter()`
+
+## Text Variablen Filtern
+
+Variablen der Klassen `factor` und `character` werden mit einem Text string gefiltert. Filter für mehrere Werte mit `|` (*or*) Operator. Das Symbol auf deutscher Windows-Tastatur: `AltGr + 7`.
+
+3.  Behalte Pinguine der Art `Chinstrap`.
+
+```{r}
+filter(penguins, species == "Chinstrap")
+```
+
+4.  Behalte Pinguine die entweder zur Art `Chinstrap` oder `Gentoo` gehören.
+
+```{r}
+filter(penguins, species == "Chinstrap" | species == "Gentoo")
+```
+
+
+```{r}
+filter(penguins, species %in% c("Chinstrap", "Gentoo"))
+```
+
+5.  Behalte Pinguine der Art `Adelie` die auf der Insel `Dream` leben (Tipp: zwei mögliche Operatoren).
+
+```{r}
+filter(penguins, species == "Adelie" & island == "Dream")
+```
+
+```{r}
+filter(penguins, species == "Adelie" , island == "Dream")
+```
+
+## Numerische Variablen Filtern
+
+6.  Behalte Pinguine mit Gewicht 2900g oder leichter.
+
+```{r}
+filter(penguins, body_mass_g <= 2900)
+```
+
+7.  Behalte Pinguine der Art `Adelie` mit `bill_length_mm` über 40 mm.
+
+```{r}
+filter(penguins, species == "Adelie" & bill_length_mm > 40)
+```
+
+## `NA`s Filtern
+
+8.  Welche variable haben `NA`? Hint: `skimr::skim()`
+9.  Entferne Pinguine die keine Daten für `sex` haben. Hint: `is.na()`
+
+```{r}
+filter(penguins, !is.na(sex))
+```
+
+# `arrange()`
+
+10. Den Datensatz mit der variable `body_mass_g` in absteigender Reihenfolge ordnen.
+
+```{r}
+arrange(penguins, desc(body_mass_g))
+```
+
+11. Den Datensatz mit den Variable `body_mass_g` und `bill_length_mm` ordnen.
+
+```{r}
+arrange(penguins, body_mass_g, bill_length_mm)
+```
+
+
+# `distinct()`
+
+12. Behalte eindeutige Zeilen mit den Variablen `species` und `island`.
+
+```{r}
+distinct(penguins, species, island)
+```
+
+```{r}
+count(penguins, species, island)
+```
+
+    Wenn du die Anzahl der Vorkommen ermitteln willst, solltest du `distinct()` gegen `count()` austauschen (später im Kurs).

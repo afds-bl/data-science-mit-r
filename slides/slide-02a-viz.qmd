@@ -1,0 +1,462 @@
+---
+title: "Daten Visualisieren mit `{ggplot2}` [2/2]"
+subtitle: "Unit 2" 
+date: ""
+format:
+  revealjs
+params:
+  unit: "2a"
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+# Ziele für heute{background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+## Diagramtypen
+
+:question:
+
+## Diagramtypen{visibility="uncounted"}
+
+:question:
+
+![](img/Diagram_Types.png){fig-align="center"}
+
+::: {.fragment .absolute top="8%" left="6%" style="font-size: 0.7em; font-weight: bold;"}
+Balkendiagramm  
+(bar chart)
+:::
+
+::: {.fragment .absolute top="8%" left="36%" style="font-size: 0.7em; font-weight: bold;"}
+Histogramm  
+(histogram)
+:::
+
+::: {.fragment .absolute top="8%" left="66%" style="font-size: 0.7em; font-weight: bold;"}
+Streudiagramm  
+(scatter plot)
+:::
+
+::: {.fragment .absolute top="52%" left="6%" style="font-size: 0.7em; font-weight: bold;"}
+Liniendiagramm  
+(line chart)
+:::
+
+::: {.fragment .absolute top="52%" left="36%" style="font-size: 0.7em; font-weight: bold;"}
+Boxplot  
+(boxplot)
+:::
+
+::: {.fragment .absolute top="52%" left="66%" style="font-size: 0.7em; font-weight: bold;"}
+Kreisdiagramm  
+(pie chart)
+:::
+
+::: {.fragment .absolute top="17%" left="7%" style="color: #cc0000; font-family: monospace; font-size: 0.65em;"}
+`geom_bar()`
+:::
+
+::: {.fragment .absolute top="17%" left="37%" style="color: #cc0000; font-family: monospace; font-size: 0.65em;"}
+`geom_histogram()`
+:::
+
+::: {.fragment .absolute top="17%" left="67%" style="color: #cc0000; font-family: monospace; font-size: 0.65em;"}
+`geom_point()`
+:::
+
+::: {.fragment .absolute top="61%" left="7%" style="color: #cc0000; font-family: monospace; font-size: 0.65em;"}
+`geom_line()`
+:::
+
+::: {.fragment .absolute top="61%" left="37%" style="color: #cc0000; font-family: monospace; font-size: 0.65em;"}
+`geom_boxplot()`
+:::
+
+::: {.fragment .absolute top="61%" left="67%" style="color: #999999; font-family: monospace; font-size: 0.65em; text-decoration: line-through;"}
+(überspringen)
+:::
+
+## R Package `ggplot2`{}
+
+::: columns
+::: {.column width="40%"}
+![](img/ggplot2-part-of-tidyverse.png)
+:::
+
+::: {.column width="60%"}
+
+```{r}
+#| eval: false
+#| code-line-numbers: "1-3|4|5"
+
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+:::
+:::
+
+## R Package `ggplot2` {visibility="hidden"}
+
+::: columns
+::: {.column width="40%"}
+![](img/ggplot2-part-of-tidyverse.png)
+:::
+
+::: {.column width="60%"}
+Streudiagramm (*Scatterplot*)
+
+Verteilungen visualisieren
+
+Beziehungen visualisieren
+
+```{r}
+#| eval: false
+#| code-line-numbers: "1-3|4|5"
+
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+:::
+:::
+
+::: notes
+Letzte Woche haben wir uns angeschaut, wie wir ein Streudiagramm mit dem `ggplot2`-Package erstellen. Diese Woche werden wir lernen, wie man Verteilungen und Beziehungen mit `ggplo2` visualisiert. Ich möchte euch an die Syntax der Funktion `ggplot()` erinnern.
+:::
+
+## Programmieren lernen mit Hilfe eines Video-Tutorials{visibility="hidden"}
+
+![](img/xvmrD9XpWpkNIe8O.mp4){fig-align="center" fig-width="150%"}
+
+::: aside
+--- Tawanda Nyahuye👨‍💻 [\@towernter, August 14, 2022](https://twitter.com/towernter/status/1558745418867118082?ref_src=twsrc%5Etfw)
+:::
+
+::: notes
+Doch bevor wir beginnen, wollte ich wissen, ob einige von euch Ende letzter Woche so empfunden haben?
+:::
+
+## Balkendiagramm
+
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+```
+
+## Balkendiagramm{auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species, fill = species)) +
+  geom_bar()
+```
+
+## Balkendiagramm{auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(y = species, fill = species)) +
+  geom_bar()
+```
+
+## Praktikum 02a
+
+[exercises/unit2/prak-02a-viz.qmd](../exercises/unit02/prak-02a-viz.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+## Praktikum 02b: Visualisierung (Hausaufgabe)
+
+[prak-02b-viz.qmd](../exercises/unit02/prak-02b-viz.qmd)
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide-02a-viz.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
+
+# Verteilungen visualisieren {background-color="#e6f2f2" visibility="uncounted"}
+
+## Kategoriale Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+```
+
+## Kategoriale Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species, fill = species)) +
+  geom_bar()
+```
+
+## Kategoriale Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species, fill = island)) +
+  geom_bar()
+```
+
+::: notes
+Die Grafik zeigt die Häufigkeit der einzelnen Pinguinarten auf den einzelnen Inseln.
+:::
+
+## Kategoriale Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species, fill = species)) +
+  geom_bar(position = "fill")
+```
+
+::: notes
+Diese Grafik ist ein relativer Häufigkeitsplot, der durch die Einstellung position = "fill" im Geom erstellt wird. Sie ist nützlicher für den Vergleich von species über Inseln hinweg, da sie nicht durch die ungleiche Anzahl von Pinguinen auf den Inseln beeinflusst wird.
+:::
+
+::: notes
+`forcats::fct_infreq()`
+:::
+
+## Numerische Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 200)
+```
+
+## Numerische Variablen {auto-animate="true" visibility="uncounted"}
+
+::: panel-tabset
+## Binwidth = 20
+```{r}
+#| fig.height: 4
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 20)
+```
+
+## Binwidth = 2000
+```{r}
+#| fig.height: 4
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 2000)
+```
+:::
+
+::: notes
+Eine Alternative für *numerische variables* ist *density plot*, eine *smoothed-out* version eines Histogramms.
+:::
+
+## Numerische Variablen {visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = body_mass_g)) +
+    geom_density()
+```
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Beziehungen visualisieren {background-color="#e6f2f2" visibility="uncounted"}
+
+## Eine numerische und eine kategoriale Variable {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot()
+```
+
+::: fragment
+::: {.absolute bottom="7%" right="0%"}
+[Erklärungen zum Boxplot](https://www.data-to-viz.com/caveat/boxplot.html)
+:::
+:::
+
+::: notes
+Alternativ können wir *density plots* mit `geom_density()` erstellen.
+:::
+
+## Eine numerische und eine kategoriale Variable {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = body_mass_g, colour = species)) +
+  geom_density(linewidth = 1)
+```
+
+## Eine numerische und eine kategoriale Variable {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = body_mass_g, colour = species, fill = species)) +
+  geom_density(alpha = 0.4)
+```
+
+## Drei oder mehr Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| output-location: fragment
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(colour = species, shape = island))
+```
+
+::: notes
+Wenn man zu viele ästhetische Zuordnungen zu einer Darstellung hinzufügt, wird sie unübersichtlich und schwer zu verstehen. Eine andere Möglichkeit, die besonders bei kategorialen Variablen nützlich ist, besteht darin, die Darstellung in `facets` aufzuteilen, d. h. in Unterdiagramme, die jeweils eine Teilmenge der Daten anzeigen.
+:::
+
+## Drei oder mehr Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| code-line-numbers: "3"
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(colour = species, shape = island)) +
+  facet_wrap(~island)
+```
+
+## {visibility="uncounted"}
+
+[![](img/data-to-viz.png)](https://www.data-to-viz.com/)
+
+::: notes
+Auf dieser Website findet ihr einen Leitfaden für geeignete grafische Möglichkeiten je nach Datentyp: [data-to-viz.com](https://www.data-to-viz.com/)
+:::
+
+## Praktikum 02b: Visualisierung {visibility="uncounted"}
+
+[prak-02b-viz.qmd](../exercises/unit02/prak-02b-viz.qmd)
+
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+## Eine numerische und eine kategoriale Variable {auto-animate="true" visibility="uncounted"}
+```{r}
+library(ggridges)
+ggplot(penguins, aes(x = body_mass_g, y = species, fill = species, colour = species)) +
+  geom_density_ridges(scale = 0.95, alpha = 0.5)
+```
+
+## Drei oder mehr Variablen {auto-animate="true" visibility="uncounted"}
+```{r}
+#| code-line-numbers: "3-4"
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(colour = species, shape = island)) +
+  facet_wrap(~island) +
+  guides(shape = "none")
+```
+
+## Eine numerische und eine kategoriale Variable {visibility="uncounted"}
+```{r}
+#| echo: false
+
+library(patchwork) # side by side plots
+
+ggplot(penguins |>
+         filter(species == "Chinstrap"), aes(x = species, y = body_mass_g)) +
+  geom_point() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
+  ) +
+  ggplot(penguins |>
+         filter(species == "Chinstrap"), aes(y = body_mass_g)) +
+  geom_histogram() +
+  facet_wrap(~species) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    strip.background = element_blank(),
+    strip.text.x = element_blank()
+  ) +
+  ggplot(penguins |>
+         filter(species == "Chinstrap"), aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+## Numerische Variable {auto-animate="true" visibility="uncounted"}
+```{r}
+#| code-line-numbers: "2,4"
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 20) +
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 2000)
+```
+
+## Kategoriale Variable {visibility="uncounted" auto-animate="true"}
+```{r}
+#| code-line-numbers: "1"
+ggplot(penguins, aes(x = fct_infreq(species))) +
+  geom_bar()
+```
+
+
+## R Package `ggplot2` {visibility="hidden"}
+
+::: columns
+::: {.column width="40%"}
+![](img/ggplot2-part-of-tidyverse.png)
+:::
+
+::: {.column width="60%"}
+::: {.fragment .semi-fade-out}
+Streudiagramm (*Scatterplot*)
+:::
+
+Verteilungen visualisieren
+
+Beziehungen visualisieren
+
+```{r}
+#| eval: false
+
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+:::
+:::
+
+##  {background-image="img/penguins/penguins.png" visibility="hidden"}
+
+## Daten {visibility="hidden"}
+
+```{r}
+library(tidyverse)
+library(palmerpenguins) # data
+
+glimpse(penguins)
+```

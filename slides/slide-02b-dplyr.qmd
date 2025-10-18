@@ -1,0 +1,469 @@
+---
+title: "Daten transformieren mit `{dplyr}`"
+subtitle: "Unit 2" 
+date: ""
+format:
+  revealjs
+params:
+  unit: "2b"
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+# Ziele für heute {background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+# Workflow: R-Projects {background-color="#e6f2f2"}
+
+## Working Directory
+
+::::::: columns
+::::: {.column width="50%"}
+::: {.fragment .fade-in-then-semi-out}
+`setwd()` :left_right_arrow: `getwd()`
+:::
+
+::: fragment
+RStudio Projekte :fireworks:
+:::
+:::::
+
+::: {.column width="50%"}
+![](img/projects/wd.png)
+:::
+:::::::
+
+::: notes
+R hat eine leistungsfähige Vorstellung vom Arbeitsverzeichnis oder *working directory*. In diesem *working directory* sucht R nach Dateien, die ihr laden möchtet, und legt alle Dateien ab, die ihr speichern möchtet. RStudio zeigt eur aktuelles *working directory* oben in der Console an.
+
+Als R-Anfänger ist es in Ordnung, wenn eur *working directory* eur Home directory, Dokumente, Austausch oder ein anderes seltsames Ordner auf eurem Computer ist. Ihr werdet jedoch in naher Zukunft langsam aber sicher keine Anfänger mehr sein, hoffentlich.
+
+Schon bald solltet ihr dazu übergehen, eure Projekte in Ordner zu organisieren und bei der Arbeit an einem Projekt das working directory von R auf das Ordner zu setzen. Ihr könntet das mit `setwd()` machen aber es gibt einen viel besseren weg: RStudio Projekte.
+:::
+
+## RStudio-Projekte
+
+:::::: columns
+:::: {.column width="50%"}
+Einer der stärksten Aspekte von RStudio:
+
+::: incremental
+-   Relative Pfade (`setwd()` nicht erforderlich)
+
+-   Dateien und Ordner zusammen, die zusammengehören
+:::
+::::
+
+::: {.column width="50%"}
+::: fragment
+![](img/projects/projects-new.png)
+:::
+:::
+::::::
+
+## Praktikum: RStudio-Projekte {.smaller}
+
+::::: columns
+::: {.column width="60%"}
+-   Erstellt ein neues Quarto-Projekt namens `test`
+:::
+
+::: {.column width="40%"}
+![](img/projects/new-quarto-project.png)
+:::
+:::::
+
+::: fragment
+-   Erstellt ein RStudio-Project mit einem existierenden Ordner
+:::
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+
+#
+
+![](img/data-science-explore.png){width="50%"}
+
+::: notes
+Die Visualisierung ist ein toller Einstieg in die R-Programmierung, denn die Vorteile liegen auf der Hand: ihr könntet elegante und informative Diagramme erstellen, die euch helfen, Daten zu verstehen.
+
+Die Visualisierung allein reicht in der Regel aber nicht aus. In Daten-Transformierung lernt ihr daher die wichtigsten Verben kennen, mit denen könntet ihr:
+
+-   wichtige Variablen auswählen
+-   wichtige Beobachtungen herausfiltern
+-   neue Variablen erstellen
+-   und Zusammenfassungen berechnen.
+
+Nachher könntet ihr Visualisierung und Transformation kombinieren um eure Daten systematisch zu explorieren -\> **explorative data analysis**.
+:::
+
+##  {background-image="img/dplyr_wrangling.png" background-size="contain"}
+
+::: aside
+Illustration von [\@allison_horst](https://twitter.com/allison_horst)
+:::
+
+::: notes
+Aufräumen und Transformieren werden zusammen als "wrangling" bezeichnet, weil es sich oft wie ein Kampf anfühlt, die Daten in eine Form zu bringen, mit der man gut arbeiten kann!
+
+This task uses the most time!
+:::
+
+<!-- # Daten-Transformation mit `{dplyr}` {background-color="#e6f2f2"} -->
+
+## Daten-Transformation mit `{dplyr}`
+
+:::::: columns
+::: {.column width="30%"}
+![](img/dplyr-part-of-tidyverse.png)
+:::
+
+:::: {.column width="70%"}
+::: incremental
+-   **Zeilen**: filtern, anordnen
+
+-   **Spalten**: auswählen, anordnen, umbenennen, erstellen
+
+-   **Gruppen**: zusammenfassen, zählen
+
+-   **Tabellen**: zusammenfügen
+:::
+::::
+::::::
+
+## Regeln der `{dplyr}`-Functions
+
+`BEFEHL(DATEN_ZUM_UMWANDELN, WAS_MACHT_ES)`
+
+::: incremental
+1.  das erste Argument ist immer ein *data frame*
+
+2.  die nachfolgenden Argumente geben an was mit dem *data frame* gemacht werden soll
+
+3.  Geben immer ein *data frame* zurück
+
+4.  ändern nichts an Ort und Stelle
+:::
+
+# Zeilen transformieren {background-color="#e6f2f2"}
+
+`filter()`, `arrange()`, `distinct()`, `slice()`
+
+## [Daten](https://data.bl.ch/explore/dataset/11990/table/?disjunctive.domain0&disjunctive.name&disjunctive.type&disjunctive.answer&sort=date)
+
+![](img/abstimmung_data.png)
+
+## [Daten](https://data.bl.ch/explore/dataset/11990/table/?disjunctive.domain0&disjunctive.name&disjunctive.type&disjunctive.answer&sort=date)
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "1|2|3"
+#| class-output: highlight
+#| output-line-numbers: "1-2|3,5,6,15"
+ 
+library(tidyverse)
+abstimmung <- read_delim("data/ogd_abstimmungsarchiv_11990.csv", delim = ";")
+glimpse(abstimmung)
+```
+
+## Zeilen filtern
+
+![`filter(Datensatz, Zeilenbedingung)`](img/dplyr/dplyr-filter.png)
+
+## Zeilen filtern
+
+:::::: columns
+::: {.column width="55%"}
+```{r}
+#| eval: false
+#| code-line-numbers: "|1"
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)"
+)
+```
+:::
+
+:::: {.column width="45%"}
+::: fragment
+-   [`{dplyr}`-Befehl: `filter()`]{style="font-size:80%"}
+:::
+::::
+::::::
+
+## Zeilen filtern {auto-animate="true" visibility="uncounted"}
+
+::::: columns
+::: {.column width="55%"}
+```{r}
+#| code-line-numbers: "2"
+#| eval: false
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)"
+)
+```
+:::
+
+::: {.column width="45%"}
+-   [`{dplyr}`-Befehl: `filter()`]{style="font-size:80%"}
+-   [Erstes Argument: *data frame*]{style="font-size:80%"}
+:::
+:::::
+
+## Zeilen filtern {auto-animate="true" visibility="uncounted"}
+
+::::: columns
+::: {.column width="55%"}
+```{r}
+#| code-line-numbers: "3"
+#| eval: false
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)"
+)
+```
+:::
+
+::: {.column width="45%"}
+-   [`{dplyr}`-Befehl: `filter()`]{style="font-size:80%"}
+-   [Erstes Argument: *data frame*]{style="font-size:80%"}
+-   [Zweites Argument: Zeilenbedingung]{style="font-size:80%"}
+:::
+:::::
+
+## Zeilen filtern {auto-animate="true" visibility="uncounted"}
+
+::::: columns
+::: {.column width="55%"}
+```{r}
+#| code-line-numbers: "3"
+#| class-output: highlight
+#| output-line-numbers: "|1"
+
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)"
+)
+```
+:::
+
+::: {.column width="45%"}
+-   [`{dplyr}`-Befehl: `filter()`]{style="font-size:80%"}
+-   [Erstes Argument: *data frame*]{style="font-size:80%"}
+-   [Zweites Argument: Zeilenbedingung]{style="font-size:80%"}
+-   [Resultat: *data frame*]{style="font-size:80%"}
+:::
+:::::
+
+## Zeilen filtern {auto-animate="true"}
+
+```{r}
+#| eval: false
+
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)" & percent_turnout > 60
+)
+```
+
+## Zeilen filtern {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| class-output: highlight
+#| output-line-numbers: "|1"
+
+filter(
+  abstimmung, 
+  name == "Oberwil (BL)" & percent_turnout > 60
+)
+```
+
+## Logische Operatoren
+
+::::::: columns
+::: {.column width="15%"}
+`<`
+
+`<=`
+
+`>`
+
+`>=`
+
+`==`
+
+`!=`
+
+`x & y`
+:::
+
+::: {.column width="30%"}
+kleiner
+
+kleiner gleich
+
+grösser
+
+grösser gleich
+
+genau gleich
+
+ungleich
+
+x UND y
+:::
+
+::: {.column width="25%"}
+`x | y`
+
+`is.na(x)`
+
+`!is.na(x)`
+
+`x %in% y`
+
+`!(x %in% y)`
+
+`!x`
+:::
+
+::: {.column width="30%"}
+`x` Oder `y`
+
+`x` ist `NA`
+
+`x` ist nicht `NA`
+
+`x` ist in `y` 
+
+`x` ist nicht in `y`
+
+nicht `x`
+:::
+:::::::
+
+## Logische Operatoren {.smaller visibility="hidden"}
+
++----------------------------------------------------------------------+-------------------------------------------------------------------------+
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | Operator          | Definition                                   | | | Operator           | Definition                                     | |
+| +===================+==============================================+ | +====================+================================================+ |
+| | `<`               | kleiner                                      | | | `x` \| `y`         | `x` Oder `y`                                   | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `<=`              | kleiner gleich                               | | | `is.na(x)`         | `x` ist `NA`                                   | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `>`               | grösser                                      | | | `!is.na(x)`        | `x` is nicht `NA`                              | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `>=`              | grösser gleich                               | | | `x %in% y`         | `x` in `y` ist                                 | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `==`              | genau gleich                                 | | | `!(x %in% y)`      | `x` nicht in `y` ist                           | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `!=`              | ungleich                                     | | | `!x`               | nicht `x`                                      | |
+| +-------------------+----------------------------------------------+ | +--------------------+------------------------------------------------+ |
+| | `x & y`           | `x` UND `y`                                  | |                                                                         |
+| +-------------------+----------------------------------------------+ |                                                                         |
++----------------------------------------------------------------------+-------------------------------------------------------------------------+
+
+## Reihenfolge der Zeilen ändern {auto-animate="true"}
+
+![`arrange(Datensatz, Spalte)`](img/dplyr/dplyr-arrange.png)
+
+## Reihenfolge der Zeilen ändern {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+arrange(abstimmung, date)
+```
+
+## Reihenfolge der Zeilen ändern {auto-animate="true"}
+
+```{r}
+arrange(abstimmung, desc(date))
+```
+
+## Eindeutige Zeilen finden {auto-animate="true"}
+
+:::::: columns
+::: {.column width="50%"}
+```{r}
+#| output-location: fragment
+distinct(abstimmung, district)
+```
+:::
+
+:::: {.column width="50%"}
+::: fragment
+```{r}
+#| output-location: fragment
+count(abstimmung, district)
+```
+:::
+::::
+::::::
+
+::: notes
+`distinct()` findet alle eindeutigen Zeilen in einem Datensatz, bearbeitet also technisch gesehen in erster Linie die Zeilen.
+:::
+
+## Zeilen nach *Indices* auswählen {auto-animate="true"}
+
+`slice()`-Familie
+
+::::::: columns
+:::: {.column width="50%"}
+::: fragment
+```{r}
+slice(abstimmung, 21:23)
+```
+:::
+::::
+
+:::: {.column width="50%"}
+::: fragment
+```{r}
+slice_sample(abstimmung, n = 3)
+```
+:::
+::::
+:::::::
+
+## Praktikum - Zeilen transformieren mit `{dplyr}` {visibility="hidden"}
+
+[prak-02c-dplyr-rows-peng.qmd](../exercises/unit02/prak-02c-dplyr-rows-peng.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+## Praktikum - Zeilen transformieren mit `{dplyr}`
+
+[prak-02c-dplyr-abstimmung.qmd](../exercises/unit02/prak-02c-dplyr-abstimmung.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Danke! :waxing_crescent_moon: {background-color="#e6f2f2"}
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide_02_visualisation.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).

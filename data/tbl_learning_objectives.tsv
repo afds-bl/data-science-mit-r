@@ -1,0 +1,22 @@
+date	unit	title	learning_objectives
+2025-01-16	1	Einführung	die sechs Elemente des *Data Science Lifecycle*s aufzählen
+2025-01-16	1	Visualisierung	*aesthetic mappings* für Datenvisualisierung im `{ggplot2}` R Package identifizieren
+2025-01-16	1	Daten kommunizieren	vier Komponenten einer Quarto-Datei identifizieren
+2025-01-30	2a	Visualisierung	Komponenten eines `{ggplot2}`-Plots auflisten
+2025-01-30	2a	Visualisierung	geeignete geometrische Objekte auswählen und vergleichen
+2025-01-30	2b	R Workflow	ein Projekt in RStudio beschreiben
+2025-01-30	2b	Daten Transformation mit dplyr	Regeln der `{dplyr}`-Befehle auflisten
+2025-01-30	2b	Daten Transformation mit dplyr	Befehle zur Transformation von Zeilen identifizieren und anwenden
+2025-02-13	3	Daten Transformation mit dplyr	Befehle zur Transformation von Spalten identifizieren und anwenden
+2025-02-13	3	Daten Transformation mit dplyr	Befehle zur Gruppierung, Zusammenfassung und zum Zählen von Daten identifizieren und anwenden
+2025-02-13	3	Daten Transformation mit dplyr	erläutern, wie man mehrere Befehle kombiniert
+2025-03-20	4	Daten Importieren und Exportieren	grundlegenden Befehle für den Datenimport und -export benennen
+2025-03-20	4	Daten Transformation mit dplyr	Befehle zur Zusammenfügung von Daten identifizieren
+2025-03-20	4	Daten Transformation mit dplyr	Grundprinzipien des *tidy data*-Konzepts nennen
+2025-03-20	4	Daten Aufräumen	`{tidyr}`-Befehle um Daten zu pivotieren auflisten
+2025-03-27	5	Daten Typen und Klassen	Datentypen und -klassen in einem Datensatz identifizieren und deren Bedeutung erklären
+2025-03-27	5	Daten Transformation	Spalten basierend auf Bedingungen umkodieren
+2025-03-27	5	Mit Factors arbeiten	Kategorien in Daten mit `{forcats}` umkodieren und sortieren
+2025-04-10	6	Datenbankzugriff	eine Verbindung zu einer Datenbank herstellen und SQL-Abfragen mit `{DBI}` ausführen
+2025-04-10	6	Einführung in Git	den grundlegenden Workflow von Git in RStudio erklären
+2025-04-10	6	Q&A, Recap & Abschluss	die wichtigsten Konzepte des Kurses zusammenfassen

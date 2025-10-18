@@ -1,0 +1,104 @@
+---
+title: "Praktikum 4c: Daten pivotieren"
+author: "___"
+execute: 
+  warning: false
+---
+
+# Tastaturkürzel
+
+|  |  |
+|-----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+
+# Packages importieren
+
+- Ladet die Packages `tidyverse`, `ggthemes` und `janitor`
+
+# Daten laden
+
+- Importiert die "data/ogd_12030_wetter.csv"-Datei. Das sind die Tagesdaten der NBCN-Station (Swiss National Basic Climate Network) Basel-Binningen vom [OGD-Portal](https://data.bl.ch/explore/dataset/12030/table/?disjunctive.jahr&sort=date&q.timerange.date=date:%5B1900-01-01+TO+2024-12-31%5D).
+
+# Namen saubermachen
+
+- Bereinigt die Namen mit der `janitor::clean_names()`-Funktion
+
+# Daten Zusammenfassen
+
+- Verwendet `group_by()` und `summarise()` (oder `summarise()` und `.by()`) um die durschnittlichen pro Jahr zu rechnen:
+
+    - maximale Tagestemperatur (`tagesmaximum_lufttemperatur`)
+    - minimale Tagestemperatur (`tagesminimum_lufttemperatur`)
+    - mittel Tagestemperatur (`tagesmittel_lufttemperatur`)
+
+```{r}
+# wetter_summary <- ___ |>
+#   ___(
+#     temp_mittel = ___,
+#     temp_min = ___,
+#     temp_max = ___,
+#     .by = ___
+#   )
+```
+
+# Liniendiagramm
+
+- reproduziert die folgende Grafik ungefähr.
+
+![](img/weather_averages.png)
+
+```{r}
+# wetter_summary |>
+#   ggplot() +
+#   geom_line(aes(x = ___, y = ___), colour = "lightblue") +
+#   geom_line(aes(x = ___, y = ___), colour = "orange") +
+#   geom_line(aes(x = ___, y = ___), colour = "black") +
+#   labs(
+#     x = "",
+#     y = "Temperatur (°C)",
+#     title = "Durschnittliche Temperaturen in der Binnigen-Station, BL",
+#     caption = "Quelle: https://data.bl.ch/explore/dataset/12030/"
+#   ) +
+#   theme_minimal()
+```
+
+**Das Problem**: mehrere `geoms`, keine `colour`-aesthetic, keine `legend`.
+
+- Verlängert den Datensatz, indem ihr *temp_typ* und *temp_wert* in zwei Spalten zusammenfasst.
+
+```{r}
+# wetter_summary_long <- wetter_summary |>
+#   ___(
+#     cols = ___,
+#     names_to = ___,
+#     values_to = ___
+#   )
+```
+
+```{r}
+# p <- wetter_summary_long |>
+#   ggplot(aes(x = ___, y = ___, colour = ___)) +
+#   geom_line(alpha = 0.4) +
+#   geom_point(alpha = 0.4) +
+#   geom_smooth(method = "lm", se = FALSE) +
+#   labs(
+#     x = "",
+#     y = "Temperatur (°C)",
+#     title = "Durschnittliche Temperaturen in der Binnigen-Station, BL",
+#     colour = "",
+#     caption = "Quelle: https://data.bl.ch/explore/dataset/12030/"
+#   ) +
+#   scale_x_continuous(
+#     breaks = seq(min(wetter_summary_long$jahr), max(wetter_summary_long$jahr), by = 10)
+#   ) +
+#   theme_minimal() +
+#   scale_colour_colorblind(labels = c("Maximal", "Mittel", "Minimal"))
+
+# p
+```

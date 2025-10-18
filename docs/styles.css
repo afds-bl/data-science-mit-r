@@ -1,0 +1,74 @@
+/* ---  css styles  --- */
+
+/* Website settings */
+
+/* Set the font to Arial for the entire website */
+body {
+  font-family: Arial, sans-serif !important;
+}
+
+/* Change background colour of the navbar */
+.navbar {
+  background-color: #e6f2f2  !important; /* CI/CD Manual of BL */
+}
+
+/* Change top nav colours */
+.navbar-brand {
+  color: #005ca2;
+}
+.nav-link {
+  color:#808080;
+}
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon {
+  color:#808080;
+}
+
+/* Change page toc colour */
+.sidebar nav[role="doc-toc"] ul > li > a.active, .sidebar nav[role="doc-toc"] ul > li > ul > li > a.active {
+color: #005ca2 !important;
+}
+
+/* Change left nav bar colour */
+div.sidebar-item-container .active,
+div.sidebar-item-container .show>.nav-link,
+div.sidebar-item-container .sidebar-link>code {
+  color:#005ca2;
+}
+
+/* Change website title colour */
+.navbar-dark .navbar-brand {
+  color:##005ca2;
+}
+
+/* Adjust logo size */
+.navbar-logo {
+  max-height:70px;
+  width:auto;
+  padding-right:16px;
+}
+
+/* --- Slide styles --- */
+
+.reveal .slides section .fragment.semi-fade-out {
+	opacity: 1;
+	visibility: inherit;
+
+	&.visible {
+		opacity: 0.25;
+		visibility: inherit;
+	}
+}
+
+.hscroll {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.reveal .custom3070 > div.column:first-child {
+  width: 30%;
+  font-size: 0.6em;
+}
+.reveal .custom3070 div.column:not(:first-child) {
+  width: 70%;
+}
+

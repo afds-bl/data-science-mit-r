@@ -1,0 +1,126 @@
+---
+title: "Unit 3 - {`dplyr`} - Bechdel Test"
+author: "___"
+format:
+  html:
+    toc: true
+    toc-location: right
+html-math-method: mathml # default mathjax does not render
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+Der [Bechdel-Test](https://de.wikipedia.org/wiki/Bechdel-Test) fragt, ob in einem Film mindestens zwei Frauen zu sehen sind, die über alles andere als einen Mann miteinander reden. Um den Test zu bestehen, muss ein Film drei Grundvoraussetzungen erfüllen:
+
+-   Es gibt mindestens zwei Frauenrollen
+-   Sie sprechen miteinander
+-   Sie unterhalten sich über etwas anderes als einen Mann.
+
+![Art by Srravya \[CC0\], via Wikimedia Commons](img/BechdelTest-768x310.jpg)
+
+In dieser Minianalyse arbeiten wir mit den Daten, die in der *FiveThirtyEight*-Geschichte mit dem Titel ["The Dollar-And-Cents Case Against Hollywood's Exclusion of Women"](https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/) benutzt wurden.
+
+1.  Lade packages `tidyverse`, `fivethirtyeight` und `skimr`
+
+```{r}
+# install.packages("skimr")
+# library(___)
+# library(___)
+# library(___)
+```
+
+2.  Erkunde die `bechdel`-Daten: `glimpse()`, `skim()`
+
+## `relocate()`
+
+3.  `binary` vor `test` schieben.
+
+```{r}
+# bechdel |> 
+#   relocate(___) 
+```
+
+4.  `code` an das Ende schieben. Hint: `?dplyr_tidy_select`
+
+```{r}
+# bechdel |> 
+#   ___(___, .after = ___)
+```
+
+## `select()`
+
+5.  Überlegt euch so viele Möglichkeiten wie möglich, um `budget`, `domgross`, `intgross`, `budget_2013`, `domgross_2013`, `intgross_2013` auszuwählen. Tipp: siehe [*select helpers*](https://dplyr.tidyverse.org/reference/select.html).
+
+```{r}
+# bechdel |> 
+#   select(___)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+## `rename()`
+
+6.  `code` mit `bechdel_code` umbenennen.
+
+```{r}
+# bechdel |> 
+#   rename(___)
+```
+
+## `mutate()`
+
+7.  Eine Spalte `roi` (*return on investment* = Kapitalrendite): 
+$$\text{roi} = \frac{\text{domgross_2013} + \text{intgross_2013}}{\text{budget_2013}}$$ 
+und ein neues Objekt `bechdel_roi` erstellen.
+
+```{r}
+# bechdel_roi <- bechdel |> 
+#   mutate(roi = ___) 
+```
+
+## `summarise()`
+
+8.  Berechnet den Mittelwert (`mean()`) und den Median (`median()`) der Kapitalrendite (`roi`) pro Testergebnis (`binary`)
+
+```{r}
+# bechdel_roi |> 
+#   group_by(___) |> 
+#   summarise(
+#     n = n(),
+#     mean_roi =___,
+#     median_roi = ___
+#   )
+```
+
+
+9.  Erstelle ein *Boxplot* der `roi` gegen `binary`.
+
+```{r}
+# ggplot(bechdel_roi, aes(x = ___, y = ___, colour = ___)) +
+#   geom____() +
+#   coord_cartesian(ylim = c(0, 15)) + # Zoom in on films with reasonable ROI
+#   labs(
+#     x = "Bechdel test",
+#     y = "Return on investment",
+#     colour = ""
+#   )
+```

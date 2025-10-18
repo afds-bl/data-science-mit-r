@@ -1,0 +1,115 @@
+---
+title: "Prak 02b - Verteilungen und Beziehungen visualisieren"
+author: "___"
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|------------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages und Daten Laden
+
+Die erforderlichen R-Packages werden zu Beginn des Skripts geladen:
+
+-   `tidyverse` für das`ggplot2` Package`,`
+-   `palmerpenguins` für die `penguins` Daten`.`
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+# Verteilungen
+
+1.  Welche Variablen im `penguins`-Datensatz sind kategorial? Welche Variablen sind numerisch? Hint: `glimpse()`, `summary()`.
+
+```{r}
+glimpse(penguins)
+```
+
+2.  Erstelle ein *barplot* der `species` von `penguins`, in dem du `species` der y-Ästhetik zuordnest.
+
+```{r}
+ggplot(penguins, aes(y = species)) +
+  geom_bar()
+```
+
+3.  Inwiefern unterscheiden sich die beiden folgenden Diagramme? Welche Ästhetik, `colour` oder `fill`, ist sinnvoller, um die Farbe der *bars* zu ändern?
+
+```{r}
+#| eval: false
+ggplot(penguins, aes(x = species)) +
+  geom_bar(fill = "red")
+```
+
+4.  Erstelle ein *barplot* der `species` von `penguins` auf der y-Achse, ordne `island` zur `fill`-*Aesthetic*. Was passiert wenn du das Argument `position = "fill"` im *barplot* benutzst?
+
+```{r}
+ggplot(penguins, aes(y = species, fill = island)) +
+  geom_bar(position = "fill")
+```
+
+5.  Was bewirkt das Argument `bins` in `geom_histogram()`?
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm)) +
+  geom_histogram(bins = 30)
+```
+
+6.  Erstelle ein *density plot* der `bill_length_mm`-Variabel. Mit der Variable `species` zuordenen.
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, colour = species, fill = species)) +
+  geom_density(alpha = 0.3)
+```
+
+# Beziehungen
+
+1.  Erstelle ein *Boxplot* von `flipper_length_mm` vs. `island`. Benutze `geom_jitter()` um Punkte auch zu zeigen.
+
+```{r}
+ggplot(penguins, aes(x = island, y = flipper_length_mm)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+2.  Erstelle ein Streudiagramm von `bill_depth_mm` vs. `bill_length_mm` und färbe die Punkte nach `species`. Was sagt die Einfärbung nach `species` über die Beziehung zwischen diesen beiden Variablen aus? Wie sieht es mit der Facettierung der `species`?
+
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(colour = species)) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ species)
+```
+
+3.  Warum ergeben sich im Folgenden zwei getrennte Legenden? Wie würdest du die beiden Legenden kombinieren?
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm, y = bill_depth_mm,
+    colour = species, shape = species
+  )
+) +
+  geom_point() +
+  labs(
+    colour = "Species",
+    shape = "Species"
+    )
+```
+
+4.  Wie könntest du deine Grafik als PNG und PDF im Ordner `out` speichern? Hint: `ggsave()`
+
+```{r}
+# ggsave("out/plt.pdf")
+# ggsave("out/plt.png")
+```
+

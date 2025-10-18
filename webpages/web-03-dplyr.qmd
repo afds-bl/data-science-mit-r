@@ -1,0 +1,55 @@
+---
+title: "Unit 3"
+subtitle: "Spalten transformieren & Gruppen zusammenfassen und zählen"
+params:
+  unit: 3
+---
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+
+```{r, eval = FALSE, out.width = "40%", fig.align = "left", preview = TRUE, echo=FALSE, include=TRUE, fig.cap="Photo by [Beazy](https://unsplash.com/photos/8uHhcPQfyVY)"}
+
+knitr::include_graphics("img/tools.jpg")
+
+```
+
+## {{< fa bullseye >}} Ziele
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+Am Ende dieser Woche kannst du:
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+<!-- `r paste0("- ", lobj, "\n")` -->
+
+<!-- `r  purrr::map(lobj, \(x) paste0("- ", x, "\n"))` -->
+
+## {{< fa display >}} Folien
+
+[Folien im Vollbild anzeigen](../slides/slide-03-dplyr.qmd) \| [Folien als PDF herunterladen](../slides/slide-03-dplyr.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-03-dplyr.html title="Unit 3 - Data wrangling" style="border: 1px solid #123233;"></iframe>
+```
+
+
+## {{< fa code >}} Praktika
+
+-   [Praktikum 03a - Spalten transformieren](../exercises/unit03/prak-03a-spalten-abstimmung.qmd)
+-   [Praktikum 03b - Zusammenfassen und zählen](../exercises/unit03/prak-3b-groups-penguins.qmd)
+-   [Praktikum 03c - Zusammenfassen und zählen](../exercises/unit03/prak-03c-dplyr-gebaeude.qmd)
+
+## {{< fa book >}} Hausaufgaben und Lektüre
+-   [Hausaufgabe 03a - Bechdel-Daten *wrangeln*](../exercises/unit03/ha-03a-dplyr-cols-bechdel.qmd)
+-   [`dplyr` Cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
+-   [R 4 Data Science: Chapter 3 - Data transformation](https://r4ds.hadley.nz/data-transform)
+-   [R for data science: Chapter 13.3 - Counts](https://r4ds.hadley.nz/numbers#sec-counts)
+-   [The tidyverse style guide](https://style.tidyverse.org/index.html)

@@ -1,0 +1,11 @@
+---
+title: "Literatur"
+bibliography: references.bib
+nocite: |
+  @*
+---
+
+### 
+
+::: {#refs}
+:::

@@ -1,0 +1,23 @@
+format:
+  revealjs: 
+    logo: img/BL_Logo_FKD_AfDuS_A_r_rgb.png
+    theme: [default, custom.scss]
+    slide-number: true
+    controls: true
+    self-contained: false
+    chalkboard: false
+    preview-links: auto
+    footer: rstatsBL - Data Science mit R
+    # css: ../styles.css
+    # template-partials:
+    #   - title-slide.html
+execute:
+  eval: true
+  echo: true
+  warning: false
+filters:
+  - output-line-highlight.lua
+title-slide-attributes:
+  data-background-color: "#e6f2f2"
+author: ""
+date-format: "D.MM.YYYY"

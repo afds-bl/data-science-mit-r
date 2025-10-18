@@ -1,0 +1,223 @@
+---
+title: "Prepare Energy Data kGWR"
+---
+
+# Load Packages and Data
+
+```{r}
+library(scales) # For percent_label() in ggplot()
+library(naniar) # To visualise missing values
+library(tidyverse)
+
+# Downloaded from https://data.bl.ch/explore/dataset/12160/table
+df <- read_delim("data/ogd_gebaeude12160.csv")
+```
+
+# Missing Data
+
+Let us look at the rate of missing data:
+```{r}
+gg_miss_var(df, show_pct = TRUE)
+```
+
+There are multiple levels for the energy source:
+```{r}
+df |> count(energie_waermequelle_heizung_primaer_bezeichnung, sort = TRUE)
+```
+
+The time frame is very wide:
+```{r}
+df |> 
+  summarise(min_year = min(baujahr_des_gebaeudes, na.rm = TRUE),
+            max_year = max(baujahr_des_gebaeudes, na.rm = TRUE))
+```
+
+# Cleaning UP
+
+Let us clean up the dataset a bit:
+
+-   Remove columns with an `NA`-rate > 25%
+-   Combine factor levels when appropriate
+-   Only keep building built in or after 1960
+-   Order the energy factor in decreasing order of total surface (later in the next section)
+-   Remove building without an area or number of floors
+
+```{r}
+df_clean <- df |>
+  # Remove columns with an `NA`-rate > 25%
+  select(where(\(x) mean(is.na(x)) <= 0.25)) |>
+  
+  # Only keep building built in or after 1960
+  filter(baujahr_des_gebaeudes > 1960) |>
+  
+  # Combine factor levels when appropriate
+    mutate(
+    energie_waermequelle_heizung_primaer_bezeichnung =
+      fct_collapse(energie_waermequelle_heizung_primaer_bezeichnung,
+        "Fossil" = c("Gas", "Heizöl"),
+        "Keine" = "Keine",
+        "Unbestimmt" = "Unbestimmt",
+      other_level = "Erneuerbare"
+      )
+  )
+
+gg_miss_var(df_clean, show_pct = TRUE)
+```
+
+```{r}
+df_clean |> count(energie_waermequelle_heizung_primaer_bezeichnung)
+```
+
+# Visualise
+
+```{r}
+df1 <- df_clean |> 
+  select(
+    baujahr_des_gebaeudes, 
+    gemeindename, 
+    gebaeudeflaeche, 
+    anzahl_geschosse, 
+    gebaeudekategorie_bezeichnung,
+    energie_waermequelle_heizung_primaer_bezeichnung) |> 
+  filter(!is.na(anzahl_geschosse) & !is.na(gebaeudeflaeche) & gebaeudekategorie_bezeichnung == "Gebäude mit ausschliesslicher Wohnnutzung") |> 
+  mutate(gebaeudeflaeche_total = gebaeudeflaeche * anzahl_geschosse) |> 
+  summarise(heated_surface = sum(gebaeudeflaeche_total), .by = c(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung)) |> 
+  mutate(energie_waermequelle_heizung_primaer_bezeichnung = fct_reorder(
+    energie_waermequelle_heizung_primaer_bezeichnung, -heated_surface, .fun = sum
+  ))
+
+df1 |> 
+  ggplot(aes(x = baujahr_des_gebaeudes, y = heated_surface, colour = energie_waermequelle_heizung_primaer_bezeichnung)) +
+  # geom_line() +
+  # geom_point() +
+  geom_smooth(se = FALSE) +
+  facet_wrap(~energie_waermequelle_heizung_primaer_bezeichnung) +
+  labs(
+    x = "Baujahr",
+    y = "Gesamte Fläche (m2)",
+    colour = "Heizungsquelle"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+df2 <- df_clean |> 
+  select(
+    baujahr_des_gebaeudes, 
+    gemeindename, 
+    gebaeudeflaeche, 
+    anzahl_geschosse, 
+    gebaeudekategorie_bezeichnung,
+    energie_waermequelle_heizung_primaer_bezeichnung) |> 
+  filter(!is.na(anzahl_geschosse) & !is.na(gebaeudeflaeche) & gebaeudekategorie_bezeichnung == "Gebäude mit ausschliesslicher Wohnnutzung") |> 
+  mutate(gebaeudeflaeche_total = gebaeudeflaeche * anzahl_geschosse) |> 
+  add_count(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung, wt = gebaeudeflaeche_total, name = "order_index") |> 
+  mutate(energie_waermequelle_heizung_primaer_bezeichnung = fct_reorder(
+    energie_waermequelle_heizung_primaer_bezeichnung, -order_index, .fun = sum
+  )) |> 
+  select(-order_index)
+
+df2 |> 
+    summarise(heated_surface = sum(gebaeudeflaeche_total), .by = c(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung)) |> 
+ggplot(aes(x = baujahr_des_gebaeudes, y = heated_surface, colour = energie_waermequelle_heizung_primaer_bezeichnung)) +
+  # geom_line() +
+  # geom_point() +
+  geom_smooth(se = FALSE) +
+  facet_wrap(~energie_waermequelle_heizung_primaer_bezeichnung) +
+  labs(
+    x = "Baujahr",
+    y = "Gesamte Fläche (m2)",
+    colour = "Heizungsquelle"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+all.equal(df1, df2 |> 
+    summarise(heated_surface = sum(gebaeudeflaeche_total), .by = c(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung)))
+```
+
+# Final Cleaned Dataset to Save
+
+```{r}
+df_clean <- df |>
+  # Remove columns with an `NA`-rate > 25%
+  select(where(\(x) mean(is.na(x)) <= 0.25)) |>
+  
+  # Only keep building built in or after 1960
+  filter(baujahr_des_gebaeudes > 1900 & gebaeudekategorie_bezeichnung == "Gebäude mit ausschliesslicher Wohnnutzung" & gebaeudestatus_bezeichnung == "Bestehend") |>
+  # Keep columns of interest
+  select(egid:grundstücksnummer, baujahr_des_gebaeudes:anzahl_geschosse, starts_with("energie_waermequelle_heizung_primaer")) |> 
+    # select(-starts_with("aktualisierungsdatum"), -gebaeudekategorie_bezeichnung, -gebaeudestatus_bezeichnung) |> 
+  # Combine factor levels when appropriate
+  mutate(
+    energie_waermequelle_heizung_primaer_bezeichnung_gruppiert =
+      fct_collapse(energie_waermequelle_heizung_primaer_bezeichnung,
+        "Fossil" = c("Gas", "Heizöl"),
+        "Keine" = "Keine",
+        "Unbestimmt" = "Unbestimmt",
+      other_level = "Erneuerbare"
+      )
+  ) |> 
+  filter(!is.na(anzahl_geschosse) & !is.na(gebaeudeflaeche)) |> 
+  
+  # Reorder energy levels in decreasing order of heated surface for plot
+    mutate(gebaeudeflaeche_total = gebaeudeflaeche * anzahl_geschosse) |> 
+  add_count(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert, wt = gebaeudeflaeche_total, name = "order_index") |> 
+  mutate(energie_waermequelle_heizung_primaer_bezeichnung_gruppiert = fct_reorder(
+    energie_waermequelle_heizung_primaer_bezeichnung_gruppiert, -order_index, .fun = sum
+  )) |> 
+  select(-order_index, -gebaeudeflaeche_total)
+  
+```
+
+```{r}
+skimr::skim(df_clean)
+```
+
+```{r}
+df_clean |>
+  mutate(gebaeudeflaeche_total = gebaeudeflaeche * anzahl_geschosse) |>
+  summarise(heated_surface = sum(gebaeudeflaeche_total), .by = c(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert)) |>
+  ggplot(aes(x = baujahr_des_gebaeudes, y = heated_surface, colour = energie_waermequelle_heizung_primaer_bezeichnung_gruppiert)) +
+  geom_line(alpha = 0.5) +
+  # geom_point() +
+  geom_smooth(se = FALSE) +
+  facet_wrap(~energie_waermequelle_heizung_primaer_bezeichnung_gruppiert) +
+  labs(
+    x = "Baujahr",
+    y = "Gesamte Fläche (m2)",
+    colour = "Heizungsquelle"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+df_clean |>
+  mutate(gebaeudeflaeche_total = gebaeudeflaeche * anzahl_geschosse) |>
+  summarise(heated_surface = sum(gebaeudeflaeche_total), .by = c(baujahr_des_gebaeudes, energie_waermequelle_heizung_primaer_bezeichnung_gruppiert)) |>
+  mutate(heated_surface_perc = heated_surface / sum(heated_surface), .by = c(baujahr_des_gebaeudes)) |> 
+  ggplot(aes(x = baujahr_des_gebaeudes, y = heated_surface_perc, colour = energie_waermequelle_heizung_primaer_bezeichnung_gruppiert)) +
+  geom_line(alpha = 0.4) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE) +
+  facet_wrap(~energie_waermequelle_heizung_primaer_bezeichnung_gruppiert) +
+  labs(
+    title = "Anteil Gebäudefläche pro Heizungsmethode ab 1960",
+    subtitle = "Kanton BL",
+    caption = "Quelle: https://data.bl.ch/explore/dataset/12160/table",
+    x = "Baujahr",
+    y = "Anteil der gesamten Fläche",
+    colour = "Heizungsquelle"
+  ) +
+  theme_minimal() + 
+  scale_y_continuous(labels = scales::label_percent())
+```
+
+# Save Prepared Data
+
+```{r}
+write_rds(df_clean, "data/ogd_gebaeude12160_clean.rds")
+```
+
+

@@ -1,0 +1,11 @@
+format:
+  html: 
+    toc: true
+    toc-location: right
+editor: source
+from: markdown+emoji
+lang: de
+author: ""
+date: last-modified
+date-format: full
+html-math-method: mathml # default mathjax does not render

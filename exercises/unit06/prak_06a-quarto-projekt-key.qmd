@@ -1,0 +1,105 @@
+---
+title: "Praktikum 06a: CO2-Emissionen"
+format: 
+  html:
+    self-contained: true
+---
+
+![](output/co2_emissionen_pers.png)
+
+# Packages laden
+
+```{r}
+library(skimr)
+library(janitor)
+library(tidyverse)
+```
+
+# Daten laden
+
+Die [CO2-Emissionen nach Energieträger, Gemeinde und Jahr](https://data.bl.ch/explore/dataset/12020/) einlesen:
+
+```{r}
+df <- read_delim("data/ogd-12020-co2-emissionen.csv", delim = ";")
+```
+
+Die [Raumgliederungsdaten](https://data.bl.ch/explore/dataset/10110/table) einlesen:
+
+```{r}
+df_gem <- read_delim("data/odg-10110-gemeinden.csv", delim = ";")
+```
+
+# Daten erkunden
+
+```{r}
+# glimpse(df)
+# skim(df)
+# glimpse(df_gem)
+```
+
+# Namen reinigen
+
+```{r}
+df_gem <- df_gem |> 
+  clean_names()
+glimpse(df_gem)
+```
+
+
+# Daten zusammenfassen `count()`
+
+```{r}
+df |> count(erhebungsjahr)
+```
+
+```{r}
+df |> count(bfs_gemeindenummer)
+```
+```{r}
+df_gem |> count(bfs_nummer, gemeinde, bezirk_nummer, bezirk)
+```
+# Daten zusammenfügen
+
+Behaltet Spalten `bfs_nummer`, `gemeinde`, `bezirk_nummer` und `bezirk` im Gemeindendatensatz
+```{r}
+df_gem <- df_gem |> 
+  select(bfs_nummer, gemeinde, starts_with("bezirk"))
+```
+Entfernt Spalte `gemeinde` in den CO2-Daten und fügt den resultiereden Datensatz mit dem Gemeinde-Datensatz:
+
+```{r}
+df_augmented <- df |> 
+  rename(jahr = erhebungsjahr) |> 
+  select(-gemeinde) |>
+  left_join(df_gem, join_by(bfs_gemeindenummer == bfs_nummer))
+glimpse(df_augmented)
+```
+
+# Daten visualisieren
+
+Verwendet `{ggplot}` um die durschnittlichen CO2-Emissionen pro Person, Jahr und Bezirk zu visualisieren.
+
+```{r}
+df_augmented |> 
+  summarise(total_co2_pers = sum(co2_kg_pro_person), .by = c(bezirk, jahr)) |> 
+  mutate(bezirk = fct_reorder(bezirk, total_co2_pers)) |> 
+  mutate(bezirk = fct_rev(bezirk)) |> 
+  ggplot(aes(x = jahr, y = total_co2_pers, colour = bezirk)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    x = "",
+    y = "kg",
+    colour = "",
+    title = "CO2-Emissionen in KG pro Person und Bezirk ab 2018",
+    subtitle = "Kanton Basel-Landschaft",
+    caption = "Quelle: https://data.bl.ch/explore/dataset/12020"
+  ) +
+  theme_minimal() +
+  ggthemes::scale_colour_colorblind()
+``` 
+
+```{r}
+ggsave(filename = "output/co2_emissionen_pers.png")
+```
+

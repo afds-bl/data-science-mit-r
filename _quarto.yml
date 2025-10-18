@@ -1,0 +1,80 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "!exercises/additional"
+    - "!exercises/data/"
+    
+bibliography: references.bib
+
+website:
+  page-navigation: true
+  title: "Data Science mit R"
+  
+  page-footer:
+    right: "Built with ❤️ and [Quarto](https://quarto.org/)."
+    background: "#e6f2f2"
+    left: |
+      © 2025 Amt für Daten und Statistik 
+      Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+  navbar:
+    logo: img/BL_Logo_FKD_AfDuS_A_r_rgb.png
+    right: 
+      - text: "{{< iconify fa6-brands square-github size=2x >}}"
+        href: https://afds-bl.github.io/data-science-mit-r
+        aria-label: Github
+        
+  sidebar:
+    background: "#e6f2f2"
+    pinned: true
+    align: center
+    style: "docked"
+    search: false
+    collapse-level: 1
+    contents: 
+      - href: index.qmd
+        text: Überblick
+      - text: "---"
+      - href: webpages/web-01-intro.qmd
+        text: "Unit 1"
+      - href: webpages/web-02-viz-dplyr.qmd
+        text: "Unit 2"
+      - href: webpages/web-03-dplyr.qmd
+        text: "Unit 3"
+      - href: webpages/web-04-import-pivot.qmd
+        text: "Unit 4"
+      - href: webpages/web-05-forcats.qmd
+        text: "Unit 5"
+      - href: webpages/web-06-sql-git.qmd
+        text: "Unit 6"
+      - text: "---"
+      - href: references.qmd
+        text: "Literatur"
+        
+format:
+  html:
+    theme: flatly
+    css: styles.css
+    toc: true
+    link-external-newwindow: true
+    linkcolor: '#004a82'
+    number-sections: false
+
+execute: 
+  freeze: auto
+  eval: true
+  echo: true
+  warning: false
+  message: false
+
+editor: source
+from: markdown+emoji
+lang: de
+language: 
+  section-title-references: "Referenzen"
+
+knitr:
+  opts_chunk: 
+    class-output: hscroll

@@ -1,0 +1,59 @@
+---
+title: "Unit 2: Hausuafgabe - `dplyr`"
+author: ___
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages und Daten Laden
+
+1.  Lade packages `tidyverse` und `skimr`.
+
+2.  Lade und erkunde die Abstimmungsdaten des Kantons BL: `glimpse()`, `head()`, `summary()`, `str()` und `skim()`
+
+```{r}
+# abstimmung <- read_delim("data/ogd_abstimmungsarchiv_11990.csv", delim = ";")
+```
+
+3.    Behalte nur Zeilen, in denen die Beteiligungsquote (*percent_turnout*) unter 10 % liegt:
+
+```{r}
+# abstimmung_unter_10 <- filter(abstimmung, ___)
+# abstimmung_unter_10
+```
+
+4.    Behalte nur Zeilen, in denen die Beteiligungsquote (*percent_turnout*) und ja-Anteil (*percent_yeas*) 50 % oder mehr sind:
+
+```{r}
+# abstimmung_ueber50 <- filter(abstimmung, ___ & ___)
+# abstimmung_ueber50
+```
+
+5. Ordne das Ergebnis nach absteigendem ja-Anteil:
+
+```{r}
+# arrange(___, desc(___))
+```
+
+6.    Welche Gemeinden (mit Bezirk oder `district`) haben eine Wahlbeteiligung über 80 %?
+
+```{r}
+# abstimmung_80 <- filter(abstimmung, ___)
+# ___(abstimmung_80, ___, ___)
+```
+
+7.    Behalte nur Zeilen, in denen `expats` vorhanden ist
+
+```{r}
+# ___(abstimmung, ___)
+```
+

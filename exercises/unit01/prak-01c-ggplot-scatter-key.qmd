@@ -1,0 +1,152 @@
+---
+title: "Praktikum 01c - `ggplot`"
+format: html
+editor: visual
+toc: true
+execute:
+  echo: true
+  warning: false
+---
+
+# R-Packages laden
+
+Die erforderlichen R-Packages werden zu Beginn des Skripts geladen.
+
+```{r}
+install.packages("palmerpenguins")
+install.packages("ggthemes")
+
+library(palmerpenguins) # data
+library(ggthemes) # scale_color_blind()
+library(tidyverse)
+```
+
+![](img/penguins_logo.png)
+
+# Streudiagramm
+
+1.  Wie viele Zeilen und Spalten gibt es in `penguins`?
+
+```{r}
+nrow(penguins)
+ncol(penguins)
+dim(penguins)
+glimpse(penguins)
+```
+
+2.  Lese die Hilfe für `?penguins`, um herauszufinden, was die Variabeln beschreiben.
+3.  Erstelle ein Streudiagramm von `bill_depth_mm` gegen `bill_length_mm`. Das heisst, erstelle ein Streudiagramm mit `bill_depth_mm` auf der y-Achse und `bill_length_mm` auf der x-Achse. Beschredie Beziehung zwischen diesen beiden Variablen.
+
+```{r}
+ggplot(
+  data = penguins,
+    mapping = aes(
+    x = bill_length_mm,
+    y = bill_depth_mm
+ )
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm,
+    y = bill_depth_mm,
+    colour = species
+  )
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+4.  Welche Rolle hat das Argument `na.rm` in `geom_point()`? Was ist der *default* für dieses Argument?
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_depth_mm,
+    y = bill_length_mm,
+    colour = species
+  )
+) +
+  geom_point(na.rm = TRUE) 
+```
+
+5.  Füge einen Titel, Achsen-Titel und eine *caption* zu dem Diagramm hinzu: "Die Daten stammen aus dem Paket palmerpenguins". Tipp: wirf einen Blick in die Dokumentation von `labs()`.
+
+```{r}
+p <- ggplot(
+  data = penguins,
+  mapping = aes(
+    x = bill_length_mm,
+    y = bill_depth_mm,
+    colour = species
+  )
+) +
+  geom_point() +
+  geom_smooth(method = "lm") +  
+  labs(
+    x = "Bill depth (mm)",
+    y = "Bill length (mm)",
+    colour = "Species", 
+    title = "Palmer Island Penguins",
+    caption = "Die Daten stammen aus dem Paket palmerpenguins"
+  )
+p
+```
+
+6.  Benutze `ggthemes::scale_color_blind()` um die Farben zu änderen und [`theme_light()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) um den Aspekt zu verbessern.
+
+```{r}
+p +
+  scale_color_colorblind() +
+  theme_light()
+  
+```
+
+7.  Was passiert, wenn man ein Streudiagramm von `bill_depth_mm` gegen `species` erstellt? Was wäre eine bessere Wahl des `geoms`?
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = species,
+    y = bill_depth_mm,
+    colour = species
+  )
+) +
+  # geom_point() +
+  geom_boxplot() +
+  geom_jitter(width = 0.1, show.legend = FALSE)
+```
+
+8.  Erstelle die folgende Visualisierung neu. Welcher Ästhetik sollte `bill_depth_mm` zugewiesen werden? Und sollte es auf der globalen Ebene oder auf der `geom`-Ebene abgebildet werden? ![](img/plt_peng_mass_flipper.png)
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = bill_depth_mm)) +
+  geom_smooth(se = FALSE)
+```
+
+9.  Was passiert wenn du die Namen der Argumenten von `ggplot()` wegnimmst?
+
+```{r}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+```
+
+10. Speicher das letzte Plot mit `ggsave()`.
+
+```{r}
+ggsave("test.png")
+```

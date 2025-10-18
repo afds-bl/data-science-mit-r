@@ -1,0 +1,91 @@
+---
+title: "Überblick"
+subtitle: "Informationen zum Kursinhalt"
+---
+
+# Wer kann teilnehmen?
+
+Der Kurs richtet sich in erster Linie an Mitarbeiter/innen der Verwaltung des Kantons Basel-Landschaft.
+
+# Was sind die Ziele?
+
+Am Ende dieses Kurses kannst du:
+
+-   den *data science lifecycle* verstehen
+-   Konzepte von *tidy data* und *data wrangling* verstehen und anwenden
+-   explorative Datenanalysen mittels Visualisierung durchführen
+-   Datenprojekte reproduzierbar publizieren
+-   dir selbst und anderen helfen, mehr über die grosse Welt der Möglichkeiten für Data Science mit R zu lernen.
+
+# Wer leitet den Kurs?
+
+[Souad Guemghar](mailto:souad.guemghar@bl.ch) und [Luca Hüsler](mailto:luca.huesler@bl.ch) vom [Amt für Daten und Statistik](https://www.baselland.ch/politik-und-behorden/direktionen/finanz-und-kirchendirektion/bv-fkd/daten-statistik)
+
+# Kursrahmen
+
+-   **Level:** Einsteiger/in
+-   **Aufwand:** 3.5 Stunden Unterricht pro Einheit, sechs Einheiten
+-   **Voraussetzungen:** Laptop, Zugriff zu Github und RStudio.
+
+# Kursinhalt
+
+-   [**Unit 1**](webpages/web-01-intro.qmd)
+    -   *Data science lifecycle*
+    -   Werkzeuge und Arbeitsumgebung kennenlernen: RStudio, Quarto
+    -   Daten visualisieren mit `ggplot2`
+-   [**Unit 2**](webpages/web-02-viz-dplyr.qmd)
+    -   Daten visualisieren mit `ggplot2`
+    -   Zeilen transformieren mit `dplyr`
+-   [**Unit 3**](webpages/web-03-dplyr.qmd)
+    -   Spalten transformieren mit `dplyr`
+    -   Das Pipe
+    -   Gruppen zusammenfassen und zählen mit `dplyr`
+-   [**Unit 4**](webpages/web-04-import-pivot.qmd)
+    -   Daten importieren und exportieren
+    -   Daten zusammenfügen mit `dplyr`
+    -   Konzept *tidy data*
+    -   Dataframes pivotieren mit `tidyr`
+-   [**Unit 5**](webpages/web-05-forcats.qmd)
+    -   Datentypen und -klassen
+    -   Datenrekodierung
+    -   Mit Factors arbeiten
+-   [**Unit 6**](webpages/web-06-sql-git.qmd)
+    -   Mit SQL-Datenbanken arbeiten
+    -   Git in RStudio verwenden
+
+# Vorbereitung
+
+::: {.callout-important collapse="false"}
+## 🔴 Erforderlich
+
+-   [**DataCamp: Introduction to R**](https://app.datacamp.com/learn/courses/free-introduction-to-r) (4 Std) – Basics, Vectors, Factors, Data Frames
+:::
+
+::: {.callout-tip collapse="false"}
+## 🟢 Empfohlen
+
+-   [**DataCamp: Introduction to the Tidyverse**](https://app.datacamp.com/learn/courses/introduction-to-the-tidyverse) (1 Std) – Data Wrangling
+:::
+
+::: {.callout-note collapse="true"}
+## 🔵 Optional
+
+### 🎥 Videos
+
+-   [RStudio Einführung](https://www.youtube.com/watch?v=tyvEHQszZJs) (10 Min).
+-   [Einfaches Rechnen in R, Variablen zuweisen](https://www.youtube.com/watch?v=qOVhiOu_ARs) (8 Min).
+-   [R programming for absolute beginners](https://www.youtube.com/watch?v=FY8BISK5DpM) (15 Minuten).
+-   [R Programming Tutorial - Learn the Basics of Statistical Computing](https://www.youtube.com/watch?v=_V8eKsto3Ug) (2 Stunden).
+
+### 📚 Bücher & Blogs
+
+-   [Einführung in R](https://methodenlehre.github.io/einfuehrung-in-R/chapters/02-R-language.html): Kapitel 1 und 2.
+-   [Einführung in R](https://methodenzentrum.ruhr-uni-bochum.de/e-learning/software/einfuehrung-in-r/)
+-   [Easy R Programming Basics](http://www.sthda.com/english/wiki/easy-r-programming-basics).
+-   [Forschungsseminar: Text as data](https://bookdown.org/valerie_hase/Github/): Kapitel 1 bis 3.
+-   Wenn du keine Programmiererfahrung hast, könnte [Hands on Programming with R](https://rstudio-education.github.io/hopr/) eine wertvolle Ergänzung zu diesem Kurs sein.
+
+### 💻 Kurse
+
+-   W3Schools [R Tutorial](https://www.w3schools.com/r/default.asp), [R Vectors](https://www.w3schools.com/r/r_vectors.asp), [R Data Frames](https://www.w3schools.com/r/r_data_frames.asp), [R Factors](https://www.w3schools.com/r/r_factors.asp).
+:::

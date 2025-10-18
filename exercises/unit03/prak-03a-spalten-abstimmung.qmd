@@ -1,0 +1,146 @@
+---
+title: "Unit 3: Spalten transformieren mit `dplyr`"
+author: "___"
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|----------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages und Daten Laden
+
+Lade packages `tidyverse` und `skimr`.
+
+Lade und erkunde die Abstimmungsdaten des Kantons BL: `View()`, `glimpse()` und `skim()`
+
+```{r}
+# abstimmung <- read_delim("data/ogd_abstimmungsarchiv_11990.csv", delim = ";")
+```
+
+# Spalten transformieren
+
+## Spaltennamen
+
+Was sind die Namen der Spalten?
+
+## Spalten verschieben: `relocate()`
+
+Verschiebe die Prozentspalten (`percent_yeas`, `percent_nays`, `percent_turnout`) nach der Bezirksspalte (`district`):
+
+```{r}
+# ___(___, ___, ___, ___, .after = ___)
+```
+
+
+```{r}
+# ___(___, starts_with("___"), .after = ___)
+```
+
+## Spalten auswählen: `select()`
+
+Überlegt euch so viele Möglichkeiten wie möglich, um `date`, `entity_id`, `name`, `district`, `percent_yeas`, `percent_nays` und `percent_turnout` auszuwählen. Tipp: siehe [*select helpers*](https://dplyr.tidyverse.org/reference/select.html).
+
+```{r}
+# select(___, ___, ___, ___, ___, ___, ___, ___)
+```
+
+## Spalten umbenennen: `rename()`
+
+Benenne die folgenden Spalten in das deutsche Äquivalent um:
+
+-   date → datum
+-   entity_id → bfs_code
+-   name → gemeinde
+-   district → bezirk
+
+```{r}
+# ___(___, ___)
+```
+
+## Werte einer Spalte ändern: `mutate()`
+
+Stimmanteile als Prozentsatz anzeigen (durch 100 dividieren):
+
+```{r}
+# ___(
+#   ___,
+#   percent_yeas = ___ / 100,
+#   percent_nays = ___ / 100,
+#   percent_turnout = ___ / 100,
+#   .keep = "used"
+# )
+```
+
+## Spalten erstellen: `mutate()`
+
+Prüfe, ob die Summe der Ja- und Nein-Stimmen 100 beträgt.
+
+```{r}
+# ___(___, percent_total = ___ + ___)
+```
+
+Berechne die Anzahl der Wähler, die sich beteiligt haben (Grundgesamtheit ist in der `eligible_voters`-Spalte enthalten):
+
+```{r}
+# ___(___, turnout = ___ * ___ / 100, .after = percent_turnout)
+```
+
+![](img/262.15.051_gr.jpg)
+
+# *The pipe*
+
+Verwende *the pipe* für die folgenden Schritte:
+
+-   Behalte Zeilen für eine Gemeinde deiner Wahl
+-   Berechne die Wahlbeteiligung (Grundgesamtheit ist in der `eligible_voters`-Spalte enthalten)
+-   Behalte alle Spalten, deren Namen "yeas", "nays" oder "turnout" enthalten.
+
+```{r}
+# abstimmung |>
+#   ___(name == "___") |>
+#   ___(turnout = ___ * ___ / 100, .after = percent_turnout) |>
+#   select(___)
+```
+
+# Optional
+
+Erstelle ein Boxplot von `percent_turnout` pro Bezirk:
+
+```{r}
+# ggplot(abstimmung, aes(x = ___, y = ___)) +
+# geom_boxplot(fill = "#E69F00", color = "#000000") +
+# labs(
+#   title = ("Verteilung der Wahlbeteiligung nach Bezirk"),
+#   subtitle = "Kanton Basel-Landschaft",
+#   x = "Bezirk",
+#   y = "Wahlbeteiligung (%)",
+#   caption = "Quelle: https://data.bl.ch/explore/dataset/11990/table"
+# ) +
+# theme_minimal() +
+# theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Berechne den Anteil von ungültigen Stimmen (`invalid` und `empty`) pro Bezirk und Ergebnis (`answer`):
+```{r}
+# abstimmung |> 
+# mutate(percent_invalid = (___ + ___) / ___ *  100) |> 
+# ggplot(aes(x = ___, y = ___)) +
+# geom_boxplot(fill = "#E69F00", color = "#000000") +
+# facet_wrap(~answer) +
+#   labs(
+#   title = "Verteilung der ungültigen und leeren Stimmen nach Bezirk",
+#   subtitle = "Kanton Basel-Landschaft",
+#   x = "Bezirk",
+#   y = "Anteil (%)",
+#   caption = "Quelle: https://data.bl.ch/explore/dataset/11990/table"
+# ) +
+# theme_minimal() +
+# theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```

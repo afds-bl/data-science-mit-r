@@ -1,0 +1,90 @@
+---
+title: "Praktikum 05d: `if_else()`, `case_when()`, `fct_infreq()`"
+date: today
+author: "___"
+format: 
+  html:
+    toc: true
+    toc-location: right
+html-math-method: mathml # default mathjax does not render
+---
+
+#   Tastaturkürzel
+
+|                                                              |                        |
+|------------------------------------------------|-------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# Packages laden
+
+Wir benutzen den `starwars`-Datensatz, der in `tidyverse` enthalten ist.
+
+1.  Lädt das `tidyverse`-Package
+
+# Daten
+
+2.  Erkundet den `starwars` Datensatz. Wie viele verschiedene Arten (`species`) gibt es?
+
+Wir werden zwei Methoden benutzen, um den Anzahl der `species` zu reduzieren, sodass die Variable mehr Sinn macht:
+
+-   `dplyr::if_else()`
+-   `dplyr::case_when()`
+
+# True/False: `if_else()`
+
+3.  Erstellt eine neue Spalte mit `if_else()`, die `species_binary` heisst, wobei species_binary = Other falls `species` != "Human". Wie ist es mit `NA`? Hint: `?if_else`. Speichert den resultierenden Dataframe in einem neuen Objekt `df`.
+
+4.  Erstellt ein Barplot von `species_binary` auf der x-Achse und ordnet sie zur `sex` Variable. `species_binary` sollte abseteigend dargestellet werden (`fct_infreq()`).
+
+# Mehrere Bedingungen: `case_when()`
+
+Die Funktion `case_when()` in Kombination mit `mutate()` erlaubt es neue Variablen basierend auf bestimmten Konditionen anderer Variablen zu erstellen.
+
+## Stetige Variable
+
+5.  Erstellt zusätzlich zur Variable `species_binary` eine Spalte für 
+$$\text{BMI} = \frac{\text{mass}}{[\text{height(m)]^2}}$$
+
+und eine kategorielle Variable `bmi_cat` mit folgenden Werten:
+
+-   BMI < 18.5: Underweight
+-   18.5 $\leq$ BMI \< 25: Healthy
+-   25 $\leq$ BMI \< 30: Overweight
+-   BMI $\geq$ 30: Obese
+
+und speichert den resultierenden Dataframe in einem neuen Objekt `df1`.
+
+6.  Erstellt ein Boxplot der Variable `bmi` gegen `species_binary`. Gibt es *outliers*?
+
+7.  Erstellt ein *barplot* von `sex` mit Zuordnung zur Variable `bmi_cat`. `sex` sollte abseteigend dargestellet werden (`fct_infreq()`).
+
+## Kategorielle Variable
+
+Im `starwars` Datensatz gibt es vier Typen von Kreaturen:
+
+-   Menschen = *Human*,
+-   Empfindungsfähige Humanoide = *Sentient Humanoid*,
+-   Nicht empfindungsfähiges Tiere = *Non-Sentient Animal*,
+-   Droiden = *Droid*.
+
+Hier ist die Liste von empfindungsfähigen Humanoiden:
+
+```{r}
+sentient_humanoids <- c("Aleena", "Besalisk", "Cerean", "Chagrian", "Clawdite", "Ewok", "Dug", "Zabrak", "Geonosian", "Gungan", "Hutt", "Iktotchi", "Kaleesh", "Kel Dor", "Mirialan", "Mon Calamari", "Muun", "Nautolan", "Neimodian", "Pau'an", "Togruta", "Twi'lek", "Wookiee", "Quermian", "Rodian", "Skakoan", "Sullustan", "Tholothian", "Togruta", "Toong", "Twi'lek", "Vulptereen", "Xexto", "Yoda's species", "Zabrak")
+```
+
+und die Liste von nicht empfindungsfähigen Tieren:
+
+```{r}
+non_sentient_animals <- c("Trandoshan", "Kaminoan", "Toydarian")
+```
+
+8.  Erstellt eine Spalte (`species_type`) für den Typ der Kreaturen. Benutzt `case_when()` und `%in%` dafür:
+
+9. Nimmt *Jabba the Hutt* ("Jabba Desilijic Tiure") raus und erstellt ein *barplot* `(position = "fill")` der Variable `species_type` mit `bmi_cat` als Zuordnung-Variable. Beide `species_type` und `bmi_cat` sollten absteigend dargestellt werden.
+

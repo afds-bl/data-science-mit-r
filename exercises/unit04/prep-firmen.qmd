@@ -1,0 +1,122 @@
+---
+title: "Prepare Companies Dataset"
+---
+
+# Tastaturkürzel
+
+|  |  |
+|---------------------------------------------------|---------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Packages laden
+
+```{r}
+library(tidyverse)
+```
+
+# Daten Laden
+
+We use company mutation data from the OGD-Portal BL: [dfmutationen nach Rechtsform, NOGA-Einteilung und Gemeinde (seit Februar 2016)](https://data.bl.ch/explore/dataset/12460/table/?disjunctive.kategorie&disjunctive.dfsitz&disjunctive.rechtsform&sort=publikationsdatum_shab)
+
+```{r}
+df <- read_delim("data/ogd_12460-firmen.csv", delim = ";")
+glimpse(df)
+summary(df)
+```
+
+```{r}
+df |> count(kategorie)
+```
+
+
+```{r}
+df |>
+  mutate(jahr = year(journaldatum_handelsregister)) |>
+  count(jahr, kategorie)
+```
+
+```{r}
+df <- df |>
+  mutate(
+    jahr = year(journaldatum_handelsregister),
+    .after = journaldatum_handelsregister
+  ) |>
+  mutate(
+    kategorie_gruppiert = fct_collapse(
+      kategorie,
+      "Auflösung" = c("Auflösung", "Auflösung infolge Konkurs"),
+      "Löschung" = c("Löschung", "Löschung infolge Fusion"),
+      "Neueintragung" = "Neueintragung",
+      other_level = "Anders"
+    ), .after = kategorie
+  ) |>
+  arrange(desc(publikationsdatum_shab)) |>
+  relocate(jahr) |>
+  select(-where(is.Date), -meldung, -id_shab)
+```
+
+```{r}
+df |>
+  summarise(n = n(), .by = c(jahr, kategorie_gruppiert)) |>
+  filter(jahr != 2025) |>
+  mutate(kategorie_gruppiert = fct_reorder(kategorie_gruppiert, -n)) |>
+  ggplot(aes(x = jahr, y = n, colour = kategorie_gruppiert)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+{
+  df |>
+    summarise(n = n(), .by = c(jahr, kategorie_gruppiert)) |>
+    filter(jahr != 2025) |>
+    mutate(kategorie_gruppiert = fct_reorder(kategorie_gruppiert, -n)) |>
+    ggplot(aes(x = jahr, y = n, fill = kategorie_gruppiert)) +
+    # geom_col(position = "jitter")
+    geom_col(position = "fill")
+} |>
+  plotly::ggplotly()
+```
+
+```{r}
+{
+  df |>
+    summarise(n = n(), .by = c(jahr, kategorie_gruppiert)) |>
+    filter(jahr != 2025) |>
+    mutate(kategorie_gruppiert = fct_reorder(kategorie_gruppiert, n)) |>
+    mutate(perc = n / sum(n), .by = jahr) |> 
+    ggplot(aes(x = jahr, y = perc, fill = kategorie_gruppiert)) +
+    # geom_col(position = "jitter")
+    geom_col()
+} |>
+  plotly::ggplotly()
+```
+
+```{r}
+df |> 
+     add_count(jahr, kategorie_gruppiert) |>
+    mutate(kategorie_gruppiert = fct_reorder(kategorie_gruppiert, n, mean)) |>
+ mutate(jahr = factor(jahr)) |> 
+  ggplot(aes(x = jahr, fill = kategorie_gruppiert)) +
+  geom_bar()
+```
+
+```{r}
+df <- df |> 
+     add_count(jahr, kategorie_gruppiert) |>
+    mutate(kategorie_gruppiert = fct_reorder(kategorie_gruppiert, -n, mean)) |>
+ mutate(across(c(jahr, kategorie, firmensitz_code, firmensitz), \(x) factor(x))) |> 
+  select(-n)
+  
+df |> glimpse()
+```
+
+```{r}
+write_csv(x = df, file = "data/ogd_12460_firmen_clean.csv")
+```
+

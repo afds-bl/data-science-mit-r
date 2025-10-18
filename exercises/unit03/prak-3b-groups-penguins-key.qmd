@@ -1,0 +1,150 @@
+---
+title: "Prak 3b: Gruppen Transformieren mit `dplyr`"
+---
+
+# Tastaturkürzel
+
+|                                                              |                        |
+|---------------------------------------------|---------------------------|
+| Einen neuen Code-chunk hinzufügen                            | `Ctrl + Alt + I`       |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter`         |
+| Den gesamten Code-chunk ausführen                            | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren                                           | `Ctrl + Shift + C`     |
+| Das Pipe `|>`                                                | `Ctrl + Shift + M`     |
+| Der Zuweisungs-Operator `<-`                                 | `Alt + -`              |
+
+# `group_by()`, `summarise()`, `n()` und `count()`
+
+Die Funktion `group_by()` wird genutzt um einen existierenden Dataframe in einen gruppierten Dataframe zu konvertieren, sodass die folgenden Operationen auf der Ebene der Gruppen angewandt werden.
+
+Mit der Funktion `summarise()` wird ein neuer Dataframe erstellt. Dieser enthält eine Spalte für jede angegebene zusammenfassende Operation und eine Zeile für jede Kombination der Gruppierungsvariablen.
+
+Die Funktion `n()` gibt die Anzahl der Beobachtungen in einer aktuellen Gruppe zurück. Sie kann nur innerhalb von `summarise()` (und `mutate()` und `filter()`) verwendet werden.
+
+`group_by()` + `summarise()` + `n()` $\equiv$ `count()`, sodass die zwei folgenden *code chunks* equivalent sind:
+
+```{r}
+# df |> 
+#   group_by(var1, var2) |> 
+#   summarise(n = n())
+```
+
+```{r}
+# df |> count(var1, var2)
+```
+
+# Aufgaben
+
+1.  Lade `tidyverse`, `skimr` und `palmerpenguins` Packages.
+
+```{r}
+library(skimr)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+
+2.  Verwende `group_by()` und `summarise()` um herauszufinden, wie viele Pinguine es pro Art gibt.
+
+    ```{r}
+    penguins |> 
+      group_by(species) |> 
+      summarise(n = n())
+    ```
+
+3.  Was ist das Minimum und Maximum `bill_length_mm` pro `species`?
+
+    ```{r}
+    penguins |> 
+      group_by(species) |> 
+      summarise(min_year = min(bill_length_mm, na.rm = TRUE),
+                max_year = max(bill_length_mm, na.rm = TRUE))
+    ```
+
+4.  Was ist die Proportion von Pinguine pro `species`? Hint: `sum(var)` summiert alle Werte in der Variable `var`.
+
+    ```{r}
+    penguins |> 
+      group_by(species) |> 
+      summarise(n = n()) |> 
+      mutate(prop = n / sum(n))
+    ```
+
+    ```{r}
+    penguins |> 
+      count(species) |> 
+      mutate(prop = n / sum(n))
+    ```
+
+5.  Nimm "Adelie" raus. Wie viele Pinguine gibt es pro `species`? Prozente?
+
+    ```{r}
+    penguins |> 
+      filter(species != "Adelie") |> 
+      group_by(species) |> 
+      summarise(n = n()) |> 
+      mutate(prop = n / sum(n))
+    ```
+
+    ```{r}
+    penguins |>
+      filter(species != "Adelie") |>
+      count(species) |>
+      mutate(prop = n / sum(n))
+    ```
+
+6.  Benutze `group_by()` und `summarise()`um zu rechnen, wie viele Pinguine es pro `species`/`island`-Kombination gibt (auch Prozente).
+
+    ```{r}
+    penguins |> 
+    group_by(species, island) |> 
+    summarise(n = n()) |> 
+    mutate(prop = n / sum(n))
+    ```
+
+7.  Etwas stimmt mit den Proportionen nicht! Wie können wir das gewünschte Ergebnis erhalten? Hint: Schaue dir genau die Warnung und den resultierenden Dataframe.
+
+    ```{r}
+    penguins |> 
+      group_by(species, island) |> 
+      summarise(n = n()) |>
+      ungroup() |> 
+      mutate(prop = n / sum(n))
+    ```
+
+8.  Benutze `count()`um zu rechnen, wie viele Pinguine es pro `species`/`island`-Kombination gibt (auch Prozente). 
+
+    ```{r}
+    penguins |> 
+    count(species, island) |> 
+    mutate(prop = n / sum(n))
+    ```
+
+    Was bewirkt das Argument `sort` bei `count()`?
+
+    ```{r}
+    penguins |> count(species, sort = TRUE)
+    ```
+
+9.  Erstelle Violin- und Boxplots, die die Quantiles und Median des Gewichts pro Insel und Art zeigen (`body_mass_g` auf der y-Achse, `species` auf der x-Achse, Facetierung mit `island`). Benutze das color scheme `ggthemes::scale_color_colorblind()`.
+
+    ```{r}
+    library(ggthemes)
+    penguins |>
+      ggplot(aes(
+        x = species,
+        y = body_mass_g,
+        colour = species
+      )) +
+      geom_violin(width = 1.4) +
+      geom_boxplot() +
+      geom_jitter(alpha = 0.3) +
+      facet_wrap(~ island) +
+      labs(
+        x = "",
+        y = "Gewicht"
+      ) +
+      theme_minimal() +
+      theme(legend.position="none") +
+      scale_colour_colorblind() # Colour-blind friendly
+    ```

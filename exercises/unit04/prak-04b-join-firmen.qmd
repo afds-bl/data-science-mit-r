@@ -1,0 +1,118 @@
+---
+title: "Praktikum 4b - Daten zusammenfügen"
+format:
+  html:
+    toc: true
+execute: 
+  warning: false
+---
+
+# Tastaturkürzel
+
+|  |  |
+|------------------------------------|------------------------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Packages laden
+
+- Lädt die `janitor` und `tidyverse` packages.
+
+# Daten laden
+
+Wir werden mit Firmendaten arbeiten, die zuvor aus dem [OGD-Portal](https://data.bl.ch/explore/dataset/12460) heruntergeladen und für diese Übung bereinigt wurden. Dieser Datensatz enthält tägliche Meldungen aus dem Schweizerischen Handelsamtsblatt (SHAB). 
+
+- Lädt die Firmendaten, die sich in der Datei "ogd_12460_firmen_clean.csv" im "data"-Ordner befinden.
+
+# Daten erkunden
+
+```{r}
+# glimpse(firmen)
+```
+
+- Wie viele verschiedene Kategorien gibt es?
+
+- Welche Jahre sind abgedeckt?
+
+# Bezirksdaten zusammenfügen
+
+Wir möchten die Trends der Firmen pro Jahr und Bezirk in BL analysieren. Dafür sollten wir zuerst die Bezirksdaten einfügen.
+
+- Lest die [Raumgliedrungsdaten](https://data.bl.ch/explore/dataset/10110) die sich in der Datei "data/ogd-10110-raumgliederung.csv" befinden.
+
+```{r}
+# raumgliederung <- ___("data/ogd-10110-raumgliederung.csv", delim = ";")
+```
+
+- Bereinigt die Namen und behaltet nur die vier ersten Spalten (`bfs_nummer`, `gemeinde`, `bezirk_nummer`, `bezirk`):
+
+- Verknüpft die Bezirksdaten mit dem Unternehmensdatensatz und verwendet dabei die folgenden Spalten als Schlüssel: `firmensitz_code == bfs_nummer`, `firmensitz == gemeinde` in der `left_join()`-Funktion:
+
+```{r}
+# firmen_joined <- firmen |>
+#   ___(___, join_by(___)) |>
+#   relocate(starts_with("bezirk"), .after = firmensitz)
+```
+
+# Visualisierung
+
+## Barplot
+
+- Behaltet nur Jahre bis und mit 2024
+- Erstellt ein Balkendiagram der Anzahl von Firmen pro Kategorie, Jahr und Bezirk
+
+```{r}
+# Pro Bezirk, bar plot
+
+# firmen_joined |>
+#   # filter
+#   ___ |> 
+#
+#   # Bar plot
+#   ggplot(aes(x = ___, fill = ___)) +
+#   ___() +
+#   facet_wrap(~___) +
+#   theme_minimal() +
+#   labs(
+#     x = "",
+#     y = "Anzahl Firmen",
+#     title = "Anzahl Firmen in BL pro Bezirk und Kategorie",
+#     caption = "https://data.bl.ch/explore/dataset/12460"
+#   )
+```
+
+## Liniendiagramm
+
+- Behaltet nur Jahre bis und mit 2024
+- Verwendet `summarise()` um die Anzahl von Firmen pro Jahr, Bezirk und gruppierte Kategorien zu berechnen
+- Erstellt ein Liniendiagram der Anzahl von Firmen pro Kategorie, Jahr und Bezirk
+
+```{r}
+# Pro Bezirk, line plot
+
+# firmen_joined |>
+#   # filter
+#   ___ |> 
+#
+#   # summarise
+#   summarise(n = ___, .by = ___)
+# 
+#   # line plot
+#   ggplot(aes(x = ___, y = ___, colour = ___)) +
+#   geom_point() +
+#   geom_line() +
+#   ___(method = "lm", se = FALSE) +
+#   facet_wrap(~___) +
+#   theme_minimal() +
+#   labs(
+#     x = "",
+#     y = "Anzahl Firmen",
+#     title = "Anzahl Firmen in BL pro Bezirk und Kategorie",
+#     caption = "https://data.bl.ch/explore/dataset/12460"
+#   )
+```
+

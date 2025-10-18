@@ -1,0 +1,49 @@
+---
+title: "Hausaufgabe 01: Rechtschreibung"
+author: "___"
+format: html
+editor: visual
+---
+
+# Tastaturkürzel
+
+-   Einen neuen Code-chunk hinzufügen: `Ctrl + Alt + I` oder ![](img/notebook-insert-chunk.png) oben rechts
+-   Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen: `Ctrl + Enter`
+-   Den gesamten Code-chunk ausführen: `Ctrl + Shift + Enter`
+-   Der Zuweisungs-Operator `<-`: `Alt + -`
+-   Bericht rendern: `Ctrl + Shift + K`
+
+# Aufgaben
+
+1.  Rendere den Bericht.
+2.  Fülle deinen Namen im YAML-Header aus.
+3.  Korrigiere diesen Code Schritt für Schritt bis du die richtige Visualisierung bekommst.
+4.  Rendere den Bericht.
+
+```{r}
+#| label: wrong
+#| eval: false
+
+libary(todyverse)
+
+ggplot(
+  daTa = penguins,
+  maping = aes(
+    x = flipper_length_mm
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r}
+#| label: right
+#| eval: true
+
+# Den korrekten Code hier eintragen
+```
+
+# Lösung
+
+`01d-prak-style-key.qmd`

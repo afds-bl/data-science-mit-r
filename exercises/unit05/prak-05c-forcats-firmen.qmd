@@ -1,0 +1,51 @@
+---
+title: "Praktikum 5c: `{forcats}`"
+date: last-modified
+format: html
+---
+
+# Tastaturkürzel
+
+|  |  |
+|---------------------------------------------------|---------------------|
+| Einen neuen Code-chunk hinzufügen | `Ctrl + Alt + I` |
+| Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen | `Ctrl + Enter` |
+| Den gesamten Code-chunk ausführen | `Ctrl + Shift + Enter` |
+| (Aus-)kommentieren | `Ctrl + Shift + C` |
+| Das Pipe `|>` | `Ctrl + Shift + M` |
+| Der Zuweisungs-Operator `<-` | `Alt + -` |
+
+# Packages laden
+
+- Ladet Packages `janitor` und `tidyverse`.
+
+# Daten laden
+
+- Lest die Firmen- und Raumgliederungsdaten ein und macht die Namen sauber (`janitor::clean_names()`)
+
+    - data/ogd_12460_firmen_clean.csv
+    - data/ogd-10110-raumgliederung.csv
+
+- Erkundet die Daten mit `glimpse()` und `summary()`.
+
+- Reinigt die Namen Vom Raumgliederung-Datensatz
+
+# Daten transformieren
+
+- Wie viele Kategorien von *rechtsform* gibt es?
+
+- Fügt die Firmen- und Raumgliederungsdaten zusammen (Achtung! verschiedene Variablenamen, `join_by()`)
+
+- Entfernt das Jahr 2025
+
+- Verwendet `fct_lump` um drei Kategorien der Rechstform zu behalten (other_level = "Anders")
+
+- Verwendet `count()` um das Ergebnis zu checken
+
+# Daten visualisieren
+
+- Erstellt ein Balkendiagram der neuen gruppierte Rechtsform-Variable
+
+- Benutzt `fct_infreq()` um die Balken absteigend zu ordnen 
+
+- Erstellt ein Balkendiagramm der neuen gruppierte Rechtsform-Variable und dem Bezirk (Facettierung: `facet_grid(rechtsform_gruppiert ~ bezirk)`)

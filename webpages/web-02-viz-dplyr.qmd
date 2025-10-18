@@ -1,0 +1,57 @@
+---
+title: "Unit 2"
+subtitle: "Visualisierung & Daten-Transformation"
+params:
+  unit: 2
+---
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+
+```{r, eval = FALSE, out.width = "40%", fig.align = "left", preview = TRUE, echo=FALSE, include=TRUE, fig.cap="Photo by [Beazy](https://unsplash.com/photos/8uHhcPQfyVY)"}
+
+knitr::include_graphics("img/tools.jpg")
+
+```
+
+## {{< fa bullseye >}} Ziele
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(params$unit == readr::parse_number(unit)) |> 
+  pull(learning_objectives)
+```
+
+
+Am Ende dieser Woche kannst du:
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+## {{< fa display >}} Folien
+
+[Folien im Vollbild anzeigen](../slides/slide-02a-viz.qmd) \| [Folien als PDF herunterladen](../slides/slide-02a-viz.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-02a-viz.html title="Unit 1 - Visualisation" style="border: 1px solid #123233;"></iframe>
+```
+
+[Folien im Vollbild anzeigen](../slides/slide-02b-dplyr.qmd) \| [Folien als PDF herunterladen](../slides/slide-02b-dplyr.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-02b-dplyr.html title="Unit 2 - Data wrangling" style="border: 1px solid #123233;"></iframe>
+```
+
+## {{< fa code >}} Praktika
+
+-   [Praktikum 02a - Visualisierung](../exercises/unit02/prak-02a-viz.qmd)
+-   [Praktikum 02c - Zeilen transformieren](../exercises/unit02/prak-02c-dplyr-abstimmung.qmd)
+
+## {{< fa book >}} Hausaufgaben und Lektüre
+
+1.   Hausaufgabe: [Verteilungen und Beziehungen visualisieren](../exercises/unit02/prak-02b-viz.qmd)
+1.   Hausaufgabe: [Zeilen transformieren](../exercises/unit02/prak-02c-dplyr-rows-peng.qmd)
+1.   [`ggplot2` cheat sheet](https://rstudio.github.io/cheatsheets/html/data-visualization.html)
+1.   [R for Data Science: Chapter 1 - Data visualisation; 1.4-1.8](https://r4ds.hadley.nz/data-visualize#visualizing-distributions)
+1.   [R for Data Science: Chapter 3 - Data transformation; 3.1-3.4](https://r4ds.hadley.nz/data-transform)

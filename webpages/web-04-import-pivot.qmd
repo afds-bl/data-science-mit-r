@@ -1,0 +1,48 @@
+---
+title: "Unit 4"
+subtitle: "Daten importieren, exportieren, und zusammenfügen & pivotieren"
+params:
+  unit: 4
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+## {{< fa bullseye >}} Ziele
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |>   pull(learning_objectives)
+```
+
+Am Ende dieser Woche kannst du:
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+<!-- `r paste0("- ", lobj, "\n")` -->
+
+<!-- `r  purrr::map(lobj, \(x) paste0("- ", x, "\n"))` -->
+
+## {{< fa display >}} Folien
+
+[Folien im Vollbild anzeigen](../slides/slide-04-import-pivot.qmd) \| [Folien als PDF herunterladen](../slides/slide-04-import-pivot.pdf)
+
+```{=html}
+<iframe class="slide-deck" width="780" height="500" src= ../slides/slide-04-import-pivot.html title="Unit 5 - Importing and exporting data" style="border: 1px solid #123233;"></iframe>
+```
+
+## {{< fa code >}} Praktika
+
+-   [Praktikum 04a - Daten importieren und exportieren](../exercises/unit04/prak-04a-import-export.qmd)
+-   [Praktikum 04b - Daten zusammenfügen](../exercises/unit04/prak-04b-join-firmen.qmd) 
+-   [Praktikum 04c - Daten pivotieren](../exercises/unit04/prak-04c-pivot.qmd) 
+
+## {{< fa book >}} Lektüre
+
+-   [`dplyr` Cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
+-   [R for Data Science: Chapters 8 - Data import](https://r4ds.hadley.nz/data-import)
+-   [R for Data Science: Chapters 21 - Spreadsheets](https://r4ds.hadley.nz/spreadsheets)
+-   [R for Data Science: Chapter 19 - Joins](https://r4ds.hadley.nz/joins)
+-   [R for Data Science: Chapter 5 - Tidy data](https://r4ds.hadley.nz/data-tidy)

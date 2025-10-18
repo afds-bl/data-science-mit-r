@@ -1,0 +1,89 @@
+/*-- scss:defaults --*/
+
+$font-family-sans-serif: Arial, sans-serif;
+$text-color: #333;
+$background-color: #fff;
+$presentation-h1-font-size: 1.2em;
+$presentation-h2-font-size: 1em;
+$btn-bg: #4CAF50; // Button background color
+$btn-hover-bg: #45a049; // Hover background color
+$btn-text-color: white; // Text color
+
+/*-- scss:rules --*/
+
+.reveal {
+  font-family: $font-family-sans-serif;
+  color: $text-color;
+  background-color: $background-color;
+}
+
+/* Keep logo visible on slides with background colour */
+.reveal .slide-logo {
+  z-index: 100;
+}
+
+/* Adjust author/date block */
+
+.reveal .quarto-title-block .quarto-title-authors .quarto-title-author .quarto-title-author-name {
+  margin-top:7rem;
+}
+
+/* Adjust slide logo size */
+.reveal .slide-logo {
+  height: 1em !important;
+  max-width: unset !important;
+  max-height: unset !important;
+}
+
+/* Red circle */
+.redcircle {
+  position: absolute;
+  width: 80px; /* Adjust for the size of the circle */
+  height: 80px; /* Same as width for a circle */
+  border: 2px solid red;
+  border-radius: 50%;
+  top: 30%; /* Adjust for the vertical position */
+  left: 50%; /* Adjust for the horizontal position */
+  z-index: 2; /* Ensure it appears above the background */
+}
+
+/* Custom red box for highlights */
+.redbox {
+  color: #ff0000;
+  background-color: transparent;
+  margin: 1px;
+  padding: 5px 2px 5px 2px;
+  height: 30px;
+  border: 5px solid;
+}
+
+/* Custom file download button */
+.custom-download-btn {
+  display: inline-block;
+  background-color: $btn-bg;
+  padding: 10px 20px;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+
+  a {
+    color: $btn-text-color; // Apply text color to the link
+    text-decoration: none; // Remove underline
+    display: block; // Ensure the link fills the button area
+  }
+
+  &:hover {
+    background-color: $btn-hover-bg;
+
+    a {
+      color: $btn-text-color; // Ensure the color remains consistent on hover
+    }
+  }
+}
+
+/* Highlight messages and warning */
+.reveal pre code {
+color: #222;
+color: #ff0000;
+}

@@ -1,0 +1,145 @@
+country,year,rate,notes
+Belgium,2021,1.6,NA
+Belgium,2020,1.55,NA
+Belgium,2019,1.6,NA
+Bulgaria,2021,1.58,NA
+Bulgaria,2020,1.56,NA
+Bulgaria,2019,1.58,NA
+Czechia,2021,1.83,b
+Czechia,2020,1.71,NA
+Czechia,2019,1.71,NA
+Denmark,2021,1.72,NA
+Denmark,2020,1.68,NA
+Denmark,2019,1.7,NA
+Germany,2021,1.58,NA
+Germany,2020,1.53,NA
+Germany,2019,1.54,NA
+Estonia,2021,1.61,NA
+Estonia,2020,1.58,NA
+Estonia,2019,1.66,NA
+Ireland,2021,1.78,NA
+Ireland,2020,1.63,NA
+Ireland,2019,1.71,e
+Greece,2021,1.43,NA
+Greece,2020,1.39,NA
+Greece,2019,1.34,NA
+Spain,2021,1.19,NA
+Spain,2020,1.19,NA
+Spain,2019,1.23,NA
+France,2021,1.84,p
+France,2020,1.83,p
+France,2019,1.86,p
+Croatia,2021,1.58,b
+Croatia,2020,1.48,NA
+Croatia,2019,1.47,NA
+Italy,2021,1.25,NA
+Italy,2020,1.24,NA
+Italy,2019,1.27,b
+Cyprus,2021,1.39,NA
+Cyprus,2020,1.36,NA
+Cyprus,2019,1.33,NA
+Latvia,2021,1.57,NA
+Latvia,2020,1.55,NA
+Latvia,2019,1.61,NA
+Lithuania,2021,1.36,NA
+Lithuania,2020,1.48,NA
+Lithuania,2019,1.61,NA
+Luxembourg,2021,1.38,NA
+Luxembourg,2020,1.36,NA
+Luxembourg,2019,1.34,NA
+Hungary,2021,1.61,NA
+Hungary,2020,1.59,NA
+Hungary,2019,1.55,NA
+Malta,2021,1.13,p
+Malta,2020,1.13,NA
+Malta,2019,1.14,NA
+Netherlands,2021,1.62,NA
+Netherlands,2020,1.54,NA
+Netherlands,2019,1.57,NA
+Austria,2021,1.48,NA
+Austria,2020,1.44,NA
+Austria,2019,1.46,NA
+Poland,2021,1.33,ep
+Poland,2020,1.39,ep
+Poland,2019,1.44,NA
+Portugal,2021,1.35,bp
+Portugal,2020,1.41,NA
+Portugal,2019,1.43,NA
+Romania,2021,1.81,e
+Romania,2020,1.8,e
+Romania,2019,1.77,e
+Slovenia,2021,1.64,NA
+Slovenia,2020,1.59,NA
+Slovenia,2019,1.61,NA
+Slovakia,2021,1.63,NA
+Slovakia,2020,1.59,NA
+Slovakia,2019,1.57,NA
+Finland,2021,1.46,NA
+Finland,2020,1.37,NA
+Finland,2019,1.35,NA
+Sweden,2021,1.67,NA
+Sweden,2020,1.67,NA
+Sweden,2019,1.71,NA
+Iceland,2021,1.82,NA
+Iceland,2020,1.72,NA
+Iceland,2019,1.74,NA
+Liechtenstein,2021,1.53,NA
+Liechtenstein,2020,1.46,NA
+Liechtenstein,2019,1.48,NA
+Norway,2021,1.55,NA
+Norway,2020,1.48,NA
+Norway,2019,1.53,NA
+Switzerland,2021,1.52,NA
+Switzerland,2020,1.46,NA
+Switzerland,2019,1.48,NA
+United Kingdom,2021,NA,NA
+United Kingdom,2020,NA,NA
+United Kingdom,2019,NA,NA
+Montenegro,2021,1.76,NA
+Montenegro,2020,1.75,NA
+Montenegro,2019,1.77,NA
+North Macedonia,2021,1.44,b
+North Macedonia,2020,1.31,NA
+North Macedonia,2019,1.34,NA
+Albania,2021,1.31,NA
+Albania,2020,1.34,NA
+Albania,2019,NA,NA
+Serbia,2021,1.52,NA
+Serbia,2020,1.48,NA
+Serbia,2019,1.52,NA
+Türkiye,2021,NA,NA
+Türkiye,2020,NA,NA
+Türkiye,2019,1.88,NA
+Andorra,2021,NA,NA
+Andorra,2020,NA,NA
+Andorra,2019,NA,NA
+Belarus,2021,NA,NA
+Belarus,2020,NA,NA
+Belarus,2019,NA,NA
+Bosnia and Herzegovina,2021,NA,NA
+Bosnia and Herzegovina,2020,NA,NA
+Bosnia and Herzegovina,2019,NA,NA
+Kosovo (under United Nations Security Council Resolution 1244/99),2021,NA,NA
+Kosovo (under United Nations Security Council Resolution 1244/99),2020,NA,NA
+Kosovo (under United Nations Security Council Resolution 1244/99),2019,1.55,NA
+Moldova,2021,NA,NA
+Moldova,2020,NA,NA
+Moldova,2019,NA,NA
+Russia,2021,NA,NA
+Russia,2020,NA,NA
+Russia,2019,NA,NA
+San Marino,2021,NA,NA
+San Marino,2020,NA,NA
+San Marino,2019,NA,NA
+Ukraine,2021,NA,NA
+Ukraine,2020,NA,NA
+Ukraine,2019,1.14,NA
+Armenia,2021,NA,NA
+Armenia,2020,NA,NA
+Armenia,2019,1.6,NA
+Azerbaijan,2021,NA,NA
+Azerbaijan,2020,NA,NA
+Azerbaijan,2019,1.81,NA
+Georgia,2021,NA,NA
+Georgia,2020,1.98,NA
+Georgia,2019,2.02,NA

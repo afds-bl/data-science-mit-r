@@ -1,0 +1,573 @@
+---
+title: "SQL-Datenbanken abfragen und Versionierung mit `git`"
+subtitle: "Unit 6" 
+date: ""
+format: revealjs
+params:
+  unit: 6
+execute: 
+  eval: false
+---
+
+```{r setup, include=FALSE}
+#| eval: true
+source(here::here("_init.R"))
+```
+
+# Ziele für heute {background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+#| eval: true
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |>
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+## Praktikum 06a
+
+[CO2-Emissionen](../exercises/unit06/prak_06a-quarto-projekt.html)
+
+`r countdown(minutes = 30, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+#  {background-image="img/r-teacher.png" background-size="contain"}
+
+# SQL Database {background-color="#e6f2f2"}
+
+## SQL Database {auto-animate="true"}
+
+::: incremental
+-   [`DBI` + `RPostgres`](https://dbi.r-dbi.org/) $\rightarrow$ Verbindung mit SQL Datenbank
+-   [dbplyr](https://dbplyr.tidyverse.org/articles/dbplyr.html) $\rightarrow$ `dplyr`-Verben mit Datenbank
+:::
+
+::: fragment
+```{r}
+#| eval: false
+
+library(DBI) # dbConnect()
+library(RPostgres) # Postgres()
+```
+:::
+
+## SQL Database {auto-animate="true" visibility="uncounted"}
+
+-   [`DBI` + `RPostgres`](https://dbi.r-dbi.org/) $\rightarrow$ Verbindung mit SQL Datenbank
+-   [dbplyr](https://dbplyr.tidyverse.org/articles/dbplyr.html) $\rightarrow$ `dplyr`-Verben mit Datenbank
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|4,12|5-9|10-11"
+
+library(DBI) # dbConnect()
+library(RPostgres) # Postgres()
+
+con <- dbConnect(
+  Postgres(),
+  sslmode = "allow",
+  host = "host-name",
+  port = port-number,
+  dbname = "db-name",
+  user = "username",
+  password = "my_password"
+)
+```
+
+::: fragment
+:no_entry: Niemals Passwort im Skript speichern!
+:::
+
+## SQL Database {auto-animate="true"}
+
+-   [`DBI` + `RPostgres`](https://dbi.r-dbi.org/) $\rightarrow$ Verbindung mit SQL Datenbank
+-   [dbplyr](https://dbplyr.tidyverse.org/articles/dbplyr.html) $\rightarrow$ `dplyr`-Verben mit Datenbank
+
+```{r}
+#| eval: false
+#| code-line-numbers: "11"
+
+library(DBI) # dbConnect()
+library(RPostgres) # Postgres()
+
+con <- dbConnect(
+  Postgres(),
+  sslmode = "allow",
+  host = "host-name",
+  port = port-number,
+  dbname = "db-name",
+  user = "username",
+  password = rstudioapi::askForPassword("Datenbank Passwort")
+)
+```
+
+## `config.yml` {auto-animate="true"}
+
+:::: columns
+
+::: {.column width="37%"}
+::: fragment
+```{verbatim}
+default:
+  DWH_var:
+    host: "host-name"
+    user: "username"
+    password: "DWH_pass" 
+    port: port-number
+    dbname: "db-name"
+```
+:::
+:::
+
+::: {.column width="63%"}
+::: fragment
+
+```{r}
+#| code-line-numbers: "7-11"
+library(DBI) # dbConnect()
+library(RPostgres) # Postgres()
+
+con <- dbConnect(
+  Postgres(),
+  sslmode = "allow",
+  host = config::get("DWH_var")$host,
+  dbname = config::get("DWH_var")$dbname,
+  user = config::get("DWH_var")$user,
+  password = config::get("DWH_var")$password,
+  port = config::get("DWH_var")$port
+)
+```
+:::
+:::
+
+::::
+
+## `config.yml` {auto-animate="true"}
+
+```{verbatim}
+default:
+  DWH_var:
+    host: "host-name1"
+    user: "username"
+    password: "DWH_pass" 
+    port: port-number1
+    dbname: "db-name1"
+  DWH_hrm:
+    host: "host-name"
+    user: "username"
+    password: "DWH_pass" 
+    port: port-number2
+    dbname: "db-name2"
+    
+andere_DB:
+  DB_fin:
+    host: "host-name3"
+    user: "username"
+    password: "DB_pass" 
+    port: port-number3
+    dbname: "db-name3"
+```
+
+## SQL Daten Bearbeiten {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+con
+```
+
+::: fragment
+<br>
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|9"
+dbListObjects(con)
+```
+:::
+
+## SQL Daten Bearbeiten {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|2"
+dbListObjects(con, Id(schema = "schema_name"))
+```
+
+## SQL Daten Bearbeiten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "1|2|3"
+#| output-location: fragment
+
+library(tidyverse)
+df_db <- tbl(con, Id(schema = "schema_name", table = "table_name"))
+class(df_db)
+```
+
+::: fragment
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "1|1,2|1-3|"
+glimpse(df_db, width = 20)
+```
+:::
+
+## SQL Daten Bearbeiten {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "|2|3-13|14"
+df_db_small <- df_db |>
+  select(var1, district_k, var2) |>
+  mutate(
+    var1 = as.character(var1), # dbplyr cannot translate factor() to sql
+    district_k = as.character(district_k),
+    district_k = case_when(
+      district_k == "1301" ~ "Arlesheim",
+      district_k == "1302" ~ "Laufen",
+      district_k == "1303" ~ "Liestal",
+      district_k == "1304" ~ "Sissach",
+      .default = "Waldenburg"
+    )
+  ) |>
+  summarise(var3 = sum(var2), .by = c(var1, district_k))
+```
+
+## SQL Daten Bearbeiten {auto-animate="true"}
+
+```{r}
+#| classes: custom3070
+#| font-size: 0.2em
+#| output-location: column-fragment
+
+df_db_small |>
+  ggplot(
+    aes(
+      x = var1,
+      y = var3,
+      fill = fct_reorder(
+        district_k,
+        var3
+      )
+    )
+  ) +
+  geom_col() +
+  labs(
+    x = "",
+    y = "Total",
+    fill = "Bezirk"
+  ) +
+  scale_y_continuous(
+    label = scales::label_number(
+      prefix = "CHF ",
+      big.mark = "'"
+    )
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = c(0.2, 0.8)
+  )
+```
+
+## SQL Query: `show_query()` {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+df_db_small |>
+  show_query()
+```
+
+## SQL Queries in Quarto Dateien {auto-animate="true"}
+
+```{sql}
+#| connection: con
+#| output.var: "db_sql_small"
+#| echo: fenced
+#| code-line-numbers: "1-4|"
+
+SELECT "var1", "district_k", SUM("var2") AS "var3"
+FROM (
+  SELECT
+    "var1",
+    CASE
+WHEN ("district_k" = '1301') THEN 'Arlesheim'
+WHEN ("district_k" = '1302') THEN 'Laufen'
+WHEN ("district_k" = '1303') THEN 'Liestal'
+WHEN ("district_k" = '1304') THEN 'Sissach'
+ELSE 'Waldenburg'
+END AS "district_k",
+    ""
+  FROM (
+    SELECT
+      CAST("var1" AS TEXT) AS "var1",
+      CAST("district_k" AS TEXT) AS "district_k",
+      ""
+    FROM "schema_name"."table_name"
+  ) "q01"
+) "q02"
+GROUP BY "var1", "district_k"
+```
+
+## Mit Resultierenden Daten Weiter Arbeiten {auto-animate="true"}
+
+```{r}
+#| code-fold: show
+#| fig-width: 12
+#| code-line-numbers: "1|2-9|10-18"
+#| output-location: fragment
+
+db_sql_small |>
+  ggplot(
+    aes(
+      x = var1,
+      y = var3,
+      fill = fct_reorder(district_k, var3)
+    )
+  ) +
+  geom_col() +
+  labs(
+    x = "",
+    y = "Total",
+    fill = "Bezirk"
+  ) +
+  scale_y_continuous(
+    label = scales::label_number(prefix = "CHF ", big.mark = "'")
+  ) +
+  theme_minimal()
+
+```
+
+## Resultierende Daten aus Datenbank Holen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+class(df_db_small)
+```
+
+::: fragment
+:point_right: Daten in DB  (*lazy loading*)
+:::
+
+::: fragment
+
+<br>
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "1-2|4"
+
+df <- df_db_small |>
+  collect() 
+
+class(df)
+```
+
+:::
+
+::: fragment
+:point_right: Daten im Dataframe!
+:::
+
+::: notes
+https://dbplyr.tidyverse.org/articles/sql-translation.html
+:::
+
+# Versionierung und Kollaboration: `git` {background-color="#e6f2f2"}
+
+## Versionierung
+
+![](img/projects/lego-steps.png)
+
+## Versionierung
+
+![](img/projects/lego-steps-commit-messages.png)
+
+## Warum Versionierung
+
+![](img/projects/phd_comics_vc.gif)
+
+## Kollaboration mit sich Selbst
+
+<br>
+
+![](img/projects/gitrepo-single.png){width="60%"}
+
+::: {.absolute top="100" left="50" width="300" height="300"}
+<p style="font-size:70%;font-weight:bold">
+
+add, commit
+
+</p>
+:::
+
+::: fragment
+::: {.absolute top="500" right="-10" width="300" height="300"}
+<p style="font-size:60%;">
+
+[github.com](github.com)
+
+</p>
+:::
+
+::: {.absolute top="500" left="20" width="300" height="300"}
+<p style="font-size:60%;">
+
+RStudio
+
+</p>
+:::
+:::
+
+## Kollaboration mit anderen
+
+![](img/projects/gitrepos-collab.png){fig-align="center" width="100%"}
+
+## Warum Git und GitLab?
+
+![](img/git/git_icon.png){.absolute top=200 left=400 width="200" height="200"}
+
+::: fragment
+![](img/git/rollback_backup.png){.absolute top=100 left=50 width="150" height="150"}
+
+:::
+
+::: fragment
+![](img/git/People-Icon.png){.absolute top=100 right=100 width="150" height="150"}
+
+:::
+
+::: fragment
+![](img/git/globe_world.png){.absolute bottom=100 left=80 width="150" height="150"}
+:::
+
+::: fragment
+![](img/git/speech_bubble.png){.absolute bottom=100 right=100 width="150" height="150"}
+:::
+
+::: notes
+-   Ein Backup Eurer Repositorys
+-   Verfolgung aller Änderungen und Möglichkeit des Rollbacks zu einem früheren Zustand
+-   Erhöhung eurer Sichtbarkeit
+-   Einfache Verteilung von *Packages* (ohne CRAN-Anmeldungen)
+-   Mit anderen zusammenarbeiten
+-   Erhöhte Interaktion mit Nutzern (*Issues*, *Pull Requests*)
+:::
+
+## Git und GitLab
+
+::: incremental
+-   (Nicht ganz) Millionen von Befehlen
+-   99% der Zeit: `add`, `commit`, `push`, `pull`
+-   In RStudio oder *command line* (*terminal*)
+-   [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+:::
+
+## Neues Projekt
+
+![](img/projects/brand-new-project.png)
+
+## Existierendes Projekt
+
+::: columns
+::: {.column width="50%"}
+![](img/projects/git-existing-directory.png)
+:::
+
+::: {.column width="50%"}
+::: fragment
+![](img/projects/git-project-setup.png)
+:::
+:::
+:::
+
+## `git` im Terminal {visibility="hidden"}
+
+```{bash}
+git status
+```
+
+::: fragment
+```{bash}
+#| eval: false
+git add --all
+```
+:::
+
+::: fragment
+```{bash}
+#| eval: false
+git commit -m 'Added scientist pics'
+```
+:::
+
+## Neues Projekt mit *Version Control* {visibility="hidden"}
+
+![](img/projects/projects-new.png)
+
+## Projekt mit `git` {visibility="hidden"}
+
+![](img/projects/create-project-vc.png)
+
+
+## `git` in RStudio
+
+[Step-by-Step 1](https://nceas.github.io/oss-lessons/version-control/4-getting-started-with-git-in-RStudio.html), [step-by-step 2](https://aberdeenstudygroup.github.io/studyGroup/lessons/SG-T1-GitHubVersionControl/VersionControl/)
+
+![](img/projects/rstudio-git-interface.png)
+
+::: notes
+-   [Setup Git in RStudio](https://www.geo.uzh.ch/microsite/reproducible_research/post/rr-rstudio-git/)
+
+-   Create a new project with a git repository
+
+-   Make a Git repo for an existing project: `Tools > Version control > Project Setup`, select "Git". Confirm New Git Repository? Yes!
+
+[Happy Git and GitHub for the useR](https://happygitwithr.com/) https://aberdeenstudygroup.github.io/studyGroup/lessons/SG-T1-GitHubVersionControl/VersionControl/
+:::
+
+
+## 
+
+![](img/projects/git.png)
+
+::: aside
+Source: [xkcd](https://xkcd.com/)
+:::
+
+## Praktikum 06b: `git`
+
+Quarto-Projekt mit `git`
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+##  {background-image="img/r_first_then.png" background-size="contain"}
+
+# Fragen?
+
+- [R for Data Science](https://r4ds.hadley.nz/)
+- [DataCamp](https://www.datacamp.com/)
+- [Stackoverflow](https://stackoverflow.com/questions)
+- ChatGPT, Perplexity Ai
+- [Souad Guemghar](mailto:souad.guemghar@bl.ch) & [Luca Hüsler](luca.huesler@bl.ch)
+
+# Danke! :full_moon: {background-color="#e6f2f2"}
+
+## 
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide_02_visualisation.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
+
+## Git-Begriffe {visibility="uncounted"}
+
+-   **repository** dein Projektordner
+-   **commit** ein Schnappschuss deines Repos
+-   **push** Commits an den *remote* senden
+-   **pull** Commits vom *remote* erhalten
+-   **clone** das Repository zum ersten Mal aus dem *remote* abrufen
+-   **remote** einen Computer, auf dem sich das Repository befindet
+

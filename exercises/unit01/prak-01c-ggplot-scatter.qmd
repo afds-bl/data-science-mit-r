@@ -1,0 +1,109 @@
+---
+title: "Praktikum 01c - `ggplot`"
+author: "___"
+format: html
+editor: visual
+toc: true
+execute:
+  echo: true
+  eval: false
+---
+
+# Tastaturkürzel
+
+Hier sind die wichtigsten Tastaturkürzel:
+
+-   Einen neuen Code-chunk hinzufügen: `Ctrl + Alt + I`oder ![](img/notebook-insert-chunk.png) oben rechts
+-   Code "Zeile für Zeile" innerhalb eines Code-chunks ausführen: `Ctrl + Enter`
+-   Den gesamten Code-chunk ausführen: `Ctrl + Shift + Enter`
+-   Der Zuweisungs-Operator `<-`: `Alt + -`
+
+# R-Packages Laden
+
+Die erforderlichen R-Packages werden zu Beginn des Skripts geladen: `tidyverse`, `palmerpenguins`, `ggthemes`.
+
+```{r}
+install.packages("palmerpenguins")
+install.packages("ggthemes")
+
+library(___)
+library(___)
+library(___)
+```
+
+![](img/penguins_logo.png)
+
+# Streudiagramm
+
+1.  Wie viele Zeilen und Spalten gibt es in `penguins`? Benutze `nrow()`, `ncol()`, `dim()` und `glimpse()`.
+2.  Lese die Hilfe für `?penguins`, um herauszufinden, was die Variabeln beschreiben.
+3.  Erstelle ein Streudiagramm von `bill_depth_mm` gegen `bill_length_mm`. Das heisst:
+
+-   Erstelle ein Streudiagramm mit `bill_depth_mm` auf der y-Achse und `bill_length_mm` auf der x-Achse.
+-   Beschreibe die Beziehung zwischen diesen beiden Variablen.
+-   Ordne die Variable `species` zur `colour`-*Aesthetic*.
+
+```{r}
+ggplot(
+  data = penguins,
+    mapping = aes(
+    x = ___,
+    y = ___,
+    colour = ___
+ )
+) +
+  geom____() +
+  geom____(mehtod = "lm")
+```
+
+4.  Welche Rolle hat das Argument `na.rm` in `geom_point()`? Was ist der *default* für dieses Argument?
+5.  Füge einen Titel, Achsen-Titel und eine *caption* zu dem Diagramm hinzu: "Die Daten stammen aus dem Paket palmerpenguins". Tipp: wirf einen Blick in die Dokumentation von `labs()`.
+
+```{r}
+ggplot(
+  data = penguins,
+    mapping = aes(
+    x = ___,
+    y = ___,
+    colour = ___
+ )
+) +
+  geom____() +
+  geom____(method = "lm") +
+  labs(___)
+```
+
+6.  Benutze `ggthemes::scale_colour_colorblind()` um die Farben zu änderen und [`theme_light()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) um den Aspekt zu verbessern.
+
+```{r}
+ggplot(
+  data = penguins,
+    mapping = aes(
+    x = ___,
+    y = ___,
+    colour = ___
+ )
+) +
+  geom____() +
+  geom____(method = "lm") +
+  labs(___) +
+  ___ +
+  ___
+```
+
+7.  Was passiert, wenn man ein Streudiagramm von `bill_depth_mm` gegen `species` erstellt? Was wäre eine bessere Wahl des `geoms`?
+8.  Erstelle die folgende Visualisierung neu. Welcher Ästhetik sollte `bill_depth_mm` zugewiesen werden? Und sollte es auf der globalen Ebene oder auf der `geom`-Ebene abgebildet werden? ![](img/plt_peng_mass_flipper.png)
+9.  Was passiert wenn du die Namen der Argumenten von `ggplot()` wegnimmst?
+
+```{r}
+ggplot(
+  penguins,
+  aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point()
+```
+
+10. Speicher das letzte Plot mit `ggsave()`.

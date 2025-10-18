@@ -1,0 +1,887 @@
+---
+title: "Daten rekodieren"
+subtitle: "Unit 5" 
+format:
+  revealjs
+date: ""
+params:
+  unit: 5
+execute: 
+  error: true
+---
+
+```{r setup, include=FALSE}
+source(here::here("_init.R"))
+```
+
+# Ziele für heute {background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |>
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+# Datentypen {background-color="#e6f2f2"}
+
+Warum sollten wir uns für Datentypen interessieren?
+
+::: notes
+`live-coding/live-04-type.qmd` (15 Minuten)
+:::
+
+## Beispiel {auto-animate="true"}
+
+```{r}
+#| warning: false
+#| echo: true
+cat_lovers <- read_csv("data/cat-lovers.csv")
+```
+
+::: fragment
+```{r}
+#| echo: false
+
+cat_lovers |>
+  gt() |>
+  opt_stylize(style = 6) |>
+  tab_options(
+    table.font.size = 20,
+    container.overflow.y = TRUE, container.height = px(400)
+  )
+```
+:::
+
+::: notes
+In einer Umfrage wurden die Befragten nach Namen und Anzahl der Katzen gefragt.
+:::
+
+##  Durschnittliche Anzahl {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+cat_lovers |>
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+::: fragment
+Warum funktioniert es nicht?!
+:::
+
+::: fragment
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "2"
+cat_lovers |>
+  summarise(mean_cats = mean(number_of_cats, na.rm = TRUE))
+```
+:::
+
+::: fragment
+Warum funktioniert es immer noch nicht?!
+:::
+
+## Einatmen... und sich die Daten Anschauen {auto-animate="true"}
+
+::: fragment
+Welchen Typ hat die Variable `number_of_cats`?
+:::
+
+::: fragment
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "4"
+cat_lovers |>
+  glimpse()
+```
+:::
+
+## Noch Einmal einen Blick darauf Werfen {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|6,10"
+cat_lovers |> count(number_of_cats)
+```
+
+## Manchmal musst Du auf deine Befragten aufpassen {auto-animate="true"}
+
+::: fragment
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "2,6|3|4|5"
+#| warning: true
+cat_lovers |>
+  mutate(number_of_cats = case_when(
+    number_of_cats == "1.5 - honestly I think one of my cats is half human" ~ 2,
+    number_of_cats == "three" ~ 3,
+    .default = as.numeric(number_of_cats)
+  )) |>
+  summarise(mean_cats = mean(number_of_cats))
+```
+:::
+
+## Immer Datentypen Respektieren! {auto-animate="true"}
+
+```{r}
+#| warning: true
+#| code-line-numbers: "3-6|8"
+#| output-location: fragment
+cat_lovers |>
+  mutate(
+    number_of_cats = case_when(
+      number_of_cats == "1.5 - honestly I think one of my cats is half human" ~ "2",
+      number_of_cats == "three" ~ "3",
+      .default = number_of_cats
+    ),
+    number_of_cats = as.numeric(number_of_cats)
+  ) |>
+  summarise(mean_cats = mean(number_of_cats))
+```
+
+## Jetzt, wo wir wissen, was wir tun... {auto-animate="true"}
+
+```{r}
+cat_lovers <- cat_lovers |>
+  mutate(
+    number_of_cats = case_when(
+      number_of_cats == "1.5 - honestly I think one of my cats is half human" ~ "2",
+      number_of_cats == "three" ~ "3",
+      .default = number_of_cats
+    ),
+    number_of_cats = as.numeric(number_of_cats)
+  )
+```
+
+## Moral der Geschichte {background-image="img/snow_white.webp" background-opacity="0.05"}
+
+::: incremental
+-   Wenn sich Deine Daten nicht so verhalten, wie du es erwartest, könnte ein *type coercion* beim Einlesen der Daten die Ursache sein.
+-   Gehe hinein, untersuche deine Daten, wende den Fix an, speichere deine Daten und lebe glücklich bis ans Ende deiner Tage.
+:::
+
+::: notes
+Sotheby's/AFP/Getty Images
+:::
+
+## Datentypen in R
+
+*Atomic vectors* 
+
+::: fragment
+::: {data-id="box1" style="background: #FFFF00; width: 300px; height: 200px; margin: 10px; position: absolute; top: 150px; left: 100px; display: flex; justify-content: center; align-items: center; text-align: center;"}
+logical: `TRUE`, `FALSE`
+:::
+:::
+
+::: fragment
+::: {data-id="box1" style="background: #FFA500; width: 300px; height: 200px; margin: 10px; position: absolute; top: 150px; left: 500px; display: flex; justify-content: center; align-items: center; text-align: center;"}
+character: "Hallo", "a", "TRUE"
+:::
+:::
+
+::: fragment
+::: {data-id="box1" style="background: #00d2ff; width: 300px; height: 200px; margin: 10px; position: absolute; top: 450px; left: 100px; display: flex; justify-content: center; align-items: center; text-align: center;"}
+integer: 2L, 34L, 0L
+:::
+:::
+
+::: fragment
+::: {data-id="box1" style="background: #AAFF00; width: 300px; height: 200px; margin: 10px; position: absolute; top: 450px; left: 500px; display: flex; justify-content: center; align-items: center; text-align: center;"}
+double: 1, 2.4, `pi`
+:::
+:::
+
+::: notes
+Wie das Objekt im Speicher abgelegt wird
+:::
+
+## Datentypen in R
+
+`typeof()` → wie R das Objekt speichert
+
+::::::: columns
+:::: {.column width="50%"}
+::: fragment
+**logical** (`TRUE`/`FALSE`)
+
+```{r}
+typeof(TRUE)
+```
+
+```{r}
+typeof(c(TRUE, FALSE))
+```
+:::
+::::
+
+:::: {.column width="50%"}
+::: fragment
+**character** (Text)
+
+```{r}
+typeof("Hallo")
+```
+
+```{r}
+typeof(c("a", "aa"))
+```
+:::
+::::
+:::::::
+
+::::::: columns
+:::: {.column width="50%"}
+::: fragment
+**double** (*floating point*)
+
+```{r}
+typeof(3.56)
+```
+
+```{r}
+typeof(c(4, 3))
+```
+:::
+::::
+
+:::: {.column width="50%"}
+::: fragment
+**integer** (Ganzzahl)
+
+```{r}
+typeof(4L)
+```
+
+```{r}
+typeof(1:4)
+```
+:::
+::::
+:::::::
+
+## Expliziter vs. Impliziter Typenzwang
+
+:::: incremental
+-   ***Explicit coercion*** `as.logical()`, `as.numeric()`, `as.integer()`, `as.double()`, `as.character()`.
+
+    ```{r}
+#| code-line-numbers: "1|2"
+#| output-location: fragment
+x <- c(TRUE, FALSE)
+as.character(x)
+    ```
+
+-   ***Implicit coercion*** z. B. R konvertiert Variablen gemischter Typen in einen einzelnen Typ.
+
+    ```{r}
+#| output-location: fragment
+c(15, "Danke")
+    ```
+
+    ```{r}
+#| output-location: fragment
+c(3L, pi)
+    ```
+
+::: fragment
+... und das ist nicht immer eine gute Sache!
+:::
+::::
+
+## Praktikum: *Type Coercion* {background-color="#e6f2f2"}
+
+[prak-05a-type-coercion.qmd](../exercises/unit05/prak-05a-type-coercion.qmd)
+
+Welcher Typ sind die angegebenenen Vektoren?
+
+# Daten-Rekodierung {background-color="#e6f2f2"}
+
+`if_else()`, `case_when()`
+
+## TRUE/FALSE: `if_else()` {auto-animate="true"}
+
+Schnabellänge kategorisieren: "überdurchschnittlich", "unterdurchschnittlich"
+
+::: fragment
+```{r}
+penguins |>
+  summarise(median_bill_length = median(bill_length_mm, na.rm = TRUE))
+```
+:::
+
+## TRUE/FALSE: `if_else()` {auto-animate="true"}
+
+`if_else(stimmt_das, das_passiert, sonst_das_passiert)`
+
+::: fragment
+```{r}
+#| code-line-numbers: "1|2-4|5"
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|6"
+penguins |>
+  mutate(
+    bl_cat = if_else(bill_length_mm < 44.45, "unterdurchschnittlich", "überdurchschnittlich")
+  ) |>
+  count(bl_cat)
+```
+:::
+
+## TRUE/FALSE: `if_else()` {auto-animate="true"}
+
+`if_else(stimmt_das, das_passiert, sonst_das_passiert, NA_so_behandeln)`
+
+::: fragment
+```{r}
+#| code-line-numbers: "5"
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|4"
+penguins |>
+  mutate(
+    bl_cat =
+      if_else(
+        bill_length_mm < 44.45, "unterdurchschnittlich", "überdurchschnittlich", missing = "unbekannt"
+      )
+  ) |>
+  count(bl_cat)
+```
+:::
+
+## Mehrere Bedingungen: `case_when()` {auto-animate="true" visibility="hidden"}
+
+Schnabellänge kategorisieren: *short*, *medium*, *long*
+
+```{r}
+prob <- c(0.25, 0.75)
+penguins |>
+  reframe(bill_length_quant = quantile(bill_length_mm, prob, na.rm = TRUE)) |>
+  mutate(prob = prob, .before = 1)
+```
+
+::: fragment
+```{r}
+#| output-location: fragment
+penguins |>
+  skimr::skim() |>
+  filter(skim_variable == "bill_length_mm") |>
+  select(starts_with("numeric.p"))
+```
+:::
+
+## Mehrere Bedingungen: `case_when()` {auto-animate="true"}
+
+Schnabellänge kategorisieren: *short*, *medium*, *long*
+
+::: fragment
+```{r}
+#| output-location: column-fragment
+#| class-output: highlight
+#| output-line-numbers: "|3,6"
+penguins |> 
+  select(bill_length_mm) |> 
+  summary()
+```
+:::
+
+## Mehrere Bedingungen: `case_when()` {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "3-8|4|5|6|7"
+#| output-location: fragment
+penguins |>
+  mutate(
+    bl_cat = case_when(
+      is.na(bill_length_mm) ~ NA,
+      bill_length_mm < 39.2 ~ "short",
+      between(bill_length_mm, 39.2, 48.5) ~ "medium",
+      .default = "long"
+    )
+  ) |>
+  count(bl_cat)
+```
+
+## Praktikum: Daten rekodieren {background-color="#e6f2f2"}
+
+[prak-05b-cond-mutate.qmd](../exercises/unit05/prak-05b-cond-mutate.qmd)
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Datenstrukturen {background-color="#e6f2f2"}
+
+## Datenstrukturen
+
+::: columns
+
+::: column
+![](img/data-structures.png)
+:::
+
+::: column
+
+::: fragment
+`class()` → wie sich das Objekt verhält
+:::
+:::
+:::
+
+::: notes
+Vektoren sind wie Lego-Bausteine. Wir kleben sie zusammen, um kompliziertere Konstrukte zu bauen, z. B. Darstellungen von Daten.
+
+Das Attribut `class` bezieht sich auf die *S3-Klasse* eines Objekts, die sein Verhalten bestimmt. Ihr müsst euch keine Gedanken darüber machen, was *S3-Klassen* wirklich bedeuten, aber ihr könnt [hier](https://adv-r.hadley.nz/s3.html#s3-classes) mehr darüber lesen, wenn ihr neugierig seid.
+
+Wir werden nur einige Datenklassen behandeln, die für unsere Klasse wichtig sind. Diese sind: *factors*, *dates*, *lists*, *dataframes.*
+:::
+
+## Factors
+
+$\rightarrow$ Kategoriale Variablen: Character + Ganzzahl
+
+:::::::: columns
+:::: {.column width="55%"}
+::: fragment
+```{r}
+(x <- c("BS", "MS", "PhD", "MS"))
+```
+:::
+::: fragment
+```{r}
+typeof(x)
+```
+:::
+
+::: fragment
+```{r}
+class(x)
+```
+:::
+::::
+
+::::: {.column width="45%"}
+::: fragment
+```{r}
+(y <- factor(x))
+```
+:::
+::: fragment
+```{r}
+typeof(y)
+```
+:::
+
+::: fragment
+```{r}
+class(y)
+```
+:::
+
+::: fragment
+```{r}
+as.integer(y)
+```
+:::
+:::::
+::::::::
+
+::: notes
+R verwendet factors, um kategoriale Variablen zu verarbeiten, also Variablen, die einen festen und bekannten Satz möglicher Werte haben.
+
+Wir können uns factors wie Zeichen (level labels) und eine Ganzzahl (level numbers) zusammenkleben vorstellen.
+:::
+
+## Dates
+
+Ganzezahl = Anzahl Tage seit Ursprung
+
+::::::::::: columns
+:::::::: {.column width="70%"}
+```{r}
+#| output-location: fragment
+(y <- as.Date("1990-01-01"))
+```
+
+::: fragment
+```{r}
+#| output-location: fragment
+typeof(y)
+```
+:::
+
+::: fragment
+```{r}
+#| output-location: fragment
+class(y)
+```
+:::
+
+::: fragment
+```{r}
+#| output-location: fragment
+as.integer(y)
+```
+:::
+
+:::: fragment
+```{r}
+#| output-location: fragment
+as.integer(y) / 365
+```
+
+::: fragment
+\~ 20 Jahre nach dem `1970-01-01`
+:::
+::::
+::::::::
+
+:::: {.column width="30%"}
+::: fragment
+[![](img/logo-lubridate.png)](https://rstudio.github.io/cheatsheets/lubridate.pdf)
+:::
+::::
+:::::::::::
+
+::: notes
+Wir können uns Datumsangaben wie eine zusammengeklebte ganze Zahl (die Anzahl der Tage seit dem Ursprung, 1. Januar 1970) und eine ganze Zahl (der Ursprung) vorstellen.
+
+*Dates* sind ein umfangreiches Thema, sie sehen auf den ersten Blick einfach aus, können aber komplex sein. Tidyverse verfügt über ein spezielles Package für die Arbeit mit Daten: `lubridate`.
+:::
+
+## Lists
+
+Generische Vektorcontainers: Vektoren jeglicher Typ und Länge
+
+```{r}
+#| output-location: fragment
+l <- list(
+  x = 1:4,
+  y = c("Hallo", "hello", "salut"),
+  z = c(TRUE, FALSE)
+)
+l
+```
+
+## Data Frames
+
+Spezielle Liste mit Vektoren gleicher Länge
+
+:::::::: columns
+:::: {.column width="70%"}
+```{r}
+#| output-location: fragment
+(df <- data.frame(x = 1:2, y = 3:4))
+class(df)
+```
+
+::: fragment
+<br>
+
+```{r}
+#| output-location: fragment
+(df <- tibble(x = 1:2, y = 3:4))
+class(df)
+```
+:::
+::::
+
+::::: {.column width="30%"}
+::: fragment
+```{r}
+df |>
+  pull(y)
+```
+:::
+
+::: fragment
+<br>
+
+```{r}
+df$y
+```
+:::
+:::::
+::::::::
+
+::: notes
+Wir können uns Dataframes wie zusammengeklebte Vektoren gleicher Länge vorstellen.
+
+-   Ein *data frame* ist eine spezielle Liste mit Vektoren gleicher Länge
+-   Wenn wir die Funktion `pull()` verwenden, extrahieren wir einen Vektor aus dem Datenrahmen.
+:::
+
+## {visibility="hidden"}
+
+Erstelle das folgende Plot, zuerst die x-Achse, dann die y-Achse.
+
+```{r}
+#| echo: false
+#| fig-width: 9.5
+
+df <- read_csv("../exercises/unit04/data/hotels.csv")
+
+df |>
+  mutate(arrival_date_month = fct_relevel(arrival_date_month, month.name)) |>
+  group_by(hotel, arrival_date_month) |>
+  summarise(mean_adr = 0.9 * mean(adr, na.rm = TRUE)) |>
+  ggplot(aes(x = arrival_date_month, y = mean_adr, group = hotel, colour = hotel)) +
+  geom_line() +
+  theme_minimal() +
+  labs(
+    x = "Arrival month",
+    y = "Mean ADR (average daily rate)",
+    colour = "Hotel type",
+    title = "Comparison of resort and city hotel prices across months",
+    subtitle = "Resort hotel prices soar in the summer while city hotel prices remain relatively constant throughout the year"
+  ) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "Fr."))
+```
+
+
+# Mit Factors Arbeiten: `{forcats}` {background-color="#e6f2f2"}
+
+##  {background-image="img/forcats-part-of-tidyverse.png" background-size="60%"}
+
+<!-- [![](img/forcats-part-of-tidyverse.png){width="70%"}](https://github.com/rstudio/cheatsheets/blob/main/factors.pdf) -->
+
+## Daten
+
+```{r}
+#| class-output: highlight
+#| output-line-numbers: "|3,4,9"
+penguins |>
+  glimpse()
+```
+
+::: notes
+Derzeit ist die `year` Variable bei `penguins` kontinuierlich von 2007 bis 2009. Es kann Situationen geben, in denen dies nicht das ist, was wir wollen, und wir es stattdessen in eine kategoriale Variable umwandeln möchten.
+:::
+
+##  {auto-animate="true"}
+
+```{r}
+#| warning: true
+#| output-location: fragment
+#| code-fold: show
+
+penguins |>
+  ggplot(aes(x = species, fill = year)) +
+  geom_bar()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "2"
+
+penguins |>
+  ggplot(aes(x = species, fill = factor(year))) +
+  geom_bar()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "2|3"
+
+penguins |>
+  mutate(year_factor = factor(year)) |>
+  ggplot(aes(x = species, fill = year_factor)) +
+  geom_bar()
+```
+
+::: notes
+-   factor sorts levels alphabetically
+-   `forcats::fct()` uses in order of appearance
+
+So can use: `mutate(year_factor = fct(as.character(year)))`
+:::
+
+##  {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "4"
+#| output-location: fragment
+
+penguins |>
+  mutate(
+    year_factor = factor(year),
+    species = fct_infreq(species)
+  ) |>
+  ggplot(aes(x = species, fill = year_factor)) +
+  geom_bar()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "4-5"
+penguins |>
+  mutate(
+    year_factor = factor(year),
+    species = fct_infreq(species),
+    species = fct_rev(species)
+  ) |>
+  ggplot(aes(x = species, fill = year_factor)) +
+  geom_bar()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+penguins |>
+  ggplot(aes(x = species, y = bill_depth_mm, fill = species)) +
+  geom_boxplot()
+```
+
+##  {auto-animate="true"}
+
+```{r}
+#| code-line-numbers: "2-4"
+#| output-location: fragment
+#| warning: false
+penguins |>
+  mutate(
+    species = fct_reorder(species, bill_depth_mm)
+  ) |>
+  ggplot(aes(x = species, y = bill_depth_mm, fill = species)) +
+  geom_boxplot()
+```
+
+## {auto-animate="true" background-image="img/starwars.jpg"}
+
+## {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| class-output: highlight
+#| output-line-numbers: "|4-5"
+starwars |> count(species, sort = TRUE)
+```
+
+## {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "2"
+starwars |>
+  mutate(species = fct_lump(species, n = 2)) |>
+  count(species)
+```
+
+## {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "4"
+starwars |>
+  mutate(
+    species = fct_lump(species, n = 2),
+    species = fct_relevel(species, "Human")
+  ) |>
+  count(species)
+```
+## {auto-animate="true"}
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "5"
+starwars |>
+  mutate(
+    species = fct_lump(species, n = 2),
+    species = fct_relevel(species, "Human"),
+    species = fct_recode(species, "Mensch" = "Human", "Anders" = "Other")
+  ) |>
+  count(species)
+```
+
+## `{forcats}`-Befehle {visibility="hidden"}
+
+-   `fct_rev()`: *levels* in umgekehrten Reihenfolge
+-   `fct_infreq()`: *levels* nach Häufigkeit neu anordnen
+-   `fct_reorder()`: *levels*, nach einer anderen Variablen, neu anordnen
+-   `fct_relevel()`: *levels* manuell neu anordnen
+-   `fct_lump()`: seltene *levels* in `other` zusammenfassen
+
+::: notes
+Factors sind nützlich, wenn ihr über echte kategoriale Daten verfügt und die Reihenfolge von character vectors überschreiben möchtet, um die Anzeige zu verbessern. Sie sind auch bei der Modellierung von Szenarien nützlich. Das **forcats**-package bietet eine Reihe nützlicher Tools, die häufige Probleme mit Faktoren lösen.
+
+-   Reihenfolge der *levels* ändern:
+
+    -   `fct_relevel()` *levels* manuell neu anordnen
+
+    -   `fct_infreq()` *levels* nach Häufigkeit neu anordnen
+
+    -   `fct_rev()` umgekehrte Reihenfolge der Levels
+
+    -   `fct_reorder()` *levels*, nach einer anderen Variablen, neu anordnen
+
+-   Werte der *levels* ändern:
+
+    -   `fct_recode()` factor *levels* manuell ändern
+
+    -   `fct_lump()` seltene *levels* in `other`zusammenfassen
+
+    -   `fct_collapse()` *levels* in manuell definierte Gruppen reduzieren
+
+-   Andere *helpers*:
+
+    ```         
+    - `as_factor()` in einem factor umwandeln
+
+    - `fct_count()` zählt *levels*, nicht nur Werte wie `count()`
+
+    - `fct_unique()` alle möglicher Werte aus den *levels*, niht nur Werte wie `unique()` - ...
+    ```
+:::
+
+## Praktikum: `{forcats}`
+
+[prak-05c-forcats-firmen.qmd](../exercises/unit05/prak-05c-forcats-firmen.qmd)
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 20, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+## Praktikum: `if_else()`, `case_when()`, `{forcats}`
+
+prak-05d-cond-mutate-forcats.qmd
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 30, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Danke! :waxing_gibbous_moon: {background-color="#e6f2f2"}
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide_02_visualisation.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).

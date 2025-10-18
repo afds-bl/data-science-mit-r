@@ -1,0 +1,8 @@
+Time	Topic
+08:30 - 09:15	Factors ({forcats}) – Understanding & working with categorical data
+09:15 - 09:25	☕ Break
+09:25 - 10:10	Integrative Case Study – Hands-on data pipeline (import, clean, transform, visualize)
+10:10 - 10:20	☕ Break
+10:20 - 11:10	Database Access – Connecting to databases with {DBI} or {odbc}
+11:10 - 11:40	Intro to Git – Concept, why it’s useful, basic workflow in RStudio
+11:40 - 12:00	Q&A, Recap & Closing Thoughts

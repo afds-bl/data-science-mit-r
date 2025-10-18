@@ -1,0 +1,186 @@
+---
+title: "Hausaufgabe 01: Rechtschreibung"
+format: html
+editor: visual
+toc: false
+execute:
+  echo: true
+  warning: false
+  eval: false
+---
+
+## Was ist los?
+
+```{r wrong1}
+libary(todyverse)
+
+ggplot(
+  daTa = penguins,
+  maping = aes(
+    x = flipper_length_mm
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong2}
+libary(todyverse)
+
+ggplot(
+  daTa = penguins,
+  maping = aes(
+    x = flipper_length_mm
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong3}
+library(tidyverse)
+
+ggplot(
+  daTa = penguins,
+  maping = aes(
+    x = flipper_length_mm
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong4}
+library(tidyverse)
+
+ggplot(
+  daTa = penguins,
+  maping = aes(
+    x = flipper_length_mm
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong5}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong6}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "species") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong7}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(colour = "red") +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong8}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong9}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm)
+```
+
+```{r wrong10}
+library(tidyverse)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm")
+```
+
+```{r wrong11}
+library(tidyverse)
+library(palmerpenguins)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm")
+```
+
+## Tada!
+
+```{r right}
+#| eval: true
+
+library(tidyverse)
+library(palmerpenguins)
+
+ggplot(
+  data = penguins,
+  mapping = aes(
+    x = flipper_length_mm,
+    y = body_mass_g
+  )
+) +
+  geom_point(mapping = aes(colour = species)) +
+  geom_smooth(method = "lm")
+```

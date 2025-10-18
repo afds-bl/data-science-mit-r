@@ -1,0 +1,20 @@
+---
+title: "Praktikum 06a: CO2-Emissionen"
+format: 
+  html:
+    self-contained: true
+---
+
+-   Erstellt ein neues Quarto-Projekt Namens "energie"
+-   Erstellt zwei Ordner im Projekt: "data" und "output"
+-   Speichert die [CO2-Emissionen nach Energieträger, Gemeinde und Jahr](https://data.bl.ch/explore/dataset/12020/) Datei in `data/`
+-   Speichert die [Raumgliederungsdaten](https://data.bl.ch/explore/dataset/10110/table) in `data/`
+-   Lädt die folgenden Packages: `{skimr}`, `{janitor}` und `{tidyverse}`
+-   Lest die Daten ein: `df` und `df_gem`
+-   Erkundet die Daten: `names()`, `View()`, `glimpse()`, `summary()`, `skim()`
+-   Macht die Namen sauber
+-   Fügt den resultiereden Datensatz mit dem Gemeinde-Datensatz. Tipp: `join_by(bfs_gemeindenummer == bfs_nummer)` und es gibt eine Gemeinde-Spalte in jedem Datensatz.
+-   Rechnet die durschnittlichen CO2-Emissionen pro Person, Jahr und Bezirk 
+-   Reproduziert die folgende Abbildung:
+    
+    ![](output/co2_emissionen_pers.png)

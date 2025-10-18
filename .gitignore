@@ -1,0 +1,25 @@
+# History files
+.Rproj.user
+.Rhistory
+/.quarto/
+*.Rproj
+
+# Session Data files
+.RData
+
+# User-specific files
+.Ruserdata
+
+# Log files
+*.log
+init.log
+
+# OS generated files
+**/.DS_Store
+
+# Scripts, folders and files
+_freeze
+_site/          # Add this
+*_files/        # Add this - intermediate files
+*_cache/        # Add this - R cache files
+site_libs/      # Add this if not using docs/

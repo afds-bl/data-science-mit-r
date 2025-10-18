@@ -1,0 +1,1145 @@
+---
+title: "Daten importieren, exportieren, zusammenfügen und pivotieren"
+subtitle: "Unit 4" 
+format:
+  revealjs
+date: ""
+params:
+  unit: 4
+execute: 
+  error: true
+---
+
+```{r setup, include=FALSE}
+source(here::here('_init.R'))
+```
+
+# Ziele für heute{background-color="#e6f2f2"}
+
+```{r goals}
+#| echo: false
+lobj <- read_tsv(here::here("data", "tbl_learning_objectives.tsv")) |>
+  filter(unit == params$unit) |> 
+  pull(learning_objectives)
+```
+
+<ol>`r paste0("<li>", lobj, "</li>", collapse="")`</ol>
+
+# Daten importieren und exportieren {background-color="#e6f2f2"}
+
+## Rechteckige Daten importieren
+
+::::::: columns
+::: {.column width="55%"}
+![](img/readr-part-of-tidyverse.png)
+:::
+
+::::: {.column width="45%"}
+::: fragment
+![](img/readxl-logo.png){fig-align="center"}
+:::
+
+::: fragment
+```{r}
+#| eval: false
+#| code-line-numbers: "1|2"
+install.packages("readxl")
+library(readxl)
+```
+:::
+:::::
+:::::::
+
+## Rechteckige Daten importieren {.smaller}
+
+:::::: columns
+::: {.column width="50%"}
+### `readr`
+
+| Funktion       | Trennung         |
+|----------------|------------------|
+| `read_csv()`   | ,                |
+| `read_csv2()`  | ;                |
+| `read_tsv()`   | ⇥ (Tab)          |
+| `read_delim()` | Selbst-definiert |
+:::
+
+:::: {.column width="50%"}
+::: fragment
+### `readxl`
+
+| Funktion       | Dateityp      |
+|----------------|---------------|
+| `read_excel()` | xls oder xlsx |
+:::
+::::
+::::::
+
+## Rechteckige Daten exportieren
+
+<br>
+
+::::::: columns
+::: {.column width="50%"}
+![](img/readr-logo.png){fig-align="center"}
+:::
+
+::::: {.column width="50%"}
+::: fragment
+![](img/writexl-logo.png){fig-align="center"}
+:::
+
+::: fragment
+```{r}
+#| eval: false
+#| code-line-numbers: "1|2"
+install.packages("writexl")
+library(writexl)
+```
+:::
+:::::
+:::::::
+
+::: notes
+To export rectangular data, we can use `readr` and `writexl`.
+:::
+
+## Rechteckige Daten exportieren
+
+:::::: columns
+::: {.column width="50%"}
+### `readr`
+
+-   `write_csv()`
+-   `write_csv2()`
+-   `write_tsv()`
+-   `write_delim()`
+:::
+
+:::: {.column width="50%"}
+::: fragment
+### `writexl`
+
+-   [`write_xlsx()`](https://r4ds.hadley.nz/spreadsheets.html)
+:::
+::::
+::::::
+
+## Daten lesen
+
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "1|"
+df <- read_delim("data/ogd_10130.csv", delim = ";")
+glimpse(df)
+```
+
+## Daten schreiben
+
+```{r}
+#| echo: false
+fussball_weltmeister <- tibble(
+   jahr = as.integer(c(2023, 2019, 2015, 2011, 2007, 
+                       2022, 2018, 2014, 2010, 2006)),
+   weltmeisterschaft = c(rep("Frauen", 5), rep("Männer", 5)),
+   titeltraeger = c("Spanien", "USA", "USA", 
+                    "Japan", "Deutschland", 
+                    "Argentinien", "Frankreich", 
+                    "Deutschland", "Spanien", 
+                    "Italien")
+) |> 
+  arrange(desc(jahr))
+```
+
+```{r}
+fussball_weltmeister
+```
+
+::: fragment
+```{r}
+write_csv(x = fussball_weltmeister, file = "data/fussball_weltmeister.csv")
+```
+:::
+
+## Daten wieder einlesen
+
+```{r}
+#| output-location: fragment
+read_csv("data/fussball_weltmeister.csv")
+```
+
+## `rio` {background-image="img/swiss-army-knife.jpg" background-opacity="0.1" background-size="contain"}
+
+[`import()`, `export()`, `convert()`](https://www.rdocumentation.org/packages/rio/versions/1.0.1)
+
+::: fragment
+```{r}
+#| eval: false
+install.packages("rio")
+library(rio)
+```
+:::
+
+::: fragment
+<br>
+
+```{r}
+#| eval: false
+x <- import("mtcars.csv") 
+y <- import("mtcars.rds") # R data format 
+z <- import("mtcars.sav") # SPSS
+u <- import("mtcars.xlsx")
+w <- import("mtcars.json")
+```
+:::
+
+::: fragment
+<br>
+
+```{r}
+#| eval: false
+#| code-line-numbers: "1|2|3|4"
+
+export("mtcars.csv")
+export(list(mtcars, penguins), "mtcars-penguins.xlsx") # multiple sheets
+import("mtcars-penguins.xlsx", which = "penguins") # select one sheet
+import_list("mtcars-penguins.xlsx") # import multiple objects
+```
+:::
+
+## Andere Formate
+
+`readRDS()` und `writeRDS()`
+
+::: incremental
+-   Zwischenergebnisse als `CSV` zu speichern unzuverlässig, wenn bestimmte Variablentypen beibehalten werden sollen
+-   `read_csv()` kann nicht wissen welche Levels eine Faktor-Variable hat
+-   Alternative: `RDS`-Dateien, ein R-internes Dateiformat
+:::
+
+::: notes
+Store types of columns (factors etc), for use between R scripts. Also binary so take less space.
+:::
+
+## Variablen-Namen
+
+```{r}
+#| output-location: fragment
+wetter <- read_delim("data/ogd_12030.csv")
+names(wetter)
+```
+
+<br>
+
+::: fragment
+```{r}
+wetter |> 
+  filter(Globalstrahlung in W/m2 > 111)
+```
+:::
+
+## Variablen-Namen - Backticks `` ` ``
+
+```{r}
+#| output-location: fragment
+wetter |> 
+  filter(`Globalstrahlung in W/m2` > 111)
+```
+
+::: fragment
+Mühsam
+:::
+
+## Variablen-Namen - `{readr}`-Funktion
+
+```{r}
+#| output-location: column-fragment
+#| code-line-numbers: "1-2,17|3-16|18"
+wetter<- read_delim(
+  "data/ogd_12030.csv",
+  col_names = c(
+    "datum",
+    "jahr",
+    "globalstrahlung_in_w_m2",
+    "gesamtschneemenge",
+    "gesamtbewolkung",
+    "luftdruck_in_h_pa",
+    "niederschlag",
+    "sonnenscheindauer",
+    "tagesmittel_lufttemperatur",
+    "tagesminimum_lufttemperatur",
+    "tagesmaximum_lufttemperatur",
+    "relative_luftfeuchtigkeit"
+  )
+)
+names(wetter)
+```
+
+::: fragment
+Auch mühsam
+:::
+
+## Variablen-Namen - `{janitor}`
+
+:::::: columns
+::: {.column width="20%"}
+![](img/janitor-logo.png)
+:::
+
+:::: {.column width="80%"}
+::: fragment
+```{r}
+#| output-location: fragment
+#| code-line-numbers: "1|2|4|6-8"
+# install.packages("janitor")
+library(janitor)
+
+wetter <- read_delim("data/ogd_12030.csv")
+
+wetter |> 
+  clean_names() |> 
+  names()
+```
+:::
+::::
+::::::
+
+## Praktikum 04a: Daten importieren und exportieren
+
+[prak-04a-import-export.qmd](../exercises/unit04/prak-04a-import-export.qmd)
+
+`r countdown(minutes = 30, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Daten-Transformation mit `dplyr`
+
+:::::: columns
+::: {.column width="35%"}
+![](img/dplyr-part-of-tidyverse.png)
+:::
+
+:::: {.column width="65%"}
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Zeilen**: auswählen, anordnen
+
+**Spalten**: aswählen, anordnen, umbenennen, erstellen
+
+**Gruppen**: zusammenfassen, zählen
+:::
+
+**Tabellen**: zusammenfügen
+::::
+::::::
+
+# Daten zusammenfügen mit `dplyr` {background-color="#e6f2f2"}
+
+## 
+
+<br>
+
+<p style="font-size:160%">
+
+Wir...
+
+</p>
+
+[haben]{style="color:green;font-size:260%"} mehrere Dataframes
+
+[wollen]{style="color:pink;font-size:260%"} diese zusammenbringen
+
+## 
+
+![](img/dplyr/dplyr-left-join.png)
+
+```{r}
+#| echo: false
+#| warning: false
+
+professions <- read_csv("data/scientists/professions.csv")
+works <- read_csv("data/scientists/works.csv")
+dates <- read_csv("data/scientists/dates.csv")
+```
+
+## Daten: Frauen in der Wissenschaft
+
+::::: columns
+::: {.column width="50%"}
+![Ada Lovelace](img/women-scientists/ada_lovelace.jpeg){width="40%"} ![Marie Curie](img/women-scientists/marie_curie.jpeg){width="40%"} ![Janaki Ammal](img/women-scientists/janaki_ammal.jpeg){width="40%"} ![Chien-Shiung Wu](img/women-scientists/chien-shiung_wu.jpeg){width="40%"} ![Katherine Johnson](img/women-scientists/katherine_johnson.jfif){width="40%"}
+:::
+
+::: {.column width="50%"}
+![Rosalind Franklin](img/women-scientists/rosalind_franklin.jpeg){width="40%"} ![Vera Rubin](img/women-scientists/rubin-dtm.jpg){width="40%"} ![Gladys West](img/women-scientists/gladys_west.jpg){width="40%"} ![Flossie Wong-Staal](img/women-scientists/flossie_wong_staal.jpg){width="40%"} ![Jennifer Doudna](img/women-scientists/jennifer_doudna.jpeg){width="40%"}
+:::
+:::::
+
+::: aside
+Quelle: [Discover Magazine](https://www.discovermagazine.com/the-sciences/meet-10-women-in-science-who-changed-the-world)
+:::
+
+::: notes
+Informationen zu 10 Frauen in der Wissenschaft welche die Welt verändert haben.
+:::
+
+## Inputs: drei Dataframes
+
+::: panel-tabset
+## professions
+
+```{r}
+#| echo: false
+professions |>
+  uFunc_nice_table()
+```
+
+## dates
+
+```{r}
+#| echo: false
+dates |>
+  uFunc_nice_table()
+```
+
+## works
+
+```{r}
+#| echo: false
+works |>
+  uFunc_nice_table()
+```
+:::
+
+## Gewünschter Output
+
+```{r}
+#| echo: false
+professions |>
+  left_join(dates, by = "name") |>
+  left_join(works, by = "name") |>
+  uFunc_nice_table()
+```
+
+::: notes
+Hier sehen wir unseren gewünschten Output. Das Ziel nachdem die drei Dataframes zusammengefügt wurden:
+
+-   name und profession aus dem ersten Dataframe
+-   name, birth_year und death_year aus dem zweiten Dataframe
+-   name und known_for aus dem dritten Dataframe
+:::
+
+## Inputs: drei Dataframes
+
+:::::: columns
+::: {.column width="65%"}
+```{r}
+names(professions)
+```
+
+<br>
+
+```{r}
+names(dates)
+```
+
+<br>
+
+```{r}
+names(works)
+```
+:::
+
+:::: {.column width="35%"}
+::: fragment
+```{r}
+nrow(professions)
+```
+
+<br>
+
+```{r}
+nrow(dates)
+```
+
+<br>
+
+```{r}
+nrow(works)
+```
+:::
+::::
+::::::
+
+::: notes
+-   Name ist hier sozusagen der Schlüssel
+-   Professions hat die komplette Info während bei den anderen etwas fehlt
+:::
+
+## Dataframes zusammenfügen
+
+`***_join(x, y)`
+
+::: incremental
+-   `left_join(x, y)`: alle Reihen aus `x`
+-   `right_join(x, y)`: alle Reihen aus `y`
+-   `full_join(x, y)`: alle Reihen aus `x` und `y`
+-   `inner_join(x, y)`: gemeinsame Reihen aus `x` und `y`
+-   `semi_join(x, y)`: wie `inner_join(x, y)`, nur Spalten aus `x`
+-   `anti_join(x, y)`: Reihen aus `x` ohne Übereinstimmung in `y`
+:::
+
+## Beispiel
+
+Für die nächsten Folien
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+#| echo: false
+
+x <- tibble(
+  id = c(1, 2, 3),
+  var_x = c("x1", "x2", "x3")
+)
+```
+
+```{r}
+x
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+
+y <- tibble(
+  id = c(1, 2, 4),
+  var_y = c("y1", "y2", "y4")
+)
+```
+
+```{r}
+y
+```
+:::
+:::::
+
+## `left_join()`
+
+::::: columns
+::: {.column width="50%"}
+![](img/left-join.gif)
+:::
+
+::: {.column width="50%"}
+```{r}
+left_join(x, y)
+```
+:::
+:::::
+
+## `left_join()`
+
+```{r}
+#| output-location: fragment
+professions |>
+  left_join(dates)
+```
+
+## `right_join()`
+
+::::: columns
+::: {.column width="50%"}
+![](img/right-join.gif)
+:::
+
+::: {.column width="50%"}
+```{r}
+right_join(x, y)
+```
+:::
+:::::
+
+## `right_join`
+
+```{r}
+#| output-location: fragment
+professions |>
+  right_join(dates)
+```
+
+## `full_join()`
+
+::::: columns
+::: {.column width="50%"}
+![](img/full-join.gif)
+:::
+
+::: {.column width="50%"}
+```{r}
+full_join(x, y)
+```
+:::
+:::::
+
+## `full_join()`
+
+```{r}
+dates |>
+  full_join(works)
+```
+
+## Alles in einer Code-Sequenz
+
+```{r}
+#| output-location: fragment
+professions |>
+  left_join(dates) |>
+  left_join(works)
+```
+
+## `join_by()`
+
+::::: columns
+::: column
+```{r}
+mitarbeiter <- tibble(
+  id = c(1, 2, 3),
+  name = c("Alice", "Bob", "Charlie")
+)
+mitarbeiter
+```
+:::
+
+::: column
+```{r}
+gehälter <- tibble(
+  persid = c(1, 2, 4),
+  gehalt = c(50000, 60000, 70000)
+)
+gehälter
+```
+:::
+:::::
+
+## `join_by()`
+
+```{r}
+#| output-location: fragment
+ergebnis <- mitarbeiter |>
+  left_join(gehälter, join_by(id == persid))
+ergebnis
+```
+
+## Praktikum 04b: Daten zusammenfügen
+
+[prak-04b-join-firmen.qmd](../exercises/unit04/prak-04b-join-firmen.qmd)
+
+`r countdown(minutes = 20, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Break :coffee: :tea: :ramen: {background-color="#e6f2f2" visibility="uncounted"}
+
+```{r}
+#| echo: false
+#| 
+countdown(minutes = 10, seconds = 0, left = 0, right = 0, margin = "5%", font_size = "2em", bottom = 0, style = "position: relative; width: min-content;")
+```
+
+# Tidy Data {background-color="#e6f2f2"}
+
+## Tidy Data
+
+> "Alle glücklichen Familien gleichen einander, jede unglückliche Familie ist auf ihre eigene Weise unglücklich." -- *Leo Tolstoy*
+
+::: fragment
+> "Tidy datasets are all alike, but every messy dataset is messy in its own way." –– *Hadley Wickham*
+:::
+
+::: fragment
+*tidy* = ordentlich, sauber, aufgeräumt.
+:::
+
+::: notes
+> "Happy families are all alike; every unhappy family is unhappy in its own way." -- *Leo Tolstoy*
+:::
+
+## Tidy Data
+
+![](img/tidy-1.png)
+
+::: incremental
+1.  Jede Variable muss eine eigene Spalte haben
+2.  Jede Beobachtung muss eine eigene Zeile haben
+3.  Jeder Wert muss eine eigene Zelle haben
+:::
+
+::: notes
+1.  Each variable must have its own column.
+2.  Each observation must have its own row.
+3.  Each value must have its own cell.
+:::
+
+## 
+
+:question:
+
+```{r}
+#| echo: false
+uFunc_nice_table(penguins |> head(14))
+```
+
+## 
+
+:question:
+
+![](img/untidy-data/untidy-data3.png)
+
+::: aside
+Quelle: [Bundesamt für Statistik - Ständige Wohnbevölkerung nach Altersklasse und Altersmasszahlen nach Kanton, Provisorische Jahresergebnisse, 2020](https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.16404478.html)
+:::
+
+## 
+
+:question:
+
+![](img/untidy-data/untidy-data4.png)
+
+::: aside
+Quelle: [Bundesamt für Statistik - Ständige Wohnbevölkerung nach Altersklasse und Altersmasszahlen nach Kanton, Provisorische Jahresergebnisse, 2020](https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.16404478.html)
+:::
+
+## 
+
+:question:
+
+![](img/untidy-data/untidy-data5.png)
+
+::: aside
+Quelle: [Bundesamt für Statistik - Ständige Wohnbevölkerung nach Altersklasse und Altersmasszahlen nach Kanton, Provisorische Jahresergebnisse, 2020](https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.16404478.html)
+:::
+
+## 
+
+:question:
+
+![](img/untidy-data/untidy-data2.png)
+
+::: aside
+Quelle: [Eurostat Fertility Indicators](https://ec.europa.eu/eurostat/databrowser/view/DEMO_FIND__custom_684440/)
+:::
+
+##  {.smaller}
+
+:question:
+
+![](img/untidy-data/untidy-data2_1.jpg)
+
+::: {.absolute top="200" right="0" width="350" height="300"}
+[Variable Jahr als Zeile]{style="color:#d56327; font-size:24px; font-weight: bold;"}
+:::
+
+::: aside
+Quelle: [Eurostat Fertility Indicators](https://ec.europa.eu/eurostat/databrowser/view/DEMO_FIND__custom_684440/)
+:::
+
+##  {.smaller}
+
+:question:
+
+![](img/untidy-data/untidy-data2_2.jpg)
+
+::: {.absolute top="200" right="0" width="350" height="300"}
+[Variable Jahr als Zeile]{style="color: #d56327; font-size:24px; font-weight: bold;"}
+
+[Zeile als Zusammenfassung (Durchschnitt)]{style="color: #34da15; font-size:24px; font-weight: bold;"}
+:::
+
+::: aside
+Quelle: [Eurostat Fertility Indicators](https://ec.europa.eu/eurostat/databrowser/view/DEMO_FIND__custom_684440/)
+:::
+
+##  {.smaller}
+
+:question:
+
+![](img/untidy-data/untidy-data2_3.jpg)
+
+::: {.absolute top="200" right="0" width="350" height="300"}
+[Variable Jahr als Zeile]{style="color: #d56327; font-size:24px; font-weight: bold;"}
+
+[Zeile als Zusammenfassung (Durchschnitt)]{style="color: #34da15; font-size:24px; font-weight: bold;"}
+
+[3 Spalten für eine Variable]{style="color: #ff80fd; font-size:24px; font-weight: bold;"}
+:::
+
+::: aside
+Quelle: [Eurostat Fertility Indicators](https://ec.europa.eu/eurostat/databrowser/view/DEMO_FIND__custom_684440/)
+:::
+
+::: notes
+Für Darstellungszwecke ist das ok, tatsächlich nützlich. Aber wenn wir mit Rohdaten arbeiten wollen, dann sollten diese *Tidy* sein.
+
+-   Title block
+-   TIME should be "GEO Label" for the column underneath it
+-   Years should be converted into a single column "Year" and the value should say "fertility rate". What if we wanted to add data for population, number of women, or any other value for that year?
+-   bep, b etc are codes for how the data was collected. It should all be in one column
+-   : stands for `NA`, so convert
+:::
+
+## Daten mit `tidyr` aufräumen
+
+:::::: columns
+::: {.column width="30%"}
+[![](img/logo_tidyr.png)](https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf)
+:::
+
+:::: {.column width="70%"}
+-   Daten umformen/pivotieren (erweitern, verlängern)
+
+::: {.fragment .semi-fade-out}
+-   Zellen teilen
+-   Fehlende Werte (`NA`) behandeln
+:::
+::::
+::::::
+
+::: notes
+Erinnernt euch an das Konzept der *tidy data*? Jede Spalte ist eine Variable, jede Zeile ist eine Beobachtung, jede Zelle ist ein Wert. Die Tidyverse-Funktionen erwarten Tidy-Daten. So oft müssen wir die Daten umformen, indem wir Zeilen und Spalten drehen und Zellen teilen, um neue Variablen oder Beobachtungen zu erstellen. Diese Aufräumfunktionen werden durch das Paket Tidyr gewährleistet. Darüber hinaus bietet Tidyr Tools zum Umgang mit fehlenden Daten.
+:::
+
+# Daten pivotieren {background-color="#e6f2f2"}
+
+## Nicht das...
+
+![](img/pivot.gif)
+
+## sondern das!
+
+![](img/tidyr-longer-wider.gif)
+
+## Daten pivotieren
+
+:::::: columns
+::: {.column width="50%"}
+![](img/original-dfs-tidy.png)
+:::
+
+:::: {.column width="50%"}
+::: fragment
+```{r}
+#| eval: false
+#| code-line-numbers: "1-6|8-12"
+wide |>
+  pivot_longer(
+    cols = x:z,
+    names_to = "key",
+    values_to = "val"
+  )
+
+long |>
+  pivot_wider(
+    names_from = key,
+    values_from = val
+  )
+```
+:::
+::::
+::::::
+
+##  {.smaller}
+
+```{r}
+#| echo: false
+
+# Generate four tables representing tuberculosis data from tidyr
+# ?who2
+table1 <- who2 |>
+  left_join(population, by = c("country", "year")) |>
+  filter(year %in% c(1999, 2000) & country %in% c("Afghanistan", "Brazil", "China")) |>
+  mutate(cases = rowSums(across(starts_with("sp_")), na.rm = TRUE)) |>
+  select(country, year, cases, population)
+
+table2 <- table1 |>
+  pivot_longer(cols = cases:population, names_to = "type", values_to = "count")
+
+table3 <- table1 |>
+  unite(col = "rate", c("cases", "population"), sep = "/")
+
+table4 <- table2 |>
+  pivot_wider(names_from = year, values_from = count)
+```
+
+::::::::: columns
+:::: {.column width="35%"}
+```{r}
+#| echo: false
+
+table1 |>
+  uFunc_nice_table(tfs = 14)
+```
+
+::: fragment
+<br>
+
+```{r}
+#| echo: false
+
+table4 |>
+  uFunc_nice_table(tfs = 14)
+```
+:::
+::::
+
+:::: {.column width="33%"}
+::: fragment
+```{r}
+#| echo: false
+
+table2 |>
+  uFunc_nice_table(tfs = 14)
+```
+:::
+::::
+
+:::: {.column width="32%"}
+::: fragment
+```{r}
+#| echo: false
+
+table3 |>
+  uFunc_nice_table(tfs = 14)
+```
+:::
+::::
+:::::::::
+
+::: notes
+In diesem Beispiel werden dieselben Daten auf vier verschiedene Arten organisiert. Jeder Datensatz zeigt die gleichen Werte von vier Variablen: Land, Jahr, Bevölkerung und Anzahl der dokumentierten Fälle von TB (Tuberkulose), aber jeder Datensatz organisiert die Werte auf unterschiedliche Weise.
+
+Dies sind alles Darstellungen derselben Daten, die jedoch nicht gleichermaßen einfach zu verwenden sind.
+
+Mit welcher Tabelle ist es im Tidyverse viel einfacher zu arbeiten?
+
+Tabelle 1, da sie *tidy* ist.
+:::
+
+##  {auto-animate="true"}
+
+::::: columns
+::: {.column width="33%"}
+```{r}
+#| echo: false
+uFunc_nice_table(table1)
+```
+:::
+
+::: {.column width="67%"}
+```{r}
+#| output-location: fragment
+table1 |>
+  mutate(rate = cases / population * 10000)
+```
+:::
+:::::
+
+::: notes
+Wenn wir die Tuberkuloserate für jedes Land pro 10,000 Einwohner berechnen möchten, dividieren wir einfach die Spalte `cases` durch die Spalte `population` und multiplizieren mit 10,000.
+:::
+
+##  {auto-animate="true"}
+
+::::: columns
+::: {.column width="33%"}
+```{r}
+#| echo: false
+uFunc_nice_table(table2)
+```
+:::
+
+::: {.column width="67%"}
+```{r}
+#| code-line-numbers: "1-5|6"
+#| output-location: fragment
+
+table2 |>
+  pivot_wider(
+    names_from = type,
+    values_from = count
+  ) |>
+  mutate(rate = cases / population * 10000)
+```
+:::
+:::::
+
+::: notes
+Allerdings ist es mit der zweiten Tabelle nicht so einfach. Um die Rate zu berechnen, müssen wir zunächst die Daten erweitern, um zwei neue Variablen zu erstellen, deren Namen vom `type` Variable abgeleitet sind.
+:::
+
+##  {auto-animate="true"}
+
+::::: columns
+::: {.column width="33%"}
+```{r}
+#| echo: false
+uFunc_nice_table(table3)
+```
+:::
+
+::: {.column width="67%"}
+```{r}
+#| code-line-numbers: "1-6|7-10|11"
+#| output-location: fragment
+
+table3 |>
+  separate_wider_delim(
+    cols = rate,
+    delim = "/",
+    names = c("cases", "population")
+  ) |>
+  mutate(
+    # separate_wider_delim() outputs character
+    cases = as.numeric(cases),
+    population = as.numeric(population),
+    rate = cases / population * 10000
+  )
+```
+:::
+:::::
+
+::: notes
+Die dritte Tabelle erfordert einen anderen Ansatz. Wir müssen die `rate` Spalte in zwei Spalten aufteilen. Auch hier kommt mit Tidyr Abhilfe mit der Funktion `separate_wider_delim()`.
+
+Beachtet, dass die Ausgabespalten den Datentyp `character` haben. Wir setzen ihren Typ auf `numeric` um, damit wir numerische Operationen ausführen können. Mehr dazu im nächsten Abschnitt.
+:::
+
+##  {.smaller auto-animate="true"}
+
+```{r}
+#| echo: false
+uFunc_nice_table(table4)
+```
+
+::: {.absolute top="10%" right="20%"}
+:question:
+:::
+
+::: fragment
+```{r}
+#| output-location: column-fragment
+
+table4 |> 
+  pivot_longer(cols = `1999`:`2000`, names_to = "year")
+```
+:::
+
+##  {.smaller auto-animate="true"}
+
+```{r}
+#| echo: false
+uFunc_nice_table(table4)
+```
+
+```{r}
+#| output-location: column-fragment
+#| code-line-numbers: "3|4"
+
+table4 |> 
+  pivot_longer(cols = `1999`:`2000`, names_to = "year") |> 
+  pivot_wider(names_from = type, values_from = value) |> 
+  mutate(rate = cases / population * 10000)
+```
+
+## Praktikum 04c: Daten pivotieren
+
+[prak-04c-pivot.qmd](../exercises/unit04/prak-04c-pivot.qmd)
+
+`r countdown(minutes = 30, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Workflow: Code-Style {background-color="#e6f2f2"}
+
+## 
+
+![](img/assignment.jpg)
+
+::: fragment
+[R (1993) $\leftarrow$ S (1976) $\leftarrow$ APL (1962)](https://colinfay.me/r-assignment/)
+:::
+
+::: notes
+Hisorische Gründe R, which was born in 1993, is based on an older language S (1970s), which in turn is based on a yet older language APL (1960s). APL was developed on a special keyboard which had a `<-` key. At the time, equality was not tested with `==` but with `=`. So it was decided that assignment would be done with `<-` and equality would be tested with the equal sign.
+
+![](img/410px-APL-keybd2.svg.png)
+:::
+
+## [The tidyverse Style Guide](https://style.tidyverse.org/index.html)
+
+> "Ein guter Kodierungsstil ist wie eine korrekte Zeichensetzung: Man kann auch ohne sie auskommen, abersiemachtalleseinfacherzulesen." -- *Hadley Wickham*
+
+::: fragment
+```{r}
+#| eval: false
+#| code-line-numbers: "1-7|9-11"
+# Good
+df |>
+  mutate(
+    sum_xy = x + y,
+    prod_xy = x * y
+  ) |>
+  arrange(sum_xy)
+
+# Bad
+df|>mutate(  sum_xy=x+y,prod_xy=x*y)|>arrange( sum_xy )
+```
+:::
+
+## [`styler`](https://www.tidyverse.org/blog/2017/12/styler-1.0.0/)
+
+:::::: columns
+::: {.column width="43%"}
+```{r}
+#| eval: false
+install.packages("styler")
+```
+:::
+
+:::: {.column width="57%"}
+::: fragment
+![](img/styler-1.0.0-addin.png)
+:::
+::::
+::::::
+
+## Praktikum: Code-Style
+
+Den Code in eine neue Quarto-Datei formatieren:
+
+```{r}
+#| eval: false
+
+library( palmerpenguins )
+library(tidyverse   )
+
+penguins|>filter( species=="Adelie" )|>group_by(island)|>summarize(n=n(),mean_bill=
+mean(bill_length_mm,na.rm=TRUE))|>filter(n>10)
+
+penguins|>filter(   species=="Chinstrap",island%in%c("Dream","Biscoe"),flipper_length_mm>190,
+body_mass_g<4000)|>group_by(sex)|>summarize(
+mean_mass=mean(body_mass_g,na.rm=TRUE),count=n())|>filter(count>5)
+```
+
+`r countdown(minutes = 10, seconds = 0, left = 0, right = 0, padding = "10px", margin = "5%", font_size = "2em", bottom = 0)`
+
+# Danke! :waxing_gibbous_moon: {background-color="#e6f2f2"}
+
+##  {visibility="uncounted"}
+
+Slides created via [revealjs and Quarto](https://quarto.org/docs/presentations/revealjs/).
+
+Access slides as [PDF](../slides/slide-04-import-pivot.pdf).
+
+All material is licensed under [Creative Commons Attribution Share Alike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
