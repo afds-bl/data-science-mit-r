@@ -23,7 +23,7 @@ website:
     logo: img/BL_Logo_FKD_AfDuS_A_r_rgb.png
     right: 
       - text: "{{< iconify fa6-brands square-github size=2x >}}"
-        href: https://afds-bl.github.io/data-science-mit-r
+        href: https://github.com/afds-bl/data-science-mit-r
         aria-label: Github
         
   sidebar:
