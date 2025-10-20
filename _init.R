@@ -45,7 +45,7 @@ conflicted::conflicts_prefer(palmerpenguins::penguins)
 ## Github packages ----
 
 # GitHub package installation using remotes
-devtools::install_github("davidsjoberg/ggsankey")
+# devtools::install_github("davidsjoberg/ggsankey")
 
 # Load the GitHub package (ggsankey)
 library(ggsankey)
