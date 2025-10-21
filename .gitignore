@@ -19,7 +19,7 @@ init.log
 
 # Scripts, folders and files
 _freeze
-_site/          # Add this
-*_files/        # Add this - intermediate files
-*_cache/        # Add this - R cache files
-site_libs/      # Add this if not using docs/
+_site/  
+*_files/        
+*_cache/       
+site_libs/      
